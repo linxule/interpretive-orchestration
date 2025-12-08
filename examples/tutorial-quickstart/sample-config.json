@@ -1,0 +1,59 @@
+{
+  "project": {
+    "name": "tutorial-quickstart",
+    "created": "2025-01-01T00:00:00.000Z",
+    "version": "0.1.0"
+  },
+  "epistemic_stance": {
+    "ontology": "interpretivist",
+    "epistemology": "systematic_co_construction",
+    "tradition": "gioia_corley",
+    "ai_relationship": "epistemic_partner",
+    "language_preference": {
+      "use": ["construct", "characterize", "interpret", "build"],
+      "avoid": ["discover", "find", "extract", "identify"]
+    }
+  },
+  "methodology": {
+    "approach": "atelier_three_stage",
+    "stages": {
+      "stage1": {
+        "name": "Solo Practice",
+        "status": "not_started",
+        "documents_coded": 0,
+        "target_documents": 15,
+        "memos_written": 0
+      },
+      "stage2": {
+        "name": "Side-by-Side Collaboration",
+        "status": "locked",
+        "phases": ["parallel_streams", "synthesis", "pattern_characterization"]
+      },
+      "stage3": {
+        "name": "Dialogue with Tradition",
+        "status": "locked"
+      }
+    }
+  },
+  "data": {
+    "total_documents": 0,
+    "documents_location": "./your-documents/",
+    "data_structure_version": 0
+  },
+  "mcps": {
+    "bundled": {
+      "sequential_thinking": true,
+      "lotus_wisdom": true,
+      "markdownify": true
+    },
+    "optional": {
+      "zen_mcp": false,
+      "jina": false,
+      "exa": false,
+      "zotero": false
+    }
+  },
+  "notes": {
+    "description": "This is a sample configuration file for the tutorial quickstart. Replace with your actual project settings after running /qual-init."
+  }
+}

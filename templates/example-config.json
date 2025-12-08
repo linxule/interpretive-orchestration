@@ -1,0 +1,87 @@
+{
+  "_comment": "Example configuration for Interpretive Orchestration - Copy to your project's .interpretive-orchestration/config.json and customize",
+
+  "project_info": {
+    "name": "My Qualitative Research Project",
+    "research_question": "Your central research question here",
+    "domain": "e.g., organizational behavior, healthcare, education",
+    "created_date": "2025-10-11",
+    "researcher_name": "Your Name"
+  },
+
+  "philosophical_stance": {
+    "ontology": "interpretivist",
+    "epistemology": "systematic_interpretation",
+    "tradition": "gioia_corley",
+    "ai_relationship": "epistemic_partner",
+    "vocabulary_mode": "constructivist",
+    "coding_verbs": ["construct", "interpret", "characterize", "organize", "build"],
+    "avoid_verbs": ["discover", "find", "extract", "uncover", "reveal"],
+    "reflexivity_level": "high",
+    "interpretive_authority": "human"
+  },
+
+  "sandwich_status": {
+    "current_stage": "stage1_foundation",
+    "stage1_complete": false,
+    "stage1_details": {
+      "documents_manually_coded": 0,
+      "initial_structure_created": false,
+      "memos_written": 0,
+      "theoretical_frameworks_consulted": []
+    },
+    "stage2_progress": {
+      "phase1_parallel_streams": "not_started",
+      "phase2_synthesis": "not_started",
+      "phase3_pattern_characterization": "not_started"
+    },
+    "stage3_progress": {
+      "evidence_organized": false,
+      "theory_developed": false,
+      "manuscript_drafted": false
+    }
+  },
+
+  "data_structure": {
+    "aggregate_dimensions": [],
+    "second_order_themes": [],
+    "first_order_concepts": [],
+    "version_history": [
+      {
+        "version": "0.1",
+        "date": "2025-10-11",
+        "changes": "Initial structure created",
+        "rationale": "Based on Stage 1 manual coding"
+      }
+    ]
+  },
+
+  "mcp_integrations": {
+    "active_mcps": [
+      "mcp-sequentialthinking-tools",
+      "lotus-wisdom",
+      "markdownify"
+    ],
+    "mcp_usage_log": []
+  },
+
+  "epistemic_growth": {
+    "reflexive_moments": [],
+    "assumption_challenges": [],
+    "philosophical_tensions": []
+  },
+
+  "interaction_preferences": {
+    "teaching_moment_frequency": "key_decisions",
+    "philosophical_depth": "beginner",
+    "preferred_dialogue_style": "socratic_questions",
+    "uncertainty_comfort": "comfortable_with_ambiguity"
+  },
+
+  "coding_progress": {
+    "documents_coded": 0,
+    "quotes_extracted": 0,
+    "concepts_in_framework": 0,
+    "last_coding_session": null
+  }
+}

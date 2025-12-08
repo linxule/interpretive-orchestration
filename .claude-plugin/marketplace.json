@@ -1,0 +1,116 @@
+{
+  "name": "interpretive-orchestration",
+  "metadata": {
+    "description": "Epistemic Partnership System for AI-Assisted Qualitative Research - Built on Gioia/Constructivist principles",
+    "version": "0.1.0",
+    "homepage": "https://github.com/linxule/interpretive-orchestration"
+  },
+  "owner": {
+    "names": ["Xule Lin", "Kevin Corley"],
+    "email": "xule.lin@imperial.ac.uk",
+    "affiliations": ["Imperial College London", "Arizona State University"]
+  },
+  "plugins": [
+    {
+      "name": "interpretive-orchestration",
+      "source": ".",
+      "description": "Complete epistemic partnership system featuring: Socratic onboarding, 4-stage reflexive coding, synthesis dialogue, and bundled MCP tools (Sequential Thinking, Lotus Wisdom, Markdownify). Prevents calculator mindset, enforces human-AI-human sandwich methodology, and teaches meta-cognitive awareness. Context-agnostic design works across all qualitative research domains.",
+      "version": "0.1.0",
+      "author": {
+        "names": ["Xule Lin", "Kevin Corley"],
+        "email": "xule.lin@imperial.ac.uk",
+        "affiliations": ["Imperial College London", "Arizona State University"],
+        "co_created_with": "Claude 4.5 (Anthropic)"
+      },
+      "homepage": "https://github.com/linxule/interpretive-orchestration#readme",
+      "repository": "https://github.com/linxule/interpretive-orchestration",
+      "license": "MIT",
+      "keywords": [
+        "qualitative-research",
+        "grounded-theory",
+        "gioia-method",
+        "interpretive-inquiry",
+        "epistemic-partnership",
+        "human-ai-collaboration",
+        "reflexive-analysis",
+        "organizational-research",
+        "constructivist",
+        "meta-cognition"
+      ],
+      "category": "research-methods",
+      "tags": [
+        "qualitative",
+        "grounded-theory",
+        "research",
+        "epistemology",
+        "partnership",
+        "social-science"
+      ],
+      "features": [
+        "Socratic onboarding establishes philosophical stance",
+        "4-stage reflexive coding with @dialogical-coder",
+        "Synthesis dialogue with /qual-reflect",
+        "Sequential Thinking for deep analytical reasoning",
+        "Lotus Wisdom for paradox navigation",
+        "Reflexive assumption examination",
+        "Sandwich methodology enforced by design",
+        "Human interpretive authority maintained",
+        "Gioia data structure templates included",
+        "Context-agnostic (works for any domain)"
+      ],
+      "mvep": {
+        "description": "Minimal Viable Epistemic Partnership - Complete and Ready",
+        "includes": [
+          "/qual-init - Establish philosophical foundation",
+          "/qual-status - Navigate your journey",
+          "@dialogical-coder - 4-stage reflexive coding",
+          "/qual-reflect - Synthesis dialogue",
+          "/qual-think-through - Deep reasoning",
+          "/qual-wisdom-check - Paradox navigation",
+          "/qual-examine-assumptions - Philosophical coherence"
+        ],
+        "transformation_goal": "Changes how you think about interpretation, not just how fast you code"
+      },
+      "requirements": {
+        "claudeCode": ">=1.0.0",
+        "mcps": {
+          "bundled": [
+            "mcp-sequentialthinking-tools",
+            "lotus-wisdom",
+            "markdownify"
+          ],
+          "optional": [
+            "zen-mcp-server",
+            "jina-ai-mcp-server",
+            "exa",
+            "zotero"
+          ],
+          "note": "Bundled MCPs (Sequential Thinking, Lotus Wisdom, Markdownify) auto-install - no configuration needed! Optional MCPs require API keys."
+        }
+      },
+      "getting_started": {
+        "step_1": "Run /qual-init for Socratic onboarding",
+        "step_2": "Complete Stage 1 manual analysis (10-15 documents)",
+        "step_3": "Use @dialogical-coder for reflexive AI-assisted coding",
+        "step_4": "Regular /qual-reflect for synthesis dialogue",
+        "time_to_value": "15 minutes for onboarding, transformational value develops over weeks"
+      }
+    }
+  ],
+  "marketplace_philosophy": {
+    "stance": "This marketplace hosts infrastructure for epistemic partnership, not automation tools",
+    "quality_standards": [
+      "Philosophical coherence maintained",
+      "Meta-cognition embedded",
+      "Human interpretive authority preserved",
+      "Context-agnostic design",
+      "Transformation over productivity"
+    ],
+    "community_values": [
+      "Thoughtful contributions over quick PRs",
+      "Reflexive documentation expected",
+      "Epistemology matters",
+      "Craft quality standards"
+    ]
+  }
+}

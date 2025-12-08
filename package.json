@@ -1,0 +1,37 @@
+{
+  "name": "interpretive-orchestration",
+  "version": "0.1.0",
+  "description": "Epistemic Partnership System for interpretive qualitative research. Human and AI learn together as apprentices to the craft tradition.",
+  "contributors": [
+    {
+      "name": "Xule Lin",
+      "email": "xule.lin@imperial.ac.uk"
+    },
+    {
+      "name": "Kevin Corley"
+    }
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/linxule/interpretive-orchestration"
+  },
+  "keywords": [
+    "qualitative-research",
+    "grounded-theory",
+    "gioia-method",
+    "interpretive-inquiry",
+    "epistemic-partnership",
+    "human-ai-collaboration",
+    "claude-code-plugin"
+  ],
+  "scripts": {
+    "test": "node tests/run-tests.js",
+    "test:hooks": "node tests/test-hooks.js",
+    "test:schemas": "node tests/test-schemas.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "private": false
+}

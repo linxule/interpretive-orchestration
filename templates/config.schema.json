@@ -1,0 +1,322 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Interpretive Orchestration Project Configuration",
+  "description": "Machine-readable configuration for epistemic partnership. Agents read this to adapt their collaboration style, language, and assumptions.",
+  "type": "object",
+  "required": ["project_info", "philosophical_stance", "sandwich_status"],
+  "properties": {
+    "project_info": {
+      "type": "object",
+      "required": ["name", "research_question", "created_date"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Project name"
+        },
+        "research_question": {
+          "type": "string",
+          "description": "Central research question guiding the inquiry"
+        },
+        "domain": {
+          "type": "string",
+          "description": "Research domain (e.g., organizational behavior, healthcare, education)"
+        },
+        "created_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "researcher_name": {
+          "type": "string"
+        }
+      }
+    },
+    "philosophical_stance": {
+      "type": "object",
+      "description": "Epistemological and ontological commitments that shape analysis",
+      "required": ["ontology", "epistemology", "tradition", "ai_relationship"],
+      "properties": {
+        "ontology": {
+          "type": "string",
+          "enum": ["objectivist", "interpretivist", "critical_realist", "relativist", "custom"],
+          "description": "What reality exists"
+        },
+        "epistemology": {
+          "type": "string",
+          "enum": ["objectivist_discovery", "systematic_interpretation", "co_constructive", "custom"],
+          "description": "How knowledge is created"
+        },
+        "tradition": {
+          "type": "string",
+          "enum": ["gioia_corley", "charmaz_constructivist", "straussian", "glaserian", "gioia_hybrid", "custom"],
+          "description": "Grounded theory tradition followed"
+        },
+        "ai_relationship": {
+          "type": "string",
+          "enum": ["epistemic_partner", "interpretive_aid", "coding_tool", "exploring"],
+          "description": "How researcher conceives AI's role"
+        },
+        "vocabulary_mode": {
+          "type": "string",
+          "enum": ["constructivist", "discovery", "systematic"],
+          "description": "Language style for AI interactions",
+          "default": "constructivist"
+        },
+        "coding_verbs": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Preferred verbs for analytical work (e.g., construct, interpret, characterize)",
+          "default": ["construct", "interpret", "characterize", "organize"]
+        },
+        "avoid_verbs": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Verbs that contradict philosophical stance (e.g., discover, find, extract)",
+          "default": ["discover", "find", "extract", "uncover"]
+        },
+        "reflexivity_level": {
+          "type": "string",
+          "enum": ["minimal", "moderate", "high", "maximal"],
+          "description": "How frequently plugin prompts reflexive thinking",
+          "default": "high"
+        },
+        "interpretive_authority": {
+          "type": "string",
+          "const": "human",
+          "description": "Non-negotiable: Human maintains final interpretive authority"
+        }
+      }
+    },
+    "sandwich_status": {
+      "type": "object",
+      "description": "Tracks progress through human-AI-human sandwich methodology",
+      "required": ["current_stage", "stage1_complete"],
+      "properties": {
+        "current_stage": {
+          "type": "string",
+          "enum": ["stage1_foundation", "stage2_collaboration", "stage3_synthesis"],
+          "description": "Current stage in sandwich methodology"
+        },
+        "stage1_complete": {
+          "type": "boolean",
+          "description": "Has human completed foundational manual analysis?",
+          "default": false
+        },
+        "stage1_details": {
+          "type": "object",
+          "properties": {
+            "documents_manually_coded": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Number of data items (interviews, field notes, documents) manually coded"
+            },
+            "initial_structure_created": {
+              "type": "boolean",
+              "default": false
+            },
+            "memos_written": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "theoretical_frameworks_consulted": {
+              "type": "array",
+              "items": {"type": "string"}
+            }
+          }
+        },
+        "stage2_progress": {
+          "type": "object",
+          "properties": {
+            "phase1_parallel_streams": {"type": "string", "enum": ["not_started", "in_progress", "complete"]},
+            "phase2_synthesis": {"type": "string", "enum": ["not_started", "in_progress", "complete"]},
+            "phase3_pattern_characterization": {"type": "string", "enum": ["not_started", "in_progress", "complete"]}
+          }
+        },
+        "stage3_progress": {
+          "type": "object",
+          "properties": {
+            "evidence_organized": {"type": "boolean", "default": false},
+            "theory_developed": {"type": "boolean", "default": false},
+            "manuscript_drafted": {"type": "boolean", "default": false}
+          }
+        }
+      }
+    },
+    "data_structure": {
+      "type": "object",
+      "description": "Evolving analytical framework (Gioia-style)",
+      "properties": {
+        "aggregate_dimensions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {"type": "string"},
+              "name": {"type": "string"},
+              "definition": {"type": "string"},
+              "theoretical_foundation": {"type": "string"}
+            }
+          }
+        },
+        "second_order_themes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {"type": "string"},
+              "name": {"type": "string"},
+              "definition": {"type": "string"},
+              "parent_dimension": {"type": "string"},
+              "researcher_interpretation": {"type": "string"}
+            }
+          }
+        },
+        "first_order_concepts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {"type": "string"},
+              "name": {"type": "string"},
+              "definition": {"type": "string"},
+              "parent_theme": {"type": "string"},
+              "informant_terms": {"type": "array", "items": {"type": "string"}},
+              "example_quotes": {"type": "array", "items": {"type": "string"}}
+            }
+          }
+        },
+        "version_history": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "version": {"type": "string"},
+              "date": {"type": "string"},
+              "changes": {"type": "string"},
+              "rationale": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "mcp_integrations": {
+      "type": "object",
+      "description": "Which MCPs are active and when they're used",
+      "properties": {
+        "active_mcps": {
+          "type": "array",
+          "items": {"type": "string"},
+          "default": ["mcp-sequentialthinking-tools", "lotus-wisdom", "markdownify"]
+        },
+        "mcp_usage_log": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "mcp_name": {"type": "string"},
+              "timestamp": {"type": "string"},
+              "purpose": {"type": "string"},
+              "stage": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "epistemic_growth": {
+      "type": "object",
+      "description": "Tracks researcher's evolving understanding of interpretation",
+      "properties": {
+        "reflexive_moments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "date": {"type": "string"},
+              "prompt": {"type": "string"},
+              "reflection": {"type": "string"},
+              "insight": {"type": "string"}
+            }
+          }
+        },
+        "assumption_challenges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "date": {"type": "string"},
+              "assumption": {"type": "string"},
+              "challenge": {"type": "string"},
+              "resolution": {"type": "string"}
+            }
+          }
+        },
+        "philosophical_tensions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "tension": {"type": "string"},
+              "how_navigated": {"type": "string"},
+              "learning": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "interaction_preferences": {
+      "type": "object",
+      "description": "How plugin should interact with this researcher",
+      "properties": {
+        "teaching_moment_frequency": {
+          "type": "string",
+          "enum": ["every_interaction", "key_decisions", "weekly_summary", "minimal"],
+          "default": "key_decisions"
+        },
+        "philosophical_depth": {
+          "type": "string",
+          "enum": ["beginner", "intermediate", "advanced", "expert"],
+          "description": "Current philosophical sophistication - increases over time",
+          "default": "beginner"
+        },
+        "preferred_dialogue_style": {
+          "type": "string",
+          "enum": ["socratic_questions", "direct_explanations", "collaborative_exploration", "minimal_guidance"],
+          "default": "socratic_questions"
+        },
+        "uncertainty_comfort": {
+          "type": "string",
+          "enum": ["needs_reassurance", "comfortable_with_ambiguity", "seeks_complexity"],
+          "description": "How researcher relates to analytical uncertainty"
+        }
+      }
+    },
+    "coding_progress": {
+      "type": "object",
+      "description": "Tracks ongoing coding activity across all stages (separate from stage1_details which tracks manual foundation)",
+      "properties": {
+        "documents_coded": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Running count of documents coded (triggers interpretive pauses every 5)",
+          "default": 0
+        },
+        "quotes_extracted": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total quotes extracted and assigned to concepts",
+          "default": 0
+        },
+        "concepts_in_framework": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of active concepts in current data structure",
+          "default": 0
+        },
+        "last_coding_session": {
+          "type": ["string", "null"],
+          "format": "date-time",
+          "description": "Timestamp of last coding session"
+        }
+      }
+    }
+  }
+}
