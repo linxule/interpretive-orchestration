@@ -59,7 +59,7 @@ Common issues and solutions for the Interpretive Orchestration plugin.
 1. Restart Claude Code
 2. Check npm installation: `npm -v`
 3. Clear npm cache: `npm cache clean --force`
-4. Try: `npx -y lotus-wisdom-mcp-server`
+4. Try: `npx -y lotus-wisdom-mcp`
 
 ---
 
@@ -168,7 +168,7 @@ If your issue isn't listed here:
    ```
 
 3. **Report issues:**
-   - GitHub: [plugin repository issues page]
+   - GitHub: [plugin repository issues page](https://github.com/linxule/interpretive-orchestration/issues)
    - Include: error messages, steps to reproduce, your OS and Claude Code version
 
 ---
