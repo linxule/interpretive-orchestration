@@ -127,6 +127,23 @@ A powerful conversion tool supporting multiple formats:
 
 Especially valuable for researchers with audio-recorded interviews - eliminates the transcription bottleneck!
 
+### MinerU (Optional - requires MINERU_API_KEY)
+VLM-powered document parsing with 90%+ accuracy on complex PDFs.
+
+**When to use MinerU instead of Markdownify:**
+- PDFs with complex tables (merged cells, multi-column)
+- Documents with figures/charts that need extraction
+- Academic papers with formulas
+- When accuracy is critical
+
+**When Markdownify is sufficient:**
+- Simple text documents
+- Audio transcription (MinerU doesn't do audio)
+- Quick conversions where cost matters
+- No API key available
+
+See DEPENDENCIES.md for full MCP ecosystem documentation.
+
 ---
 
 ## Stage 1 Thinking Partner: @stage1-listener
@@ -200,6 +217,54 @@ You CAN help users with installation and configuration tasks. These are qualitat
 **Where to look for details:**
 - INSTALL.md has complete setup instructions
 - TROUBLESHOOTING.md has common issues and solutions
+
+---
+
+## Skills Infrastructure
+
+The plugin uses auto-discoverable skills for complex workflows. Skills are loaded when relevant to the user's request.
+
+### Core Skills
+
+| Skill | When Triggered | Purpose |
+|-------|----------------|---------|
+| `project-setup` | "initialize", "new project", "getting started" | Socratic onboarding + project creation |
+| `gioia-methodology` | "data structure", "themes", "concepts", "Gioia" | Data structure building + validation |
+| `deep-reasoning` | "think through", "plan", complex decisions | Step-by-step reasoning (Sequential Thinking) |
+| `paradox-navigation` | "tension", "contradiction", "both/and" | Integration of opposites (Lotus Wisdom) |
+| `coherence-check` | "assumptions", "coherent", consistency questions | Philosophical alignment check |
+
+### Workflow Skills
+
+| Skill | When Triggered | Purpose |
+|-------|----------------|---------|
+| `analysis-orchestration` | "configure", "model selection", "cost" | API setup + cost estimation |
+| `coding-workflow` | "batch", "systematic coding", "process" | Document coding management |
+| `project-dashboard` | "status", "progress", "where am I" | Progress visualization |
+
+### Document Processing Skills
+
+| Skill | When Triggered | Purpose |
+|-------|----------------|---------|
+| `literature-sweep` | "literature", "theoretical stream", "Stream A" | Search + fetch + organize papers |
+| `interview-ingest` | "transcribe", "convert", "import" | Audio/PDF/doc conversion |
+| `document-conversion` | "PDF", "convert document" | Intelligent format conversion |
+
+### Using Skills
+
+1. **Auto-discovery**: Claude loads skills when their keywords appear in user requests
+2. **Scripts**: Skills include executable scripts for deterministic operations
+3. **State I/O**: `skills/_shared/scripts/` provides config read/write operations
+4. **Graceful degradation**: Skills with optional MCP dependencies operate at available tier
+
+### State Management
+
+Before any operation that depends on project state, read the config:
+```bash
+node skills/_shared/scripts/read-config.js --project-path /path/to/project
+```
+
+This returns the current project configuration including Stage 1 status.
 
 ---
 

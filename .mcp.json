@@ -160,6 +160,61 @@
         "note": "Especially valuable for researchers with audio-recorded interviews - can transcribe directly!"
       }
     },
+    "mineru-mcp": {
+      "command": "npx",
+      "args": ["-y", "mineru-mcp"],
+      "env": {
+        "MINERU_API_KEY": "${MINERU_API_KEY}"
+      },
+      "description": "VLM-powered document parsing - 90%+ accuracy on complex PDFs with tables, figures, and multi-column layouts",
+      "package_info": {
+        "npm_package": "mineru-mcp",
+        "license": "MIT",
+        "note": "Requires MinerU API key (optional MCP)"
+      },
+      "capabilities": [
+        "High-accuracy PDF parsing using Vision Language Models",
+        "Complex table extraction with merged cells and multi-column",
+        "Figure and chart extraction with captions",
+        "Academic paper parsing with formula support",
+        "Multi-column layout handling"
+      ],
+      "usage_guide": {
+        "when_to_use": [
+          "PDFs with complex tables (merged cells, multi-column)",
+          "Documents with figures/charts that need extraction",
+          "Academic papers with formulas or equations",
+          "When accuracy is critical for data extraction",
+          "Multi-column academic journal articles"
+        ],
+        "when_markdownify_is_better": [
+          "Simple text documents without complex formatting",
+          "Audio transcription (MinerU doesn't do audio)",
+          "Quick conversions where cost matters",
+          "No API key available"
+        ],
+        "stage_recommendations": {
+          "stage1": "Convert complex interview transcripts or documents with tables",
+          "stage2_phase1": "Parse academic articles with tables and figures for theoretical stream"
+        },
+        "note": "Use for complex PDFs; fallback to Markdownify for simple docs or audio"
+      },
+      "comparison_with_markdownify": {
+        "mineru_advantages": [
+          "Higher accuracy on complex layouts (90%+ vs ~70%)",
+          "Better table extraction",
+          "Figure/chart extraction",
+          "Formula support"
+        ],
+        "markdownify_advantages": [
+          "Bundled (no API key needed)",
+          "Audio transcription",
+          "YouTube video support",
+          "Lower cost (free)"
+        ],
+        "recommendation": "Use MinerU for complex PDFs with tables/figures; Markdownify for everything else"
+      }
+    },
     "zotero": {
       "command": "npx",
       "args": ["-y", "zotero-mcp-server"],
@@ -220,6 +275,7 @@
       "markdownify"
     ],
     "optional_requires_api_keys": [
+      "mineru-mcp",
       "zen-mcp-server",
       "jina-ai-mcp-server",
       "exa",
@@ -249,6 +305,7 @@
     "optional_mcps": {
       "description": "These MCPs require API keys - configure only if you need them",
       "api_keys_needed": {
+        "mineru-mcp": "MINERU_API_KEY (best for complex PDFs with tables/figures)",
         "zen-mcp-server": "GOOGLE_API_KEY and/or OPENAI_API_KEY",
         "jina-ai-mcp-server": "JINA_API_KEY",
         "exa": "EXA_API_KEY",

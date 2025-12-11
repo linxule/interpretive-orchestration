@@ -24,6 +24,22 @@ function findProjectRoot(startPath) {
   return null;
 }
 
+// Output structured remediation JSON (machine-readable)
+function outputRemediation(code, severity, reason, nextCommands, nextSkills, canBypass, details) {
+  const remediation = {
+    code,
+    severity,
+    reason,
+    next_commands: nextCommands,
+    next_skills: nextSkills,
+    can_bypass: canBypass,
+    details
+  };
+
+  // Output JSON to stderr for machine parsing
+  console.error(JSON.stringify(remediation));
+}
+
 function getSessionStats(projectRoot) {
   const logPath = path.join(projectRoot, '.interpretive-orchestration', 'conversation-log.jsonl');
 
@@ -59,6 +75,26 @@ function main() {
   }
 
   const stats = getSessionStats(projectRoot);
+
+  // Output structured remediation for machine parsing
+  outputRemediation(
+    'SESSION_REFLECTION',
+    'info',  // This is a reflection prompt, not a warning or blocker
+    'Session ending - reflexivity prompt for epistemic awareness',
+    ['/qual-reflect', '/qual-memo', '/qual-think-through'],
+    ['deep-reasoning', 'coherence-check'],
+    true,  // Always bypassable - it's a prompt, not a block
+    {
+      session_activities: stats.activities,
+      tools_used: stats.tools_used,
+      codes_created: stats.codes_created,
+      reflexive_questions: [
+        'What did you learn about your data today?',
+        'What assumptions did you examine?',
+        'How did working with AI shape your thinking?'
+      ]
+    }
+  );
 
   console.log('');
   console.log('🌅 SESSION REFLECTION');

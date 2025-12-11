@@ -25,21 +25,55 @@ function findProjectRoot(startPath) {
   return null;
 }
 
+// Output structured remediation JSON (machine-readable)
+function outputRemediation(code, severity, reason, nextCommands, nextSkills, canBypass, details) {
+  const remediation = {
+    code,
+    severity,
+    reason,
+    next_commands: nextCommands,
+    next_skills: nextSkills,
+    can_bypass: canBypass,
+    details
+  };
+
+  // Output JSON to stderr for machine parsing, human-readable to stdout
+  console.error(JSON.stringify(remediation));
+}
+
 // Main hook logic
 function checkStage1Complete() {
   const projectRoot = findProjectRoot(process.cwd());
 
   if (!projectRoot) {
-    console.error('⚠️  No Interpretive Orchestration project found in current directory.');
-    console.error('   Run /qual-init first to create a project.');
+    outputRemediation(
+      'PROJECT_NOT_FOUND',
+      'blocking',
+      'No Interpretive Orchestration project found in current directory',
+      ['/qual-init'],
+      ['project-setup'],
+      false,
+      { suggestion: 'Run /qual-init first to create a project' }
+    );
+    console.log('⚠️  No Interpretive Orchestration project found.');
+    console.log('   Run /qual-init first to create a project.');
     process.exit(1);
   }
 
   const configPath = path.join(projectRoot, '.interpretive-orchestration', 'config.json');
 
   if (!fs.existsSync(configPath)) {
-    console.error('⚠️  Project configuration not found.');
-    console.error('   Run /qual-init to set up your project properly.');
+    outputRemediation(
+      'CONFIG_NOT_FOUND',
+      'blocking',
+      'Project configuration not found',
+      ['/qual-init'],
+      ['project-setup'],
+      false,
+      { suggestion: 'Run /qual-init to set up your project properly' }
+    );
+    console.log('⚠️  Project configuration not found.');
+    console.log('   Run /qual-init to set up your project properly.');
     process.exit(1);
   }
 
@@ -47,6 +81,25 @@ function checkStage1Complete() {
 
   // Check if Stage 1 is complete
   if (!config.sandwich_status || !config.sandwich_status.stage1_complete) {
+    const stage1Details = config.sandwich_status?.stage1_details || {};
+    const documentsCoded = stage1Details.documents_manually_coded || 0;
+    const memosWritten = stage1Details.memos_written || 0;
+
+    outputRemediation(
+      'STAGE1_INCOMPLETE',
+      'blocking',
+      'Stage 1 manual coding not complete',
+      ['/qual-memo', '/qual-status'],
+      ['project-setup', 'gioia-methodology'],
+      true,  // Can bypass with explicit reason
+      {
+        documents_coded: documentsCoded,
+        documents_required: 10,
+        memos_written: memosWritten,
+        memos_recommended: 5,
+        suggestion: `Code ${Math.max(0, 10 - documentsCoded)} more documents manually`
+      }
+    );
     console.log('');
     console.log('📋 METHODOLOGY CHECK: Stage 1 Foundation');
     console.log('');

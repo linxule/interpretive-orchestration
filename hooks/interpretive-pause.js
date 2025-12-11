@@ -25,6 +25,22 @@ function findProjectRoot(startPath) {
   return null;
 }
 
+// Output structured remediation JSON (machine-readable)
+function outputRemediation(code, severity, reason, nextCommands, nextSkills, canBypass, details) {
+  const remediation = {
+    code,
+    severity,
+    reason,
+    next_commands: nextCommands,
+    next_skills: nextSkills,
+    can_bypass: canBypass,
+    details
+  };
+
+  // Output JSON to stderr for machine parsing
+  console.error(JSON.stringify(remediation));
+}
+
 function getDocumentCount(projectRoot) {
   const configPath = path.join(projectRoot, '.interpretive-orchestration', 'config.json');
   if (!fs.existsSync(configPath)) return 0;
@@ -49,6 +65,25 @@ function main() {
   const documentCount = getDocumentCount(projectRoot);
 
   if (shouldPause(documentCount)) {
+    // Output structured remediation for machine parsing
+    outputRemediation(
+      'INTERPRETIVE_PAUSE',
+      'info',  // This is a methodological reminder, not a warning or blocker
+      `Interpretive pause triggered at ${documentCount} documents`,
+      ['/qual-reflect', '/qual-think-through', '/qual-memo'],
+      ['deep-reasoning', 'gioia-methodology'],
+      true,  // Always bypassable - it's a prompt, not a block
+      {
+        documents_coded: documentCount,
+        next_pause_at: documentCount + 5,
+        suggested_actions: [
+          'Write analytical memo',
+          'Review emerging patterns',
+          'Check theoretical coherence'
+        ]
+      }
+    );
+
     console.log('');
     console.log('🔍 INTERPRETIVE PAUSE: Time to Reflect');
     console.log('   (methodology prompt - this pause is part of the process, not an interruption)');

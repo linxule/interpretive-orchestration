@@ -24,12 +24,12 @@
 📖 **../README.md** - Start here! Philosophy-first introduction
 📋 **../CONTRIBUTING.md** - Community guidelines with epistemic focus
 
-### Templates & Guides
-📐 **../templates/epistemic-stance.md** - Socratic self-examination questions
-🏗️ **../templates/GIOIA-STRUCTURE-GUIDE.md** - How to build your framework
-📊 **../templates/gioia-data-structure-template.json** - Concrete scaffold
-⚙️ **../templates/config.schema.json** - Configuration options
-📡 **../templates/conversation-log-spec.md** - AI-to-AI transparency system
+### Templates & Guides (now in skills/)
+📐 **../skills/project-setup/templates/epistemic-stance.md** - Socratic self-examination questions
+🏗️ **../skills/gioia-methodology/templates/gioia-structure-guide.md** - How to build your framework
+📊 **../skills/gioia-methodology/templates/gioia-data-structure-template.json** - Concrete scaffold
+⚙️ **../skills/project-setup/templates/config.schema.json** - Configuration options
+📡 **../skills/coding-workflow/templates/conversation-log-spec.md** - AI-to-AI transparency system
 
 ### Project Summaries
 📈 **../PROJECT-SUMMARY.md** - What we built and why
@@ -44,10 +44,10 @@
 
 **Understand the philosophy:**
 → Start with `../README.md`
-→ Then `../templates/epistemic-stance.md`
+→ Then `../skills/project-setup/templates/epistemic-stance.md`
 
 **Learn the methodology:**
-→ Read `../templates/GIOIA-STRUCTURE-GUIDE.md`
+→ Read `../skills/gioia-methodology/templates/gioia-structure-guide.md`
 → Review commands in `../commands/`
 
 **See our process:**

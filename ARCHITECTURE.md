@@ -110,16 +110,46 @@ graph TB
 
 ## Component Inventory
 
+### Skills (11) - NEW!
+
+Skills are auto-discoverable capability packages. Claude loads them when relevant to the user's request.
+
+**Core Skills:**
+| Skill | Triggers On | Purpose |
+|-------|-------------|---------|
+| `project-setup` | "initialize", "setup", "new project" | Socratic onboarding + project creation |
+| `gioia-methodology` | "Gioia", "data structure", "themes" | Data structure building + validation |
+| `project-dashboard` | "status", "progress", "where am I" | Progress visualization |
+| `analysis-orchestration` | "cost", "model", "configure" | Model selection + cost estimation |
+| `coding-workflow` | "batch", "systematic coding" | Document coding management |
+
+**Composite MCP Skills (with graceful degradation):**
+| Skill | Tiers | Purpose |
+|-------|-------|---------|
+| `literature-sweep` | Exa+Jina → Jina → WebFetch | Academic literature search + fetch |
+| `interview-ingest` | MinerU → Markdownify → manual | Audio/PDF conversion |
+| `document-conversion` | MinerU vs Markdownify | Intelligent format conversion |
+
+**Mindset Skills (MCP wrappers):**
+| Skill | Invokes | Purpose |
+|-------|---------|---------|
+| `deep-reasoning` | Sequential Thinking MCP | Step-by-step analytical thinking |
+| `paradox-navigation` | Lotus Wisdom MCP | Navigate contradictions |
+| `coherence-check` | None (self-contained) | Philosophical assumption check |
+
+**Shared Infrastructure:**
+- `_shared/scripts/` - State I/O (read-config.js, update-progress.js, append-log.js, query-status.js)
+
 ### Commands (7)
-| Command | Purpose | Stage | Type |
-|---------|---------|-------|------|
-| `/qual-init` | Socratic onboarding | Entry | Setup |
-| `/qual-status` | Journey navigation | All | Meta |
-| `/qual-configure-analysis` | Technical orchestration | Stage 2 | Whisperer |
-| `/qual-reflect` | Synthesis dialogue | 2 & 3 | Reflection |
-| `/qual-think-through` | Deep reasoning | All | Epistemic |
-| `/qual-wisdom-check` | Paradox navigation | All | Epistemic |
-| `/qual-examine-assumptions` | Philosophy check | All | Epistemic |
+| Command | Purpose | Stage | Triggers Skill |
+|---------|---------|-------|----------------|
+| `/qual-init` | Socratic onboarding | Entry | `project-setup` |
+| `/qual-status` | Journey navigation | All | `project-dashboard` |
+| `/qual-configure-analysis` | Technical orchestration | Stage 2 | `analysis-orchestration` |
+| `/qual-reflect` | Synthesis dialogue | 2 & 3 | - |
+| `/qual-think-through` | Deep reasoning | All | `deep-reasoning` |
+| `/qual-wisdom-check` | Paradox navigation | All | `paradox-navigation` |
+| `/qual-examine-assumptions` | Philosophy check | All | `coherence-check` |
 
 ### Agents (4)
 | Agent | Stage | Function | Key Feature |
@@ -194,16 +224,30 @@ Theory Articulated
 ```
 interpretive-orchestration/
 │
-├── 📄 Entry & Core Docs (6)
+├── 📄 Entry & Core Docs
 │   └── [README, QUICK-START, CHANGELOG, CONTRIBUTING, DESIGN-DECISIONS, LICENSE]
+│   └── [ARCHITECTURE, DEPENDENCIES, INSTALL, TROUBLESHOOTING]
 │
 ├── 🎭 Active Components
 │   ├── agents/ (4) - Dialogue partners for each stage
-│   ├── commands/ (7 + READMEs) - Tools organized functionally
+│   ├── commands/ (7 + READMEs) - Simple triggers that invoke skills
 │   └── hooks/ (5 scripts + config) - Enforcement & prompting
 │
-├── 🏗️ Scaffolding
-│   └── templates/ (6) - Structures, guides, examples
+├── 🧩 Skills (NEW - 11 skills!)
+│   ├── project-setup/ - Socratic onboarding + project creation
+│   │   ├── SKILL.md, scripts/, templates/, examples/
+│   ├── gioia-methodology/ - Data structure building + validation
+│   │   ├── SKILL.md, scripts/, templates/, examples/
+│   ├── analysis-orchestration/ - Model selection + cost estimation
+│   ├── coding-workflow/ - Document coding management
+│   ├── project-dashboard/ - Progress visualization
+│   ├── literature-sweep/ - Academic literature (3-tier graceful degradation)
+│   ├── interview-ingest/ - Audio/PDF conversion (3-tier)
+│   ├── document-conversion/ - Format conversion (MinerU/Markdownify)
+│   ├── deep-reasoning/ - Sequential Thinking wrapper
+│   ├── paradox-navigation/ - Lotus Wisdom wrapper
+│   ├── coherence-check/ - Philosophical alignment
+│   └── _shared/ - State I/O scripts (read-config, update-progress, etc.)
 │
 ├── 📚 Meta-Research
 │   └── docs/ (3 + index) - Methods paper, journal, navigation
@@ -409,6 +453,84 @@ graph LR
 
 ---
 
+## Skills Architecture (NEW!)
+
+Skills are auto-discoverable capability packages that Claude loads when relevant.
+
+### Why Skills?
+
+| Before (Commands) | After (Skills) |
+|-------------------|----------------|
+| Complex multi-hundred line commands | Commands = simple triggers (~50 lines) |
+| Logic embedded in prompts | Logic in executable scripts |
+| No state management | Atomic state I/O with validation |
+| No graceful degradation | 3-tier degradation for optional MCPs |
+
+### Skill Structure
+
+```
+skills/<skill-name>/
+├── SKILL.md           # Discovery info + usage guide
+├── scripts/           # Executable JS scripts
+│   ├── operation1.js
+│   └── operation2.js
+├── templates/         # Bundled templates (optional)
+└── examples/          # Usage examples (optional)
+```
+
+### State I/O Pattern
+
+All skills use shared state scripts for reliable config management:
+
+```bash
+# Read current state
+node skills/_shared/scripts/read-config.js --project-path /path
+
+# Update progress
+node skills/_shared/scripts/update-progress.js \
+  --project-path /path \
+  --stage1-documents 12 \
+  --memos 5
+```
+
+Features:
+- Atomic writes (temp file + rename)
+- Schema validation against config.schema.json
+- Path guards (only touches .interpretive-orchestration/)
+
+### Graceful Degradation
+
+Skills that use optional MCPs implement tier systems:
+
+```
+Tier 1: Full capability (all MCPs available)
+Tier 2: Reduced capability (some MCPs)
+Tier 3: Basic capability (bundled MCPs only)
+```
+
+Example - `literature-sweep`:
+- Tier 1: Exa search + Jina fetch
+- Tier 2: User URLs + Jina fetch
+- Tier 3: User URLs + WebFetch
+
+### Hook Remediation
+
+Hooks now return structured JSON for better error handling:
+
+```json
+{
+  "code": "STAGE1_INCOMPLETE",
+  "severity": "blocking",
+  "reason": "Stage 1 manual coding not complete",
+  "next_commands": ["/qual-memo", "/qual-status"],
+  "next_skills": ["project-setup"],
+  "can_bypass": false,
+  "details": { "documents_coded": 5, "documents_required": 10 }
+}
+```
+
+---
+
 ## Enforcement & Prompting System
 
 ```
@@ -582,9 +704,9 @@ Epistemic Ambidexterity
 **Contribution:** Building as scholarship, philosopher-builder synthesis
 
 ### For Developers (Technical)
-**Architecture:** 7 commands, 4 agents, 5 hooks, 8 MCPs
-**Design:** Functional organization, dual-format config, enforcement through hooks
-**Quality:** All JSON validated, all hooks executable, all paths portable
+**Architecture:** 11 skills, 7 commands, 4 agents, 5 hooks, 8+ MCPs
+**Design:** Skills-first architecture, commands as triggers, graceful degradation for optional MCPs
+**Quality:** Atomic state writes, schema validation, structured hook remediation
 
 ### For Apprentices (Learning)
 **Craft:** Micro-details matter, organization teaches, invisible excellence
@@ -628,6 +750,6 @@ Epistemic Ambidexterity
 
 *Built by: Xule Lin, Kevin Corley & Claude 4.5, co-apprentices*
 *Frameworks: Cognitio Emergens (Lin) | Interpretive Orchestration (Lin & Corley)*
-*Date: Saturday, October 11, 2025*
+*Last updated: December 11, 2025 (Skills infrastructure added)*
 
-**The atelier's blueprint - preserved.** 🎨🙏
+**The atelier's blueprint - preserved and enhanced.** 🎨🙏

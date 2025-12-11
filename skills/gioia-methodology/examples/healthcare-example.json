@@ -1,0 +1,165 @@
+{
+  "title": "Example: Chronic Illness Self-Management",
+  "description": "Demonstrates a complete Gioia data structure from healthcare research on patient self-management",
+
+  "aggregate_dimensions": [
+    {
+      "id": "AD1",
+      "name": "Managing Chronic Uncertainty",
+      "definition": "Overarching construct capturing how patients navigate the ongoing ambiguity inherent in chronic illness management",
+      "theoretical_foundation": "Builds on uncertainty management theory (Mishel, 1988) and extends it to daily self-management contexts",
+
+      "second_order_themes": [
+        {
+          "id": "AD1_T1",
+          "name": "Adaptive Routine Building",
+          "definition": "Processes through which patients develop and modify self-care practices",
+          "researcher_interpretation": "Grouped these concepts because they all involve the iterative development of personalized management strategies that evolve over time",
+
+          "first_order_concepts": [
+            {
+              "id": "AD1_T1_C1",
+              "name": "Selective symptom tracking",
+              "definition": "Focusing monitoring efforts on meaningful indicators rather than comprehensive tracking",
+              "informant_terms": ["just noting the really bad days", "only tracking what matters"],
+              "example_quotes": [
+                {
+                  "document_id": "P003",
+                  "lines": "45-48",
+                  "quote": "I switched to just noting the really bad days because tracking everything was overwhelming. Now I can actually see patterns.",
+                  "context": "Discussing evolution of self-monitoring practices"
+                }
+              ],
+              "coding_note": "Distinct from comprehensive tracking; emphasizes strategic selection"
+            },
+            {
+              "id": "AD1_T1_C2",
+              "name": "Personalizing medical advice",
+              "definition": "Adapting professional recommendations to fit individual circumstances and preferences",
+              "informant_terms": ["what works for my body", "I do it my way", "modified the doctor's instructions"],
+              "example_quotes": [
+                {
+                  "document_id": "P007",
+                  "lines": "112-116",
+                  "quote": "The doctor said to take it with breakfast, but that doesn't work for me. I figured out that taking it at lunch works better for my schedule and my stomach.",
+                  "context": "Medication management discussion"
+                }
+              ]
+            },
+            {
+              "id": "AD1_T1_C3",
+              "name": "Flexible routine adjustment",
+              "definition": "Willingness to modify established routines when circumstances change",
+              "informant_terms": ["when it feels overwhelming, I change it", "I have to be flexible"],
+              "example_quotes": [
+                {
+                  "document_id": "P012",
+                  "lines": "78-82",
+                  "quote": "Some weeks I can do everything. Other weeks, I just focus on the absolute essentials. You have to be able to adjust.",
+                  "context": "Discussing routine variability"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "AD1_T2",
+          "name": "Navigating Healthcare Systems",
+          "definition": "Strategies for accessing and optimizing care within institutional structures",
+          "researcher_interpretation": "These concepts share a focus on patient agency in healthcare interactions, particularly overcoming systemic barriers",
+
+          "first_order_concepts": [
+            {
+              "id": "AD1_T2_C1",
+              "name": "Finding doctors who listen",
+              "definition": "Seeking providers who engage with patient perspectives and experiences",
+              "informant_terms": ["someone who actually listens", "a doctor who gets it"],
+              "example_quotes": [
+                {
+                  "document_id": "P002",
+                  "lines": "156-160",
+                  "quote": "I went through four doctors before I found one who actually listened to what I was experiencing instead of just looking at test results.",
+                  "context": "Healthcare provider selection"
+                }
+              ]
+            },
+            {
+              "id": "AD1_T2_C2",
+              "name": "Working around insurance barriers",
+              "definition": "Developing strategies to obtain needed care despite insurance limitations",
+              "informant_terms": ["fighting with insurance", "finding workarounds", "creative solutions"],
+              "example_quotes": [
+                {
+                  "document_id": "P009",
+                  "lines": "201-205",
+                  "quote": "The insurance wouldn't cover the medication, so my doctor and I worked together to find an alternative that would work and be covered.",
+                  "context": "Insurance navigation"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AD2",
+      "name": "Reconstructing Identity Through Illness",
+      "definition": "How patients integrate chronic illness into their sense of self while maintaining valued aspects of identity",
+      "theoretical_foundation": "Draws on identity theory and narrative approaches to illness (Charmaz, 1995)",
+
+      "second_order_themes": [
+        {
+          "id": "AD2_T1",
+          "name": "Redefining Normal",
+          "definition": "Processes of establishing new baselines and expectations for daily life",
+          "researcher_interpretation": "Grouped because all involve cognitive reframing of what constitutes acceptable or expected functioning",
+
+          "first_order_concepts": [
+            {
+              "id": "AD2_T1_C1",
+              "name": "Accepting the new baseline",
+              "definition": "Coming to terms with changed capabilities and expectations",
+              "informant_terms": ["this is my new normal", "I had to accept things would be different"],
+              "example_quotes": [
+                {
+                  "document_id": "P015",
+                  "lines": "89-93",
+                  "quote": "There was a point where I stopped comparing myself to how I was before. This is my life now, and I needed to figure out how to make it work.",
+                  "context": "Reflecting on adjustment process"
+                }
+              ]
+            },
+            {
+              "id": "AD2_T1_C2",
+              "name": "Celebrating small victories",
+              "definition": "Finding meaning and satisfaction in accomplishments that might previously have seemed mundane",
+              "informant_terms": ["counting the good days", "little wins matter"],
+              "example_quotes": [
+                {
+                  "document_id": "P011",
+                  "lines": "134-138",
+                  "quote": "I used to run marathons. Now a good day is when I can walk around the block without stopping. And you know what? I celebrate that walk.",
+                  "context": "Discussion of changed expectations"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+
+  "structure_metadata": {
+    "version": "Example 1.0",
+    "last_updated": "2025-01-15",
+    "total_dimensions": 2,
+    "total_themes": 3,
+    "total_concepts": 7,
+    "total_quotes": 7,
+    "notes": [
+      "This is a simplified example showing proper structure format",
+      "A real structure would have more concepts and quotes per theme",
+      "All quotes are fictional for demonstration purposes"
+    ]
+  }
+}

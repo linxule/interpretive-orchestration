@@ -25,6 +25,22 @@ function findProjectRoot(startPath) {
   return null;
 }
 
+// Output structured remediation JSON (machine-readable)
+function outputRemediation(code, severity, reason, nextCommands, nextSkills, canBypass, details) {
+  const remediation = {
+    code,
+    severity,
+    reason,
+    next_commands: nextCommands,
+    next_skills: nextSkills,
+    can_bypass: canBypass,
+    details
+  };
+
+  // Output JSON to stderr for machine parsing
+  console.error(JSON.stringify(remediation));
+}
+
 // Whitelist: Technical/file operations that don't imply ontological stance
 // These are common phrases where "find", "identify", "extract" etc. are
 // used in technical (not research-interpretive) contexts
@@ -126,6 +142,21 @@ function main() {
   const issues = checkLanguageCoherence(stance, recentActivity);
 
   if (issues.length > 0) {
+    // Output structured remediation for machine parsing
+    outputRemediation(
+      'COHERENCE_CHECK_NOTE',
+      'warning',  // This is a reflection prompt, not a blocker
+      'Language inconsistency detected with declared philosophical stance',
+      ['/qual-examine-assumptions', '/qual-reflect'],
+      ['coherence-check'],
+      true,  // Always bypassable - this is a reflection prompt
+      {
+        issues_found: issues.length,
+        stance: stance.vocabulary_mode || 'constructivist',
+        issues: issues.slice(0, 3)  // First 3 issues for brevity
+      }
+    );
+
     console.log('');
     console.log('💭 REFLECTION PROMPT: Philosophical Coherence');
     console.log('   (heuristic check - simple pattern matching, not definitive judgment)');

@@ -25,7 +25,7 @@ Every contribution should:
 Read these first:
 - `README.md` - Philosophy-first introduction
 - `docs/REFLEXIVE-JOURNAL.md` - Our learning process
-- `templates/epistemic-stance.md` - Philosophical foundations
+- `skills/project-setup/templates/epistemic-stance.md` - Philosophical foundations
 
 **Key commitments:**
 - Gioia/Constructivist interpretivist (default, configurable)

@@ -369,12 +369,12 @@ This plugin bundles powerful MCPs as epistemic tools - **no API keys required fo
 - **QUICK-START.md** - 5-minute quick start guide
 - **INSTALL.md** - Detailed installation for social science researchers
 - **TROUBLESHOOTING.md** - Common issues and solutions
-- **templates/epistemic-stance.md** - Philosophical foundation questions
+- **skills/project-setup/templates/epistemic-stance.md** - Philosophical foundation questions
 
 ### For Understanding Methodology
 - **DESIGN-PHILOSOPHY.md** - Why partnership over automation; sandwich approach explained
-- **templates/gioia-structure-guide.md** - Systematic interpretivist principles
-- **templates/epistemic-stance.md** - Philosophical foundation questions
+- **skills/gioia-methodology/templates/gioia-structure-guide.md** - Systematic interpretivist principles
+- **skills/project-setup/templates/epistemic-stance.md** - Philosophical foundation questions
 
 ### For Advanced Use
 - **CLAUDE.md** - Agent behavior and MCP integration guidance
@@ -530,10 +530,10 @@ interpretive-orchestration/
 │   ├── check-coherence.js       # Philosophical consistency prompts
 │   └── session-reflect.js       # End-of-session reflexivity
 │
-├── templates/                   # Starting points and schemas
-│   ├── epistemic-stance.md      # Philosophical foundation questions
-│   ├── gioia-structure-guide.md # Systematic interpretivist principles
-│   └── config.schema.json       # Validates project configuration
+├── skills/                      # Auto-discoverable capability packages
+│   ├── project-setup/           # Socratic onboarding + templates
+│   ├── gioia-methodology/       # Data structure building + validation
+│   └── coding-workflow/         # Batch coding orchestration
 │
 └── tests/                       # Basic sanity checks
     └── *.js                     # Hook integrity, schema validation

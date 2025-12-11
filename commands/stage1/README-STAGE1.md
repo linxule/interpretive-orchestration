@@ -49,8 +49,8 @@ You might notice: **This folder has very few (or no) command files.**
 - Manual note-taking in `stage1-foundation/memos/`
 
 ### Philosophical Guidance
-- `templates/epistemic-stance.md` - Your declared philosophy
-- `templates/GIOIA-STRUCTURE-GUIDE.md` - How to build your framework
+- `skills/project-setup/templates/epistemic-stance.md` - Your declared philosophy
+- `skills/gioia-methodology/templates/gioia-structure-guide.md` - How to build your framework
 
 ---
 
@@ -87,7 +87,7 @@ You might notice: **This folder has very few (or no) command files.**
 ### 4. Build Initial Framework
 - Group 1st-order codes into 2nd-order themes
 - Develop preliminary aggregate dimensions
-- Use `templates/gioia-data-structure-template.json`
+- Use `skills/gioia-methodology/templates/gioia-data-structure-template.json`
 - Save to `stage1-foundation/initial-structure.json`
 
 ### 5. Check Readiness

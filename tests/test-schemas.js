@@ -40,8 +40,8 @@ function testJsonFilesParse() {
     '.mcp.json',
     '.claude-plugin/plugin.json',
     '.claude-plugin/marketplace.json',
-    'templates/config.schema.json',
-    'templates/example-config.json',
+    'skills/project-setup/templates/config.schema.json',
+    'skills/project-setup/templates/example-config.json',
     'examples/tutorial-quickstart/sample-config.json'
   ];
 
@@ -61,7 +61,7 @@ function testJsonFilesParse() {
 // Test: config.schema.json has required fields
 function testConfigSchemaStructure() {
   test('config.schema.json: Has required properties', () => {
-    const schemaPath = path.join(PROJECT_ROOT, 'templates', 'config.schema.json');
+    const schemaPath = path.join(PROJECT_ROOT, 'skills', 'project-setup', 'templates', 'config.schema.json');
     const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
 
     assert(schema.required, 'Schema should have required array');
@@ -71,7 +71,7 @@ function testConfigSchemaStructure() {
   });
 
   test('config.schema.json: Has philosophical_stance properties', () => {
-    const schemaPath = path.join(PROJECT_ROOT, 'templates', 'config.schema.json');
+    const schemaPath = path.join(PROJECT_ROOT, 'skills', 'project-setup', 'templates', 'config.schema.json');
     const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
 
     const stance = schema.properties.philosophical_stance;
@@ -82,7 +82,7 @@ function testConfigSchemaStructure() {
   });
 
   test('config.schema.json: Has coding_progress', () => {
-    const schemaPath = path.join(PROJECT_ROOT, 'templates', 'config.schema.json');
+    const schemaPath = path.join(PROJECT_ROOT, 'skills', 'project-setup', 'templates', 'config.schema.json');
     const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
 
     assert(schema.properties.coding_progress, 'Should have coding_progress');
@@ -90,7 +90,7 @@ function testConfigSchemaStructure() {
   });
 
   test('config.schema.json: Has interpretive_authority = human', () => {
-    const schemaPath = path.join(PROJECT_ROOT, 'templates', 'config.schema.json');
+    const schemaPath = path.join(PROJECT_ROOT, 'skills', 'project-setup', 'templates', 'config.schema.json');
     const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
 
     const authority = schema.properties.philosophical_stance.properties.interpretive_authority;
@@ -134,7 +134,7 @@ function testPluginJsonStructure() {
 // Test: example-config matches schema structure
 function testExampleConfigMatchesSchema() {
   test('example-config.json: Has all required fields', () => {
-    const configPath = path.join(PROJECT_ROOT, 'templates', 'example-config.json');
+    const configPath = path.join(PROJECT_ROOT, 'skills', 'project-setup', 'templates', 'example-config.json');
     const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 
     assert(config.project_info, 'Should have project_info');
@@ -143,7 +143,7 @@ function testExampleConfigMatchesSchema() {
   });
 
   test('example-config.json: philosophical_stance complete', () => {
-    const configPath = path.join(PROJECT_ROOT, 'templates', 'example-config.json');
+    const configPath = path.join(PROJECT_ROOT, 'skills', 'project-setup', 'templates', 'example-config.json');
     const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 
     const stance = config.philosophical_stance;
