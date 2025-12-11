@@ -170,6 +170,8 @@ These tools are **bundled and work immediately** - no API keys needed:
 
 **Markdownify** is especially valuable - it can transcribe your interview recordings directly!
 
+**Full MCP documentation:** See [DEPENDENCIES.md](DEPENDENCIES.md) for complete capabilities and setup instructions.
+
 ---
 
 ## Optional: Enhanced MCP Servers
@@ -240,4 +242,4 @@ Remember: The friction is intentional. Slow down to think deeply.
 
 **Welcome to the atelier.**
 
-*Built by Xule Lin (Imperial College London), Kevin Corley (Arizona State University), and Claude 4.5 (Anthropic)*
+*Built by Xule Lin and Kevin Corley (Imperial College London), with Claude Opus 4.5 (Anthropic) as co-apprentice, reviewed by Codex (OpenAI) and Gemini (Google)*

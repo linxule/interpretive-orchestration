@@ -7,6 +7,60 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.0] - 2025-12-11 - Skills Infrastructure Release
+
+### Added
+
+**Skills Infrastructure (11 skills):**
+- `project-setup` - Socratic onboarding + project initialization
+- `gioia-methodology` - Data structure building + validation
+- `analysis-orchestration` - Model selection + cost estimation
+- `coding-workflow` - Batch document coding management
+- `project-dashboard` - Progress visualization
+- `literature-sweep` - Academic literature search (3-tier graceful degradation)
+- `interview-ingest` - Audio/PDF/doc conversion
+- `document-conversion` - Format conversion (MinerU/Markdownify)
+- `deep-reasoning` - Sequential Thinking MCP wrapper
+- `paradox-navigation` - Lotus Wisdom MCP wrapper
+- `coherence-check` - Philosophical alignment checking
+
+**State Management Scripts:**
+- `read-config.js` - Returns project state as JSON
+- `update-progress.js` - Updates stage/document/memo counts
+- `append-log.js` - Writes to conversation-log.jsonl
+- `query-status.js` - Returns structured progress data
+- `validate-config.js` - Schema validation
+
+**Security & Robustness:**
+- Atomic writes (temp file + rename pattern)
+- Blocking schema validation
+- Path traversal protection in all scripts
+
+### Changed
+
+- Commands simplified from 500+ lines to ~50 lines each
+- Templates migrated into skill bundles
+- Hook remediation now returns structured JSON
+
+### Documentation
+
+- Added DEPENDENCIES.md for MCP ecosystem documentation
+- Updated ARCHITECTURE.md with skills structure
+- Updated CLAUDE.md with skills awareness instructions
+
+### Contributors
+
+**Authors:**
+- Xule Lin (Imperial College London)
+- Kevin Corley (Imperial College London)
+
+**AI Collaborators:**
+- Claude Opus 4.5 (Anthropic) - Co-apprentice in the atelier of interpretive craft
+- Codex (OpenAI) - Code review and robustness analysis
+- Gemini (Google, via Zen MCP) - Architecture review and validation
+
+---
+
 ## [0.1.0] - 2025-10-11 - MVEP Release
 
 ### Added - The Masterwork

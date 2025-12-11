@@ -87,62 +87,14 @@ When working with this plugin, you are a **co-apprentice** in the craft of quali
 
 ## Using the Bundled MCP Servers
 
-### Sequential Thinking
-Dynamic, reflective problem-solving through structured thought sequences.
+| MCP | When to Invoke | Trigger Keywords |
+|-----|----------------|------------------|
+| **Sequential Thinking** | Step-by-step analysis, complex decisions | "plan", "work through", "break down" |
+| **Lotus Wisdom** | Contradictory patterns, integration needed | "tension", "both/and", "paradox" |
+| **Markdownify** | Convert documents/audio to markdown | "transcribe", "convert", "import" |
+| **MinerU** (optional) | Complex PDFs with tables/figures | "high-accuracy", "tables", "figures" |
 
-Invoke when the researcher needs to:
-- Plan their analytical approach step-by-step
-- Work through complex theoretical tensions with explicit reasoning
-- Build dimensional analysis with traceable logic
-- Construct final frameworks through structured thought chains
-- Break down complex coding decisions into manageable steps
-
-The tool creates dynamic thought sequences that can branch and revise as understanding deepens.
-
-### Lotus Wisdom
-Multi-faceted problem-solving using wisdom traditions, with five domains:
-- **Skillful Means**: Different approaches to truth - direct or gradual
-- **Non-Dual Recognition**: Integrating apparent opposites
-- **Meta-Cognitive**: The mind watching its own understanding
-- **Process Flow**: Natural arcs of inquiry
-- **Meditation**: Pauses to let insights emerge from stillness
-
-Invoke when:
-- Patterns seem contradictory
-- The researcher is stuck in either/or thinking
-- Integration feels impossible
-- Tensions need transcending, not resolving
-- Questions benefit from both direct and gradual approaches
-
-Beautiful visualizations help make the contemplative process visible.
-
-### Markdownify
-A powerful conversion tool supporting multiple formats:
-- **pdf-to-markdown**: Convert PDF files (articles, reports, documents)
-- **audio-to-markdown**: Transcribe audio files (great for interviews!)
-- **youtube-to-markdown**: Extract content from YouTube videos
-- **webpage-to-markdown**: Convert web pages and articles
-- **docx/xlsx/pptx-to-markdown**: Convert Office documents
-- **image-to-markdown**: Convert images with metadata extraction
-
-Especially valuable for researchers with audio-recorded interviews - eliminates the transcription bottleneck!
-
-### MinerU (Optional - requires MINERU_API_KEY)
-VLM-powered document parsing with 90%+ accuracy on complex PDFs.
-
-**When to use MinerU instead of Markdownify:**
-- PDFs with complex tables (merged cells, multi-column)
-- Documents with figures/charts that need extraction
-- Academic papers with formulas
-- When accuracy is critical
-
-**When Markdownify is sufficient:**
-- Simple text documents
-- Audio transcription (MinerU doesn't do audio)
-- Quick conversions where cost matters
-- No API key available
-
-See DEPENDENCIES.md for full MCP ecosystem documentation.
+**Full details:** See [DEPENDENCIES.md](DEPENDENCIES.md) for complete MCP capabilities, when to use each, and API key setup.
 
 ---
 
@@ -291,4 +243,4 @@ This plugin aims for transformation, not automation. Every interaction should de
 ---
 
 *Interpretive Orchestration: Epistemic Partnership System*
-*Built by Xule Lin (Imperial College London), Kevin Corley (Arizona State University), and Claude 4.5 (Anthropic)*
+*Built by Xule Lin and Kevin Corley (Imperial College London), with Claude Opus 4.5 (Anthropic), reviewed by Codex (OpenAI) and Gemini (Google)*
