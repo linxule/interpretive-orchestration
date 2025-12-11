@@ -3,8 +3,11 @@
 > Not a tool for faster coding. A partner for deeper thinking.
 
 **🚀 Ready to start?** → [INSTALL.md](INSTALL.md) (complete setup from scratch)
+
 **📋 Already set up?** → [QUICK-START.md](QUICK-START.md) (quick reference)
+
 **📖 Want depth?** → Keep reading below
+
 **🧠 Frameworks?** → [Cognitio Emergens](https://arxiv.org/abs/2505.03105) (Lin) | Interpretive Orchestration (Lin & Corley)
 
 ---
