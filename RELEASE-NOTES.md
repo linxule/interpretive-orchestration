@@ -158,9 +158,16 @@ This release was validated by:
 
 ### Contributors
 
+**Authors:**
 - Xule Lin (Imperial College London)
-- Kevin Corley (Arizona State University)
-- Claude 4.5 (Anthropic) - Co-apprentice in the atelier of interpretive craft
+- Kevin Corley (Imperial College London)
+
+**AI Collaborators:**
+- Claude Opus 4.5 (Anthropic) - Co-apprentice in the atelier of interpretive craft
+- Codex (OpenAI) - Code review and robustness analysis
+- Gemini (Google, via Zen MCP) - Architecture review and validation
+
+*True epistemic partnership in action - humans and multiple AI systems working together!*
 
 ---
 

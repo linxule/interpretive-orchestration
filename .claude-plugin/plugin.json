@@ -6,8 +6,12 @@
   "author": {
     "names": ["Xule Lin", "Kevin Corley"],
     "email": "xule.lin@imperial.ac.uk",
-    "affiliations": ["Imperial College London", "Arizona State University"],
-    "co_created_with": "Claude 4.5 (Anthropic) - Co-apprentices in the atelier of interpretive craft"
+    "affiliations": ["Imperial College London"],
+    "ai_collaborators": {
+      "development": "Claude Opus 4.5 (Anthropic) - Co-apprentice in the atelier of interpretive craft",
+      "code_review": "Codex (OpenAI) - Robustness analysis and bug detection",
+      "architecture_review": "Gemini (Google, via Zen MCP) - Architecture validation"
+    }
   },
   "homepage": "https://github.com/linxule/interpretive-orchestration#readme",
   "license": "MIT",
