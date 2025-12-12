@@ -41,48 +41,36 @@ cd ~\my-qualitative-research
 
 ## Step 1: Install Claude Code
 
-### macOS
+### macOS / Linux
 
 Open Terminal and run:
 ```bash
-# Install via Homebrew (recommended)
-brew install anthropic/tap/claude-code
-
-# Or install via npm if you prefer
-npm install -g @anthropic-ai/claude-code
+curl -fsSL https://claude.ai/install.sh | bash
 ```
+
+Then restart your terminal or run `source ~/.zshrc` (Mac) / `source ~/.bashrc` (Linux).
 
 ### Windows
 
-Open PowerShell as Administrator and run:
+Open PowerShell and run:
 ```powershell
-# Install via npm (requires Node.js - see Step 2 if you don't have it)
-npm install -g @anthropic-ai/claude-code
-
-# Or download the installer from:
-# https://claude.com/download
+irm https://claude.ai/install.ps1 | iex
 ```
 
-### Linux
+Then restart your terminal.
 
-```bash
-# Install via npm
-npm install -g @anthropic-ai/claude-code
-
-# Or via curl
-curl -fsSL https://claude.com/install.sh | bash
-```
-
-**Verify installation:**
+### Verify installation
 ```bash
 claude --version
 ```
 
+See [official docs](https://code.claude.com/docs/en/setup) for alternative installation methods.
+
 ---
 
-## Step 2: Install Node.js (if needed)
+## Step 2: Install Node.js (required for plugin features)
 
-Node.js powers the plugin's methodology enforcement hooks.
+Node.js powers the plugin's methodology enforcement hooks and analysis scripts. Claude Code itself doesn't require Node.js, but this plugin does.
 
 ### Check if you already have it:
 ```bash
@@ -92,31 +80,14 @@ node --version
 
 ### If you need to install Node.js:
 
-**Option A: Let Claude Code help you!**
-```bash
-cd ~/my-qualitative-research
-claude
-```
-Then ask: *"Help me install Node.js 18 or higher on my system"*
+**All platforms:** Download from [nodejs.org](https://nodejs.org/)
+1. Click the big green **LTS** button
+2. Run the downloaded installer
+3. Follow the prompts (click "Next" through)
+4. **Restart your terminal** after installing
+5. Verify with `node --version`
 
-Claude Code will guide you through the installation step by step.
-
-**Option B: Manual installation**
-
-#### macOS
-```bash
-brew install node@20
-```
-
-#### Windows
-Download from: https://nodejs.org/en/download/
-Choose the "LTS" (Long Term Support) version.
-
-#### Linux (Ubuntu/Debian)
-```bash
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt-get install -y nodejs
-```
+**Or ask Claude Code:** Run `claude` and ask *"Help me install Node.js 18 or higher"*
 
 ---
 
