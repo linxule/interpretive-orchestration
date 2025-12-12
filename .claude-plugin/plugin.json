@@ -92,6 +92,7 @@
       "markdownify"
     ],
     "mcps_optional": [
+      "mineru-mcp",
       "zen-mcp-server",
       "jina-ai-mcp-server",
       "exa",

@@ -54,7 +54,7 @@
 |-------|-------------|
 | `@stage1-listener` | Stage 1 - thinking partner for manual coding |
 | `@dialogical-coder` | Stage 2 - 4-stage reflexive coding |
-| `@research-configurator` | Stage 2 - technical setup without jargon |
+| `@research-configurator` | Stage 2 - "The Whisperer" (12 capabilities: model selection, cost estimation, batch strategy, API setup - all without coding!) |
 | `@scholarly-companion` | Stage 3 - theoretical dialogue |
 
 ---

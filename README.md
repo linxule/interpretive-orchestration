@@ -179,6 +179,36 @@ Skills are auto-discoverable capability packages that Claude loads when relevant
 
 ---
 
+## 🤖 Agents
+
+| Agent | Stage | Role |
+|-------|-------|------|
+| `@stage1-listener` | 1 | Thinking partner - asks questions, never suggests codes |
+| `@dialogical-coder` | 2 | 4-stage visible reasoning for reflexive coding |
+| `@research-configurator` | 2 | "The Whisperer" - technical setup without jargon |
+| `@scholarly-companion` | 3 | Asks tradition's questions about theoretical significance |
+
+### @research-configurator: The Whisperer
+
+This agent bridges research goals and technical implementation for non-coding researchers. **12 capabilities:**
+
+1. **Analysis Strategy Design** - Sampling, checkpoints, framework maturity
+2. **Model Selection** - Opus vs Sonnet vs Gemini based on YOUR needs
+3. **Thinking Budget Configuration** - How deeply AI reasons (cost/quality trade-off)
+4. **Batch Processing Strategy** - Sequential vs batch vs parallel
+5. **Cost Estimation** - Transparent per-item and total costs
+6. **API Setup** - Guided step-by-step (no coding required)
+7. **Quality Assessment** - Translates metrics to research signals
+8. **Human Review Orchestration** - When to pause, what to examine
+9. **Troubleshooting Translation** - Technical errors → methodological insights
+10. **Saturation Monitoring** - Tracks new concepts over time
+11. **Multi-Strategy Exploration** - Compare different analytical approaches
+12. **Framework Evolution** - Evidence-based refinement suggestions
+
+**Invoke:** `@research-configurator Help me set up my analysis`
+
+---
+
 ## 🔒 Methodology Hooks
 
 The plugin enforces the sandwich methodology through automated hooks:
@@ -210,6 +240,7 @@ If you're blocked, it's asking you to think. That's intentional epistemic fricti
 | [INSTALL.md](INSTALL.md) - Complete setup | [DESIGN-PHILOSOPHY.md](DESIGN-PHILOSOPHY.md) - Why partnership |
 | [QUICK-START.md](QUICK-START.md) - 5-min guide | [ARCHITECTURE.md](ARCHITECTURE.md) - Technical details |
 | [TROUBLESHOOTING.md](TROUBLESHOOTING.md) - Issues | [CLAUDE.md](CLAUDE.md) - Agent behavior |
+| [UPGRADE-GUIDE.md](UPGRADE-GUIDE.md) - v0.1→v0.2 | [DEPENDENCIES.md](DEPENDENCIES.md) - MCP ecosystem |
 
 ---
 
