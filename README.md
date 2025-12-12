@@ -123,6 +123,8 @@ If something feels "heavy" - that's intentional epistemic friction preventing th
 
 **New to Claude Code?** See [INSTALL.md](INSTALL.md) for complete hand-holding setup instructions (Windows, macOS, Linux).
 
+**Want a pre-configured environment?** Use the [Starter Project](https://github.com/linxule/interpretive-orchestration-starter) - a ready-to-use VS Code workspace with beginner-friendly settings.
+
 **Already have Claude Code?**
 ```bash
 cd your-project-folder

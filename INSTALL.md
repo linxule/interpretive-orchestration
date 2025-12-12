@@ -4,6 +4,19 @@ This guide walks you through setup from scratch - no prior experience with comma
 
 ---
 
+## Quick Start Alternative
+
+**Want a pre-configured environment?** Use the [Starter Project](https://github.com/linxule/interpretive-orchestration-starter):
+
+1. Clone or download the starter repo
+2. Double-click `starter.code-workspace` to open in VS Code/Cursor
+3. Install recommended extensions when prompted
+4. Continue from Step 1 below
+
+The starter project gives you a clean, research-focused VS Code environment with beginner-friendly settings.
+
+---
+
 ## Step 0: Create Your Project Folder
 
 Before installing anything, create a dedicated folder for your research:
