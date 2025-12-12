@@ -198,6 +198,7 @@ Claude Code will guide you through:
 
 | MCP | What It Does | API Key Needed |
 |-----|--------------|----------------|
+| **MinerU** | High-accuracy PDF parsing (90%+) | MINERU_API_KEY |
 | **Zen** | Multi-model validation (Gemini, GPT-4) | GOOGLE_API_KEY or OPENAI_API_KEY |
 | **Exa** | Literature search | EXA_API_KEY |
 | **Jina** | Web article fetching | JINA_API_KEY |

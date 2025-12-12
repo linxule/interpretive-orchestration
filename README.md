@@ -146,6 +146,7 @@ This plugin bundles powerful MCPs as epistemic tools - **no API keys required fo
 - **Markdownify** - Convert PDFs, transcribe audio, extract from videos/web (`/qual-import-pdf`)
 
 ### Optional (Require API Keys)
+- **MinerU** - High-accuracy PDF parsing (90%+) for complex tables/figures - requires MINERU_API_KEY
 - **Zen MCP** - Multi-model validation (`/qual-get-perspectives`) - requires GOOGLE_API_KEY or OPENAI_API_KEY
 - **Jina** - Fetch articles (`/qual-fetch-article`) - requires JINA_API_KEY
 - **Exa** - Search literature (`/qual-search-literature`) - requires EXA_API_KEY
@@ -158,6 +159,35 @@ This plugin bundles powerful MCPs as epistemic tools - **no API keys required fo
 - Convert PDF articles and reports
 - Extract content from YouTube videos
 - Convert web pages and Office documents
+
+---
+
+## 🧩 Skills (v0.2.0)
+
+Skills are auto-discoverable capability packages that Claude loads when relevant to your request.
+
+| Skill | Triggers | Purpose |
+|-------|----------|---------|
+| `project-setup` | "initialize", "new project" | Socratic onboarding + config |
+| `gioia-methodology` | "data structure", "Gioia" | Data structure building |
+| `literature-sweep` | "literature", "Stream A" | Search + fetch + organize papers |
+| `interview-ingest` | "transcribe", "convert audio" | Audio/PDF conversion |
+| `deep-reasoning` | "think through", "plan" | Sequential Thinking integration |
+| `paradox-navigation` | "tension", "both/and" | Lotus Wisdom integration |
+
+**Full list:** See [CLAUDE.md](CLAUDE.md) for all 11 skills and their triggers.
+
+---
+
+## 🔒 Methodology Hooks
+
+The plugin enforces the sandwich methodology through automated hooks:
+
+- **PreStage2** - Blocks AI coding until Stage 1 foundation complete
+- **PostFiveDocuments** - Triggers interpretive pause every 5 documents
+- **EpistemicCoherence** - Checks philosophical consistency
+
+If you're blocked, it's asking you to think. That's intentional epistemic friction.
 
 ---
 

@@ -17,15 +17,33 @@
 
 ## Key Commands
 
+### Project Setup
 ```bash
 /qual-init                # Start: Socratic onboarding
 /qual-status              # Check: Where am I in the journey?
 /qual-check-setup         # Verify: Is everything configured?
 /qual-configure-analysis  # Setup: Model and batch configuration
-/qual-reflect             # Synthesize: End-of-session dialogue
+```
+
+### Stage 1 (Solo Practice)
+```bash
+/qual-memo                # Write: Analytical memo from coding
+```
+
+### Stage 2 (Collaboration)
+```bash
+/qual-parallel-streams       # Run: Theoretical + empirical streams
+/qual-code-deductive         # Code: Apply framework to documents
+/qual-characterize-patterns  # Analyze: Systematic variation
+/qual-synthesize             # Merge: Integrate streams
+```
+
+### Analysis & Reflection
+```bash
 /qual-think-through       # Deep: Structured reasoning (Sequential Thinking)
 /qual-wisdom-check        # Navigate: Paradox integration (Lotus Wisdom)
 /qual-examine-assumptions # Meta: Check philosophical coherence
+/qual-reflect             # Synthesize: End-of-session dialogue
 ```
 
 ---
@@ -41,11 +59,28 @@
 
 ---
 
-## Bundled Tools (No API Keys)
+## Skills (Auto-Discovered)
+
+Claude loads these when relevant to your request:
+
+| Say This | Skill Loads |
+|----------|-------------|
+| "initialize", "new project" | `project-setup` |
+| "data structure", "Gioia" | `gioia-methodology` |
+| "literature", "Stream A" | `literature-sweep` |
+| "transcribe", "convert" | `interview-ingest` |
+| "think through", "plan" | `deep-reasoning` |
+| "tension", "both/and" | `paradox-navigation` |
+
+---
+
+## Bundled MCPs (No API Keys)
 
 - **Sequential Thinking** - Structured reasoning chains
 - **Lotus Wisdom** - Navigate paradoxes, integrate tensions
 - **Markdownify** - Convert PDFs, transcribe audio, extract from videos
+
+**Optional (with API keys):** MinerU (90%+ PDF accuracy), Zen (multi-model), Exa (search), Jina (fetch), Zotero (bibliography). See [DEPENDENCIES.md](DEPENDENCIES.md).
 
 ---
 
