@@ -24,7 +24,7 @@ Every contribution should:
 
 Read these first:
 - `README.md` - Philosophy-first introduction
-- `docs/REFLEXIVE-JOURNAL.md` - Our learning process
+- [https://www.threadcounts.org/p/loom-xv-theorizing-by-building](https://www.threadcounts.org/p/loom-xv-theorizing-by-building-018) - Our learning process
 - `skills/project-setup/templates/epistemic-stance.md` - Philosophical foundations
 
 **Key commitments:**
