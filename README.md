@@ -127,7 +127,7 @@ If something feels "heavy" - that's intentional epistemic friction preventing th
 ```bash
 cd your-project-folder
 claude
-/plugin install interpretive-orchestration
+/plugin install linxule/interpretive-orchestration
 /qual-check-setup  # Verify installation
 /qual-init         # Begin Socratic onboarding
 ```

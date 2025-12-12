@@ -18,7 +18,7 @@ Common issues and solutions for the Interpretive Orchestration plugin.
 2. If not listed, reinstall:
    ```
    /plugin marketplace add linxule/interpretive-orchestration
-   /plugin install interpretive-orchestration
+   /plugin install linxule/interpretive-orchestration
    ```
 3. Restart Claude Code and try again
 

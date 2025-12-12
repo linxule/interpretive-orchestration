@@ -117,7 +117,7 @@ claude
 
 Then type:
 ```
-/plugin install interpretive-orchestration
+/plugin install linxule/interpretive-orchestration
 ```
 
 Claude Code will:

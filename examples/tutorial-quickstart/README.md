@@ -29,7 +29,7 @@ Before starting:
 
 ```
 /plugin marketplace add linxule/interpretive-orchestration
-/plugin install interpretive-orchestration
+/plugin install linxule/interpretive-orchestration
 ```
 
 Verify installation:
