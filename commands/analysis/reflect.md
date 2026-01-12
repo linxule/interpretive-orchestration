@@ -1,3 +1,7 @@
+---
+description: Synthesis dialogue and reflexive pause for theoretical integration
+---
+
 # /qual-reflect - Synthesis Dialogue & Reflexive Pause
 
 ## Purpose
@@ -15,7 +19,7 @@ Create space for reflexive thinking about your analytical journey. This isn't a 
 
 ---
 
-## 🧠 Philosophical Foundation
+## Philosophical Foundation
 
 ### This Is NOT:
 - A progress report ("I've coded X documents")
@@ -30,7 +34,7 @@ Create space for reflexive thinking about your analytical journey. This isn't a 
 
 ---
 
-## 📋 When to Use /qual-reflect
+## When to Use /qual-reflect
 
 ### Recommended Timing
 
@@ -212,7 +216,7 @@ Ready to transition? Or need more Stage 2 work?
 
 ---
 
-## 🌊 Integration with MCP Ecosystem
+## Integration with MCP Ecosystem
 
 /qual-reflect can invoke other epistemic tools:
 
@@ -242,14 +246,14 @@ During reflection: "How would different AIs see this synthesis?"
 
 ---
 
-## 💡 Example Reflection Dialogue
+## Example Reflection Dialogue
 
 ```
 User: /qual-reflect
 
 Plugin: Let's pause and reflect together. You've been coding for 2 weeks.
 
-        📊 Your Journey So Far:
+        Your Journey So Far:
         - Documents coded: 45
         - Concepts in framework: 28
         - Memos written: 12
@@ -323,7 +327,7 @@ Plugin: Wonderful! Before you go - one meta-question:
         epistemically productive]
 ```
 
-**This is epistemic partnership in action!** 🤝
+**This is epistemic partnership in action!**
 
 ---
 
@@ -409,4 +413,4 @@ This reflection structure works for:
 - Consumer: Theorizing decision-making patterns
 - **Any qualitative inquiry!**
 
-**The PROCESS of reflection transfers. The CONTENT is yours.** 🌟
+**The PROCESS of reflection transfers. The CONTENT is yours.**

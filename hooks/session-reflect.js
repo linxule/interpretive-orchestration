@@ -128,7 +128,7 @@ function main() {
   console.log('   Or: Jot notes in .interpretive-orchestration/reflexivity-journal.md');
   console.log('');
   console.log('   📝 Why this matters:');
-  console.log('   Reflexivity isn't overhead - it's how you develop');
+  console.log("   Reflexivity isn't overhead - it's how you develop");
   console.log('   theoretical sensitivity and epistemic awareness.');
   console.log('');
   console.log('   Constructivist principle: Your position shapes interpretation.');

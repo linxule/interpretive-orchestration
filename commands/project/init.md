@@ -1,3 +1,7 @@
+---
+description: Initialize a qualitative research project with Socratic philosophical onboarding
+---
+
 # /qual-init - Initialize Qualitative Research Project
 
 Start a new qualitative research project with **epistemic partnership** at its core.

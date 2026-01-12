@@ -1,3 +1,7 @@
+---
+description: Navigate paradoxes and integrate contradictions using Lotus Wisdom contemplative reasoning
+---
+
 # /qual-wisdom-check - Navigate Paradoxes & Transcend Contradictions
 
 ## Purpose
@@ -226,12 +230,12 @@ These seem opposite but both appear essential. Help me see this differently.
 AND strategic (performing role). Paradox or integration?
 ```
 
-**The wisdom navigation process works for any domain's inherent complexities.** 🌊
+**The wisdom navigation process works for any domain's inherent complexities.**
 
 ---
 
 *Carefully smooths this piece, checking the drape*
 
-The wisdom navigator - for when contradictions hide deeper truths. ☯️
+The wisdom navigator - for when contradictions hide deeper truths.
 
-**Next: The assumption examiner...** 🔍
+**Next: The assumption examiner...**

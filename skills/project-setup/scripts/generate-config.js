@@ -12,7 +12,12 @@
  *     --ontology interpretivist \
  *     --epistemology systematic_interpretation \
  *     --tradition gioia_corley \
- *     --ai-relationship epistemic_partner
+ *     --ai-relationship epistemic_partner \
+ *     --research-design '{"study_type":"comparative","cases":[...]}'
+ *
+ * Research Design Options:
+ *   --study-type          single_case|comparative|longitudinal|comparative_longitudinal
+ *   --research-design     Full JSON object for complex designs
  */
 
 const fs = require('fs');
@@ -57,11 +62,70 @@ function getVocabulary(ontology, epistemology) {
   }
 }
 
+/**
+ * Generate research_design section from arguments
+ * Handles both simple --study-type and complex --research-design JSON
+ */
+function generateResearchDesign(args) {
+  // If full research-design JSON provided, parse and use it
+  if (args['research-design']) {
+    try {
+      return JSON.parse(args['research-design']);
+    } catch (e) {
+      console.error(`Warning: Invalid JSON in --research-design, using defaults`);
+    }
+  }
+
+  // Build from individual arguments
+  const studyType = args['study-type'] || 'single_case';
+
+  const design = {
+    study_type: studyType,
+    cases: [],
+    waves: [],
+    streams: {
+      theoretical: {
+        folder_path: 'literature',
+        sources: []
+      },
+      empirical: {
+        folder_path: 'data',
+        sources: []
+      }
+    },
+    data_sources: [],
+    isolation_config: {
+      case_isolation: {
+        enabled: studyType.includes('comparative'),
+        relaxes_at: 'phase3_pattern_characterization',
+        friction_level: 'challenge'
+      },
+      wave_isolation: {
+        enabled: studyType.includes('longitudinal'),
+        relaxes_at: 'cross_wave_analysis',
+        friction_level: 'challenge'
+      },
+      stream_separation: {
+        enabled: true,
+        relaxes_at: 'phase2_synthesis',
+        friction_level: 'nudge'
+      },
+      custom_isolations: []
+    },
+    rule_overrides: []
+  };
+
+  return design;
+}
+
 function generateConfig(args) {
   const vocab = getVocabulary(args.ontology, args.epistemology);
   const today = new Date().toISOString().split('T')[0];
+  const researchDesign = generateResearchDesign(args);
 
   const config = {
+    research_design: researchDesign,
+
     project_info: {
       name: args.name || 'Qualitative Research Project',
       research_question: args['research-question'] || '',
@@ -253,6 +317,27 @@ if (existingConfig) {
 
   // Restore preserved fields
   Object.assign(finalConfig, preservedFields);
+
+  // Handle research_design - preserve if exists unless explicitly updating
+  if (existingConfig.research_design) {
+    if (args['research-design'] || args['study-type']) {
+      // User is explicitly updating research design - merge carefully
+      finalConfig.research_design = {
+        ...existingConfig.research_design,
+        ...newConfig.research_design,
+        // Preserve rule_overrides (audit trail)
+        rule_overrides: existingConfig.research_design.rule_overrides || [],
+        // Merge isolation_config carefully
+        isolation_config: {
+          ...existingConfig.research_design.isolation_config,
+          ...newConfig.research_design.isolation_config
+        }
+      };
+    } else {
+      // No explicit update - preserve existing research_design entirely
+      finalConfig.research_design = existingConfig.research_design;
+    }
+  }
 
   // Merge project_info (allow updates but keep created_date)
   finalConfig.project_info = {

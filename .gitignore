@@ -57,8 +57,7 @@ WORKSHOP-NOTES.md
 INTERNAL-*.md
 
 # Internal meta-research documentation (for methods paper, not plugin users)
-docs/REFLEXIVE-JOURNAL.md
-docs/METHODS-PAPER-OUTLINE.md
+docs/local/
 
 # User research data (never commit actual research data!)
 # These patterns protect sensitive research materials from accidental commits

@@ -1,3 +1,8 @@
+---
+name: project-setup
+description: "This skill should be used when users want to initialize a new qualitative research project, mentions 'setup', 'initialize', 'new project', 'getting started', or asks about establishing philosophical foundations and epistemic stance. Triggers on phrases like 'start my research project', 'create a new study', 'configure my stance'."
+---
+
 # project-setup
 
 Initialize qualitative research projects with epistemic partnership at the core. This skill guides researchers through philosophical foundation establishment via Socratic dialogue, then creates the project infrastructure.

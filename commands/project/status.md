@@ -1,3 +1,7 @@
+---
+description: Show analytical journey dashboard and progress through sandwich methodology stages
+---
+
 # /qual-status - Your Analytical Journey Dashboard
 
 Show where you are in the sandwich methodology and what comes next.

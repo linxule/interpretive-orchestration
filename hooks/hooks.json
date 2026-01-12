@@ -78,6 +78,28 @@
         "rationale": "Confirmability through transparent documentation. Every analytical decision traced and justified.",
         "prevents": "Black-box synthesis where decisions are opaque"
       }
+    },
+    {
+      "name": "PostPhaseTransition",
+      "event": "PostToolUse",
+      "description": "Updates methodological rules when analytical phase changes. Rules automatically relax at their designated phase.",
+      "condition": {
+        "tool_names": [
+          "/qual-advance-stage",
+          "/qual-complete-stage1",
+          "/qual-parallel-streams",
+          "/qual-synthesize",
+          "/qual-characterize-patterns",
+          "@dialogical-coder"
+        ]
+      },
+      "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/post-phase-transition.js",
+      "timeout": 10000,
+      "blocking": false,
+      "philosophy": {
+        "rationale": "Methodological rules should adapt to analytical phase. What's forbidden during open coding becomes appropriate at synthesis. Rules are a conscience, not a cage.",
+        "prevents": "Rules remaining inappropriately restrictive after legitimate phase progression"
+      }
     }
   ],
   "hook_philosophy": {

@@ -1,3 +1,7 @@
+---
+description: Configure AI model selection, batch processing, and analysis parameters for Stage 2
+---
+
 # /qual-configure-analysis - Technical Decision Support
 
 Get help choosing AI models, thinking budgets, and processing strategies for YOUR research - without needing programming knowledge.

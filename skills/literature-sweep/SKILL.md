@@ -1,3 +1,8 @@
+---
+name: literature-sweep
+description: "This skill should be used when users need to gather foundational literature, mentions 'literature review', 'theoretical patterns', 'Stream A', wants to search for academic papers, or is starting Stage 2 Phase 1 theoretical stream."
+---
+
 # literature-sweep
 
 Search, fetch, and organize academic literature for theoretical pattern extraction (Stage 2 Phase 1, Stream A). Implements graceful degradation based on available MCP servers.

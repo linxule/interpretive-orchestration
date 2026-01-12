@@ -126,6 +126,100 @@ We **strongly recommend** completing Stage 1 before using AI assistance. This is
 
 ---
 
+## 🏗️ Question 6: Your Research Design
+
+Beyond philosophical stance, the *structure* of your study shapes how we work together. Methodological rules will adapt based on your answers here.
+
+### 6a. How many cases or sites are you studying?
+
+**A) Single case / single site**
+- Deep dive into one organization, community, or phenomenon
+- Cross-case isolation rules won't apply
+- Simplest design structure
+
+**B) Multiple cases / comparative**
+- 2+ organizations, sites, or bounded cases
+- Each case deserves independent analysis before comparison
+- ⚠️ Cross-case contamination is a methodological risk
+
+**C) Nested / embedded design**
+- Multiple units within a broader case
+- Example: Teams within an organization
+- Partial isolation rules apply
+
+**Your Choice:** _____________
+
+**If B or C:** How many cases/sites? _____________
+
+---
+
+### 6b. Is this a longitudinal study?
+
+**A) Cross-sectional**
+- Single time point or retrospective
+- No temporal isolation needed
+
+**B) Longitudinal - multiple waves**
+- Data collected at different time points
+- Each wave should be analyzed before cross-wave comparison
+- ⚠️ Temporal contamination (projecting later insights onto earlier data) is a risk
+
+**Your Choice:** _____________
+
+**If B:** How many waves/time points? _____________
+
+---
+
+### 6c. How do you want to handle theory and data?
+
+**A) Theoretical stream separate from empirical (Parallel Streams)**
+- Develop theoretical framework in Stream A
+- Conduct empirical analysis in Stream B
+- Synthesize at designated integration point
+- Recommended for Gioia methodology
+
+**B) Integrated from the start**
+- Theoretical concepts inform coding as you go
+- No stream separation rules
+- More flexible but less structured
+
+**C) Not sure - help me understand the difference**
+
+**Your Choice:** _____________
+
+---
+
+### 📊 Your Research Design Summary
+
+Based on your answers:
+
+| Aspect | Your Design | Isolation Rules |
+|--------|-------------|-----------------|
+| Cases | [Single / Comparative] | [None / Case isolation during open coding] |
+| Time | [Cross-sectional / Longitudinal] | [None / Wave isolation] |
+| Streams | [Parallel / Integrated] | [None / Stream separation until synthesis] |
+
+**Complex Study Detected?**
+
+If you answered B or C to multiple questions above, you have a complex research design. Consider using:
+
+```
+/qual-design
+```
+
+This command provides deep configuration for:
+- Named cases with folder structure
+- Defined waves with collection periods
+- Custom isolation rules and friction levels
+- Advanced methodological constraints
+
+**Would you like to:**
+- [ ] Proceed with defaults based on above answers
+- [ ] Run `/qual-design` for detailed configuration
+- [ ] Learn more about methodological rules
+
+---
+
 ## 📊 Your Philosophical Profile
 
 Based on your responses, your stance appears to be:

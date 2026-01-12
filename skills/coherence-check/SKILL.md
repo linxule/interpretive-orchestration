@@ -1,3 +1,8 @@
+---
+name: coherence-check
+description: "This skill should be used when users question their philosophical stance, their language contradicts their declared epistemology, they are moving between stages and want to verify coherence, mentions 'assumptions', 'examine', 'coherent', 'consistent', or something feels 'off' about their analytical approach."
+---
+
 # coherence-check
 
 Examine philosophical assumptions and check for methodological coherence. Ensures alignment between ontology, epistemology, and analytical practice.

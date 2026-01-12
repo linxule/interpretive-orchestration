@@ -340,3 +340,84 @@ else tier = 3;
 
 ### No MCPs Available
 The plugin works without any optional MCPs. Bundled MCPs start automatically.
+
+---
+
+## Advanced: Local MCP Setup
+
+For faster startup and full source control, you can run MCP servers locally instead of via npx.
+
+### Prerequisites
+
+```bash
+# Install bun (Node.js package manager)
+curl -fsSL https://bun.sh/install | bash
+
+# Install uv (Python package manager) - optional, for Python servers
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+### Clone and Build Local Servers
+
+Choose a directory for your MCP servers (examples):
+- macOS/Linux: `~/mcp-servers` or `~/.local/share/mcp`
+- Windows: `%USERPROFILE%\mcp-servers`
+
+```bash
+# Create MCP directory (use your preferred location)
+export MCP_DIR="$HOME/mcp-servers"  # Customize this path
+mkdir -p "$MCP_DIR" && cd "$MCP_DIR"
+
+# Clone and build Sequential Thinking (official Anthropic)
+# Note: Use npx for this one - it's lightweight
+
+# Clone and build Lotus Wisdom
+git clone https://github.com/XiYuan68/lotus-wisdom-mcp.git
+cd lotus-wisdom-mcp && bun install && bun run build && cd ..
+
+# Clone and build Markdownify
+git clone https://github.com/zcaceres/markdownify-mcp.git
+cd markdownify-mcp && bun install && bun run build && cd ..
+```
+
+### Configure Local Servers
+
+Edit `~/.claude.json` (global) or project `.mcp.json`.
+
+**Replace `<MCP_DIR>` with your actual path:**
+
+```json
+{
+  "mcpServers": {
+    "mcp-sequentialthinking-tools": {
+      "command": "bunx",
+      "args": ["@modelcontextprotocol/server-sequential-thinking"]
+    },
+    "lotus-wisdom": {
+      "command": "bun",
+      "args": ["<MCP_DIR>/lotus-wisdom-mcp/dist/index.js"]
+    },
+    "markdownify": {
+      "command": "bun",
+      "args": ["<MCP_DIR>/markdownify-mcp/dist/index.js"]
+    }
+  }
+}
+```
+
+**Example paths by platform:**
+- macOS: `/Users/jane/mcp-servers/lotus-wisdom-mcp/dist/index.js`
+- Linux: `/home/jane/mcp-servers/lotus-wisdom-mcp/dist/index.js`
+- Windows: `C:\\Users\\jane\\mcp-servers\\lotus-wisdom-mcp\\dist\\index.js`
+
+### Local vs Remote Comparison
+
+| Aspect | npx/bunx (Remote) | Local Build |
+|--------|-------------------|-------------|
+| **Setup** | Zero (automatic) | Clone + build required |
+| **Startup** | Downloads on first run | Instant |
+| **Updates** | Automatic (latest) | Manual (git pull + rebuild) |
+| **Customization** | None | Full source control |
+| **Portability** | Works anywhere | Machine-specific paths |
+
+**Recommendation:** Use npx/bunx (default) unless you need customization or faster startup.

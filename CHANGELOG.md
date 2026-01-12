@@ -7,6 +7,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.1] - 2026-01-12 - Agent Quality & Stage Commands
+
+### Added
+
+**New Commands (4):**
+- `/qual-stage1-guide` - Comprehensive guidance for Stage 1 manual coding
+- `/qual-complete-stage1` - Validate and complete Stage 1 with detailed checks
+- `/qual-advance-stage` - Transition between stages with validation
+- `/qual-design` - Configure research design (cases, waves, isolation rules)
+
+**PostPhaseTransition Hook:**
+- Triggers when advancing between stages
+- Updates methodological rules automatically
+- Logs transitions to reflexivity journal
+
+### Changed
+
+**Agent Quality Improvements:**
+- All 4 agents now under 3,000 word limit (dialogical-coder reduced from 3,235 to ~2,700)
+- Removed duplicate "Agent System Prompt" sections from 3 agents
+- Added trigger phrases to all agent descriptions ("Use when: ...")
+- Added `tools:` frontmatter to agents using MCPs:
+  - `@dialogical-coder` declares `mcp__mcp-sequentialthinking-tools__sequentialthinking`
+  - `@scholarly-companion` declares `mcp__lotus-wisdom__lotuswisdom`
+
+**Command Quality:**
+- Removed ~22 emojis from 7 command files for professional consistency
+- Added detailed implementation sections with specific config field paths
+- Fixed script references (`write-config.js` → `update-progress.js`)
+
+**Plugin Manifest:**
+- Updated `plugin.json` to list all new commands
+- Added `PostPhaseTransition` to hooks array
+
+### Fixed
+
+- Config field paths now match actual schema (`stage2_progress.phase1_parallel_streams`, etc.)
+- All commands reference existing scripts only
+
+### Contributors
+
+**AI Collaborators (this release):**
+- Claude Opus 4.5 (Anthropic) - Implementation and documentation
+- plugin-dev agents (plugin-validator, skill-reviewer) - Quality review
+
+---
+
 ## [0.2.0] - 2025-12-11 - Skills Infrastructure Release
 
 ### Added

@@ -13,11 +13,15 @@ commands/
 ```
 
 ### project/ - Meta-Commands
-**Function:** Project setup and navigation (transcend stages)
+**Function:** Project setup, navigation, and stage transitions (transcend stages)
 - `init.md` - Initialize project with Socratic onboarding
 - `status.md` - Navigate atelier journey, see progress
+- `check-setup.md` - Verify plugin installation and configuration
+- `configure-analysis.md` - Model selection, cost estimation, batch processing
+- `design.md` - Configure research design (cases, waves, isolation rules)
+- `advance-stage.md` - Transition between stages with validation
 
-**When used:** Beginning + throughout for orientation
+**When used:** Beginning + throughout for orientation and stage management
 
 ### analysis/ - Epistemic Tools
 **Function:** Thinking and synthesis tools (stage-agnostic)
@@ -29,10 +33,13 @@ commands/
 **When used:** Stage 1 (planning), Stage 2 (challenges), Stage 3 (theorization)
 
 ### stage1/ - Solo Practice Guidance
-**Function:** Explain why minimal AI in Stage 1
+**Function:** Stage 1 philosophy and transition commands
 - `README-STAGE1.md` - Philosophy of solo practice
+- `memo.md` - Capture analytical memos during manual coding
+- `stage1-guide.md` - Comprehensive guidance for Stage 1 manual coding
+- `complete-stage1.md` - Validate foundation and transition to Stage 2
 
-**When used:** Understanding Stage 1 approach
+**When used:** Understanding Stage 1, capturing insights, completing Stage 1
 
 ### stage2/ - Collaboration Organization
 **Function:** Explain where Stage 2 tools live (they're distributed!)
@@ -80,4 +87,4 @@ commands/
 - Discoverability over perfect taxonomy
 - Pragmatic access over theoretical purity
 
-**A small example of craft thinking in infrastructure design.** ✨
+**A small example of craft thinking in infrastructure design.**

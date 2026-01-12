@@ -1,3 +1,8 @@
+---
+name: paradox-navigation
+description: "This skill should be used when patterns seem contradictory but both feel true, user is stuck in either/or thinking, theoretical and empirical streams seem irreconcilable, or user mentions 'paradox', 'tension', 'contradiction', 'both/and'. Helps integrate opposites at a higher level."
+---
+
 # paradox-navigation
 
 Navigate apparent contradictions and integrate tensions using contemplative reasoning. Invokes Lotus Wisdom MCP with qualitative research framing.

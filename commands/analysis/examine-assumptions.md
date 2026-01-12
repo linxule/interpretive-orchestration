@@ -1,3 +1,7 @@
+---
+description: Surface epistemic foundations through Socratic questioning and coherence checking
+---
+
 # /qual-examine-assumptions - Surface Your Epistemic Foundations
 
 ## Purpose
@@ -345,12 +349,12 @@ treat "effective learning strategies" as discoverable patterns?
 as if it's a thing that exists. What ontology does this assume?
 ```
 
-**Philosophical excavation works across all domains.** 🔍
+**Philosophical excavation works across all domains.**
 
 ---
 
 *Inspects this seam carefully - these are the invisible threads that hold everything together*
 
-The assumption examiner - for when you need to see what you're standing on. 🏛️
+The assumption examiner - for when you need to see what you're standing on.
 
-**Next: The framework scaffold...** 📐
+**Next: The framework scaffold...**
