@@ -39,13 +39,17 @@ You might notice: **This folder has very few (or no) command files.**
   - Prompts memo-writing when insights emerge
   - **NEVER suggests codes or patterns** - that's your job
 
+### Stage 1 Guidance
+- `/qual-stage1-guide` - Comprehensive guidance for manual coding process
+- `/qual-complete-stage1` - Validate your foundation and transition to Stage 2
+
 ### Thinking Support (Not Coding Automation)
 - `/qual-think-through` - Plan your Stage 1 approach systematically
 - `/qual-examine-assumptions` - Surface your philosophical commitments
 - `/qual-status` - See your progress and stay oriented
 
 ### Documentation
-- `/qual-memo` - Capture analytical insights (coming in Phase 2)
+- `/qual-memo` - Capture analytical insights during manual coding
 - Manual note-taking in `stage1-foundation/memos/`
 
 ### Philosophical Guidance
@@ -119,7 +123,7 @@ Don't rush it. Don't shortcut it.
 
 ## When You're Done with Stage 1
 
-Run `/qual-status` to validate completion, then:
+Run `/qual-complete-stage1` to validate your foundation and transition to Stage 2:
 
 **Stage 2 unlocks:**
 - @dialogical-coder (4-stage reflexive coding)
@@ -133,7 +137,7 @@ Run `/qual-status` to validate completion, then:
 - Conceptual framework AI applies
 - Authority to guide AI's work
 
-**This is why Stage 1 matters.** 💡
+**This is why Stage 1 matters.**
 
 ---
 

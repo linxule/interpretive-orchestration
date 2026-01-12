@@ -5,9 +5,11 @@
  *
  * Usage:
  *   node create-structure.js --project-path /path/to/project --project-name "My Research"
+ *   node create-structure.js --project-path /path/to/project --research-design '{"cases":[...],"waves":[...]}'
  *
  * Options:
- *   --force    Overwrite existing files (DANGEROUS - will destroy user content)
+ *   --force           Overwrite existing files (DANGEROUS - will destroy user content)
+ *   --research-design JSON string with cases/waves configuration for folder creation
  */
 
 const fs = require('fs');
@@ -49,7 +51,57 @@ function safeWriteFile(filePath, content, force) {
   }
 }
 
-function createStructure(projectPath, projectName, force = false) {
+/**
+ * Create a README for a case folder
+ */
+function createCaseReadme(caseDef) {
+  return `# Case: ${caseDef.name}
+
+**ID:** ${caseDef.id}
+${caseDef.description ? `**Description:** ${caseDef.description}` : ''}
+
+## Methodological Note
+
+This folder contains data for a single case in your comparative study.
+
+**During open coding:** Analyze this case independently. Let themes emerge from THIS case's data without reference to other cases.
+
+**Why isolation matters:** Cross-case contamination during open coding prevents genuine pattern emergence. Each case deserves analytical fresh eyes.
+
+**When this changes:** Case isolation relaxes during synthesis phases, when cross-case comparison becomes methodologically appropriate.
+
+---
+
+*This folder is part of a multi-case study managed by Interpretive Orchestration.*
+`;
+}
+
+/**
+ * Create a README for a wave folder
+ */
+function createWaveReadme(waveDef) {
+  return `# Wave: ${waveDef.name}
+
+**ID:** ${waveDef.id}
+${waveDef.collection_period ? `**Collection Period:** ${waveDef.collection_period}` : ''}
+
+## Methodological Note
+
+This folder contains data from a specific time point in your longitudinal study.
+
+**During analysis:** Keep this wave's analysis separate from other waves. Track how concepts emerge and evolve without projecting later developments onto earlier data.
+
+**Why isolation matters:** Wave isolation preserves the temporal integrity of your data. Analyzing waves separately allows you to trace genuine conceptual evolution.
+
+**When this changes:** Wave isolation relaxes during cross-wave analysis, when examining change over time becomes the focus.
+
+---
+
+*This folder is part of a longitudinal study managed by Interpretive Orchestration.*
+`;
+}
+
+function createStructure(projectPath, projectName, force = false, researchDesign = null) {
   const directories = [
     '.interpretive-orchestration',
     'stage1-foundation/manual-codes',
@@ -61,6 +113,34 @@ function createStructure(projectPath, projectName, force = false) {
     'stage3-synthesis/theoretical-integration',
     'outputs'
   ];
+
+  // Add case folders if specified in research design
+  if (researchDesign && researchDesign.cases && researchDesign.cases.length > 0) {
+    for (const caseDef of researchDesign.cases) {
+      if (caseDef.folder_path) {
+        directories.push(caseDef.folder_path);
+      }
+    }
+  }
+
+  // Add wave folders if specified in research design
+  if (researchDesign && researchDesign.waves && researchDesign.waves.length > 0) {
+    for (const waveDef of researchDesign.waves) {
+      if (waveDef.folder_path) {
+        directories.push(waveDef.folder_path);
+      }
+    }
+  }
+
+  // Add stream folders if specified
+  if (researchDesign && researchDesign.streams) {
+    if (researchDesign.streams.theoretical && researchDesign.streams.theoretical.folder_path) {
+      directories.push(researchDesign.streams.theoretical.folder_path);
+    }
+    if (researchDesign.streams.empirical && researchDesign.streams.empirical.folder_path) {
+      directories.push(researchDesign.streams.empirical.folder_path);
+    }
+  }
 
   const results = {
     success: true,
@@ -187,6 +267,48 @@ The sandwich starts with human bread!
     results.errors.push({ path: stage1ReadmePath, error: stage1Result.error });
   }
 
+  // Create README files for case folders
+  if (researchDesign && researchDesign.cases && researchDesign.cases.length > 0) {
+    for (const caseDef of researchDesign.cases) {
+      if (caseDef.folder_path) {
+        const caseReadmePath = path.join(projectPath, caseDef.folder_path, 'README.md');
+        const caseReadmeContent = createCaseReadme(caseDef);
+        const caseResult = safeWriteFile(caseReadmePath, caseReadmeContent, force);
+        if (caseResult.action === 'created' || caseResult.action === 'overwritten') {
+          results.created.push(caseReadmePath);
+        } else if (caseResult.action === 'skipped') {
+          results.skipped.push({ path: caseReadmePath, reason: caseResult.reason });
+        } else if (caseResult.action === 'error') {
+          results.errors.push({ path: caseReadmePath, error: caseResult.error });
+        }
+      }
+    }
+    // Track research design info
+    results.researchDesign = results.researchDesign || {};
+    results.researchDesign.casesCreated = researchDesign.cases.length;
+  }
+
+  // Create README files for wave folders
+  if (researchDesign && researchDesign.waves && researchDesign.waves.length > 0) {
+    for (const waveDef of researchDesign.waves) {
+      if (waveDef.folder_path) {
+        const waveReadmePath = path.join(projectPath, waveDef.folder_path, 'README.md');
+        const waveReadmeContent = createWaveReadme(waveDef);
+        const waveResult = safeWriteFile(waveReadmePath, waveReadmeContent, force);
+        if (waveResult.action === 'created' || waveResult.action === 'overwritten') {
+          results.created.push(waveReadmePath);
+        } else if (waveResult.action === 'skipped') {
+          results.skipped.push({ path: waveReadmePath, reason: waveResult.reason });
+        } else if (waveResult.action === 'error') {
+          results.errors.push({ path: waveReadmePath, error: waveResult.error });
+        }
+      }
+    }
+    // Track research design info
+    results.researchDesign = results.researchDesign || {};
+    results.researchDesign.wavesCreated = researchDesign.waves.length;
+  }
+
   return results;
 }
 
@@ -205,6 +327,20 @@ const projectPath = args['project-path'];
 const projectName = args['project-name'] || 'Qualitative Research Project';
 const force = args.force === true;
 
+// Parse research design if provided
+let researchDesign = null;
+if (args['research-design']) {
+  try {
+    researchDesign = JSON.parse(args['research-design']);
+  } catch (e) {
+    console.error(JSON.stringify({
+      success: false,
+      error: `Invalid JSON in --research-design: ${e.message}`
+    }));
+    process.exit(1);
+  }
+}
+
 // Path traversal protection
 const resolvedPath = path.resolve(projectPath);
 const configTarget = path.join(resolvedPath, '.interpretive-orchestration');
@@ -216,7 +352,7 @@ if (!configTarget.startsWith(resolvedPath + path.sep) && configTarget !== resolv
   process.exit(1);
 }
 
-const results = createStructure(resolvedPath, projectName, force);
+const results = createStructure(resolvedPath, projectName, force, researchDesign);
 
 // Add warning if files were skipped
 if (results.skipped.length > 0) {

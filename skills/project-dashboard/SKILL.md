@@ -1,3 +1,8 @@
+---
+name: project-dashboard
+description: "This skill should be used when users ask 'where am I?', 'what is my progress?', mentions 'status', 'dashboard', 'progress', wants to know if they are ready for the next stage, or needs an overview of their project state."
+---
+
 # project-dashboard
 
 Progress visualization and status reporting for qualitative research projects. Shows where you are in the sandwich methodology and what comes next.

@@ -1,3 +1,8 @@
+---
+name: gioia-methodology
+description: "This skill should be used when users are building or refining their Gioia data structure, mentions 'Gioia', 'data structure', 'themes', 'concepts', 'dimensions', '1st-order', '2nd-order', 'aggregate', or needs to validate/export their analytical hierarchy for publication."
+---
+
 # gioia-methodology
 
 Gioia method data structure building and validation. Helps researchers construct the three-level hierarchy (1st-order concepts, 2nd-order themes, aggregate dimensions) with validation and export capabilities.

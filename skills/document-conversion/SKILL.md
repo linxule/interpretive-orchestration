@@ -1,3 +1,8 @@
+---
+name: document-conversion
+description: "This skill should be used when users need to convert PDFs (especially with tables or figures), mentions 'convert', 'PDF', 'document processing', has complex academic papers to import, or asks about MinerU vs Markdownify."
+---
+
 # document-conversion
 
 Robust PDF and document conversion with intelligent tool selection. Chooses the best available conversion method based on document complexity and MCP availability.

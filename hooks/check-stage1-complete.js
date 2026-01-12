@@ -118,10 +118,8 @@ function checkStage1Complete() {
     console.log('');
     console.log('   📋 Current Stage 1 Progress:');
 
-    const stage1Details = config.sandwich_status?.stage1_details || {};
-    const documentsCoded = stage1Details.documents_manually_coded || 0;
+    // Reuse stage1Details, documentsCoded, memosWritten from above
     const structureCreated = stage1Details.initial_structure_created || false;
-    const memosWritten = stage1Details.memos_written || 0;
 
     console.log(`   • Documents manually coded: ${documentsCoded}/10+ [${documentsCoded >= 10 ? '✓' : '○'}]`);
     console.log(`   • Initial data structure: [${structureCreated ? '✓' : '○'}]`);

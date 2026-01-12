@@ -1,6 +1,98 @@
 {
   "_comment": "Example configuration for Interpretive Orchestration - Copy to your project's .interpretive-orchestration/config.json and customize",
 
+  "research_design": {
+    "_comment": "Research design structure - drives methodological rules generation",
+    "study_type": "comparative_longitudinal",
+    "cases": [
+      {
+        "id": "org_alpha",
+        "name": "TechCorp Alpha",
+        "folder_path": "data/cases/alpha",
+        "description": "Large technology company undergoing digital transformation",
+        "status": "in_progress"
+      },
+      {
+        "id": "org_beta",
+        "name": "HealthCo Beta",
+        "folder_path": "data/cases/beta",
+        "description": "Healthcare organization implementing new systems",
+        "status": "not_started"
+      },
+      {
+        "id": "org_gamma",
+        "name": "FinServ Gamma",
+        "folder_path": "data/cases/gamma",
+        "description": "Financial services firm in regulatory transition",
+        "status": "not_started"
+      }
+    ],
+    "waves": [
+      {
+        "id": "wave_1",
+        "name": "Pre-implementation",
+        "folder_path": "data/waves/wave1",
+        "collection_period": "Jan-Mar 2025",
+        "status": "collected"
+      },
+      {
+        "id": "wave_2",
+        "name": "6-month follow-up",
+        "folder_path": "data/waves/wave2",
+        "collection_period": "Jul-Sep 2025",
+        "status": "not_collected"
+      }
+    ],
+    "streams": {
+      "theoretical": {
+        "folder_path": "literature",
+        "sources": ["sensemaking theory", "institutional theory", "identity work"]
+      },
+      "empirical": {
+        "folder_path": "data",
+        "sources": ["interviews", "observations", "documents"]
+      }
+    },
+    "data_sources": [
+      {
+        "type": "interviews",
+        "role": "primary",
+        "count": 45,
+        "description": "Semi-structured interviews with managers and employees"
+      },
+      {
+        "type": "observations",
+        "role": "supplementary",
+        "count": 12,
+        "description": "Meeting observations and shadowing sessions"
+      },
+      {
+        "type": "documents",
+        "role": "supplementary",
+        "description": "Internal communications, strategy documents, memos"
+      }
+    ],
+    "isolation_config": {
+      "case_isolation": {
+        "enabled": true,
+        "relaxes_at": "phase3_pattern_characterization",
+        "friction_level": "challenge"
+      },
+      "wave_isolation": {
+        "enabled": true,
+        "relaxes_at": "cross_wave_analysis",
+        "friction_level": "challenge"
+      },
+      "stream_separation": {
+        "enabled": true,
+        "relaxes_at": "phase2_synthesis",
+        "friction_level": "nudge"
+      },
+      "custom_isolations": []
+    },
+    "rule_overrides": []
+  },
+
   "project_info": {
     "name": "My Qualitative Research Project",
     "research_question": "Your central research question here",

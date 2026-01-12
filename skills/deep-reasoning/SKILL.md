@@ -1,3 +1,8 @@
+---
+name: deep-reasoning
+description: "This skill should be used when users need to think through a complex analytical decision, asks 'how should I approach this?' or 'help me think through...', is stuck on a difficult coding boundary, needs to plan dimensional analysis, or is building theoretical frameworks in Stage 3."
+---
+
 # deep-reasoning
 
 Structured step-by-step thinking for complex analytical decisions. Invokes Sequential Thinking MCP with qualitative research framing.

@@ -1,3 +1,8 @@
+---
+name: coding-workflow
+description: "This skill should be used when users are ready to start Stage 2 coding, asks about processing documents systematically, needs to track coding progress, wants to generate audit documentation, or mentions 'batch', 'coding session', 'systematic coding'."
+---
+
 # coding-workflow
 
 Document coding orchestration for Stage 2. Manages the systematic coding process, tracks progress, and generates audit trails.

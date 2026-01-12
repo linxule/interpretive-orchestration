@@ -1,0 +1,324 @@
+{
+  "_description": "Methodology presets configure default rules, prompts, and behaviors based on the researcher's chosen methodological tradition.",
+
+  "presets": {
+    "gioia_corley": {
+      "name": "Gioia & Corley Systematic Approach",
+      "description": "Systematic interpretive approach emphasizing data structure, parallel streams, and visible reasoning.",
+      "philosophical_defaults": {
+        "ontology": "interpretivist",
+        "epistemology": "systematic_interpretation",
+        "vocabulary_mode": "systematic",
+        "reflexivity_level": "high"
+      },
+      "isolation_defaults": {
+        "case_isolation": {
+          "enabled": true,
+          "relaxes_at": "phase3_pattern_characterization",
+          "friction_level": "challenge"
+        },
+        "wave_isolation": {
+          "enabled": true,
+          "relaxes_at": "cross_wave_analysis",
+          "friction_level": "challenge"
+        },
+        "stream_separation": {
+          "enabled": true,
+          "relaxes_at": "phase2_synthesis",
+          "friction_level": "nudge"
+        }
+      },
+      "proactive_prompts": [
+        "in_vivo_check",
+        "memo_prompt",
+        "negative_case_prompt",
+        "variation_memo",
+        "theoretical_sensitivity",
+        "constant_comparison",
+        "synthesis_readiness"
+      ],
+      "key_practices": [
+        "Build data structure (1st order → 2nd order → aggregate dimensions)",
+        "Use informant terms for first-order concepts",
+        "Parallel theoretical and empirical streams",
+        "Visible reasoning in all coding decisions",
+        "Structured interpretive pauses every 5 documents"
+      ],
+      "coding_verbs": ["construct", "interpret", "characterize", "organize", "build"],
+      "avoid_verbs": ["discover", "find", "extract", "uncover", "reveal"]
+    },
+
+    "charmaz_constructivist": {
+      "name": "Charmaz Constructivist Grounded Theory",
+      "description": "Emphasizes co-construction, reflexivity, and researcher positioning in meaning-making.",
+      "philosophical_defaults": {
+        "ontology": "relativist",
+        "epistemology": "co_constructive",
+        "vocabulary_mode": "constructivist",
+        "reflexivity_level": "maximal"
+      },
+      "isolation_defaults": {
+        "case_isolation": {
+          "enabled": true,
+          "relaxes_at": "phase2_synthesis",
+          "friction_level": "nudge"
+        },
+        "wave_isolation": {
+          "enabled": true,
+          "relaxes_at": "cross_wave_analysis",
+          "friction_level": "nudge"
+        },
+        "stream_separation": {
+          "enabled": false,
+          "friction_level": "silent"
+        }
+      },
+      "proactive_prompts": [
+        "in_vivo_check",
+        "memo_prompt",
+        "theoretical_sensitivity",
+        "reflexivity_check",
+        "constant_comparison"
+      ],
+      "key_practices": [
+        "Reflexive memoing throughout",
+        "Position yourself explicitly in the research",
+        "Co-construct meaning with participants",
+        "Use gerunds for codes (action focus)",
+        "Theoretical sampling guided by emerging theory"
+      ],
+      "coding_verbs": ["co-construct", "negotiate", "build together", "interpret", "create meaning"],
+      "avoid_verbs": ["discover", "find", "extract", "identify"]
+    },
+
+    "straussian": {
+      "name": "Straussian Grounded Theory",
+      "description": "Structured approach with coding paradigm, axial coding, and conditional matrix.",
+      "philosophical_defaults": {
+        "ontology": "critical_realist",
+        "epistemology": "systematic_interpretation",
+        "vocabulary_mode": "systematic",
+        "reflexivity_level": "moderate"
+      },
+      "isolation_defaults": {
+        "case_isolation": {
+          "enabled": true,
+          "relaxes_at": "phase3_pattern_characterization",
+          "friction_level": "challenge"
+        },
+        "wave_isolation": {
+          "enabled": true,
+          "relaxes_at": "cross_wave_analysis",
+          "friction_level": "challenge"
+        },
+        "stream_separation": {
+          "enabled": true,
+          "relaxes_at": "phase2_synthesis",
+          "friction_level": "challenge"
+        }
+      },
+      "proactive_prompts": [
+        "memo_prompt",
+        "negative_case_prompt",
+        "variation_memo",
+        "theoretical_coding_readiness",
+        "constant_comparison"
+      ],
+      "key_practices": [
+        "Open coding → Axial coding → Selective coding",
+        "Use coding paradigm (conditions, actions, consequences)",
+        "Build conditional matrix",
+        "Theoretical sampling for category development",
+        "Integrate around core category"
+      ],
+      "coding_verbs": ["identify", "categorize", "relate", "integrate", "construct"],
+      "avoid_verbs": []
+    },
+
+    "glaserian": {
+      "name": "Glaserian Classic Grounded Theory",
+      "description": "Emergence-focused approach emphasizing theoretical sensitivity and minimal preconception.",
+      "philosophical_defaults": {
+        "ontology": "objectivist",
+        "epistemology": "objectivist_discovery",
+        "vocabulary_mode": "discovery",
+        "reflexivity_level": "minimal"
+      },
+      "isolation_defaults": {
+        "case_isolation": {
+          "enabled": true,
+          "relaxes_at": "phase3_pattern_characterization",
+          "friction_level": "hard_stop"
+        },
+        "wave_isolation": {
+          "enabled": true,
+          "relaxes_at": "cross_wave_analysis",
+          "friction_level": "hard_stop"
+        },
+        "stream_separation": {
+          "enabled": true,
+          "relaxes_at": "phase3_pattern_characterization",
+          "friction_level": "hard_stop"
+        }
+      },
+      "proactive_prompts": [
+        "memo_prompt",
+        "negative_case_prompt",
+        "constant_comparison"
+      ],
+      "key_practices": [
+        "Let theory emerge - no forcing",
+        "Delay literature review until after core category emerges",
+        "Substantive coding → Theoretical coding",
+        "Focus on basic social process",
+        "Theoretical sensitivity from experience, not preconception"
+      ],
+      "coding_verbs": ["discover", "find", "identify", "uncover", "reveal"],
+      "avoid_verbs": []
+    },
+
+    "phenomenology": {
+      "name": "Phenomenological Analysis",
+      "description": "Focus on lived experience, bracketing, and essence of phenomena.",
+      "philosophical_defaults": {
+        "ontology": "interpretivist",
+        "epistemology": "systematic_interpretation",
+        "vocabulary_mode": "constructivist",
+        "reflexivity_level": "maximal"
+      },
+      "isolation_defaults": {
+        "case_isolation": {
+          "enabled": true,
+          "relaxes_at": "phase2_synthesis",
+          "friction_level": "challenge"
+        },
+        "wave_isolation": {
+          "enabled": false,
+          "friction_level": "silent"
+        },
+        "stream_separation": {
+          "enabled": false,
+          "friction_level": "silent"
+        }
+      },
+      "proactive_prompts": [
+        "bracketing_reminder",
+        "memo_prompt",
+        "reflexivity_check"
+      ],
+      "key_practices": [
+        "Bracket preconceptions before each session",
+        "Focus on lived experience, not explanation",
+        "Identify meaning units",
+        "Transform to psychological/phenomenological language",
+        "Synthesize essential structure"
+      ],
+      "coding_verbs": ["describe", "interpret", "understand", "illuminate", "reveal essence"],
+      "avoid_verbs": ["explain", "cause", "predict"]
+    },
+
+    "ethnography": {
+      "name": "Ethnographic Analysis",
+      "description": "Cultural interpretation emphasizing thick description and emic understanding.",
+      "philosophical_defaults": {
+        "ontology": "interpretivist",
+        "epistemology": "systematic_interpretation",
+        "vocabulary_mode": "constructivist",
+        "reflexivity_level": "high"
+      },
+      "isolation_defaults": {
+        "case_isolation": {
+          "enabled": false,
+          "friction_level": "silent"
+        },
+        "wave_isolation": {
+          "enabled": true,
+          "relaxes_at": "cross_wave_analysis",
+          "friction_level": "nudge"
+        },
+        "stream_separation": {
+          "enabled": false,
+          "friction_level": "silent"
+        }
+      },
+      "proactive_prompts": [
+        "thick_description",
+        "memo_prompt",
+        "reflexivity_check"
+      ],
+      "key_practices": [
+        "Thick description - meaning in context",
+        "Emic (insider) and etic (outsider) perspectives",
+        "Participant observation and field notes",
+        "Cultural patterns and practices",
+        "Reflexive positioning"
+      ],
+      "coding_verbs": ["describe", "interpret", "contextualize", "understand", "portray"],
+      "avoid_verbs": ["measure", "test", "verify"]
+    },
+
+    "custom": {
+      "name": "Custom Configuration",
+      "description": "Fully customizable - no preset defaults applied.",
+      "philosophical_defaults": {},
+      "isolation_defaults": {
+        "case_isolation": {
+          "enabled": false,
+          "relaxes_at": "manual",
+          "friction_level": "silent"
+        },
+        "wave_isolation": {
+          "enabled": false,
+          "relaxes_at": "manual",
+          "friction_level": "silent"
+        },
+        "stream_separation": {
+          "enabled": false,
+          "relaxes_at": "manual",
+          "friction_level": "silent"
+        }
+      },
+      "proactive_prompts": [],
+      "key_practices": [
+        "Configure all settings manually",
+        "Define your own isolation rules",
+        "Select proactive prompts individually"
+      ],
+      "coding_verbs": [],
+      "avoid_verbs": []
+    }
+  },
+
+  "preset_selection_guide": {
+    "questions": [
+      {
+        "question": "How do you view the relationship between researcher and data?",
+        "options": {
+          "Data reveals patterns that exist independently": ["glaserian"],
+          "Researcher interprets patterns systematically": ["gioia_corley", "straussian"],
+          "Researcher and participants co-construct meaning": ["charmaz_constructivist"],
+          "Researcher seeks to understand lived experience": ["phenomenology"],
+          "Researcher interprets cultural meaning in context": ["ethnography"]
+        }
+      },
+      {
+        "question": "How important is a structured coding process?",
+        "options": {
+          "Very important - I want clear stages and procedures": ["gioia_corley", "straussian"],
+          "Moderately important - structure with flexibility": ["charmaz_constructivist"],
+          "Less important - let the process emerge": ["glaserian"],
+          "Different - focused on experience/culture": ["phenomenology", "ethnography"]
+        }
+      },
+      {
+        "question": "When should you engage with theoretical literature?",
+        "options": {
+          "Before and during - it sensitizes analysis": ["gioia_corley", "straussian"],
+          "Throughout - in dialogue with data": ["charmaz_constructivist"],
+          "After core category emerges - to avoid forcing": ["glaserian"],
+          "Before - for phenomenological/cultural framework": ["phenomenology", "ethnography"]
+        }
+      }
+    ]
+  }
+}

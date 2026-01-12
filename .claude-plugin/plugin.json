@@ -1,7 +1,7 @@
 {
   "name": "interpretive-orchestration",
   "displayName": "Interpretive Orchestration: Epistemic Partnership System",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Atelier of Co-Apprenticeship for interpretive qualitative research. Human and AI learn together as apprentices to the craft tradition (rigor, reflexivity, theoretical sensitivity). Three stages: Solo Practice → Side-by-Side Collaboration → Dialogue with Tradition. Instantiates Partnership Agency from Cognitio Emergens framework. Prevents calculator mindset, embeds meta-cognition, maintains human interpretive authority. Built with care on Gioia/Constructivist principles.",
   "author": {
     "names": ["Xule Lin", "Kevin Corley"],
@@ -68,8 +68,8 @@
   },
   "components": {
     "commands": {
-      "project": ["init", "status", "check-setup", "configure-analysis"],
-      "stage1": ["memo"],
+      "project": ["init", "status", "check-setup", "configure-analysis", "design", "advance-stage"],
+      "stage1": ["memo", "stage1-guide", "complete-stage1"],
       "stage2": ["parallel-streams", "synthesize", "code-deductive", "characterize-patterns"],
       "analysis": ["examine-assumptions", "think-through", "wisdom-check", "reflect"]
     },
@@ -84,7 +84,8 @@
       "PostFiveDocuments",
       "PostSynthesis",
       "SessionEnd",
-      "EpistemicCoherence"
+      "EpistemicCoherence",
+      "PostPhaseTransition"
     ],
     "mcps_bundled": [
       "mcp-sequentialthinking-tools",

@@ -1,3 +1,8 @@
+---
+name: analysis-orchestration
+description: "This skill should be used when users ask about which AI model to use for coding, mentions 'cost', 'batch', 'API', 'configure analysis', wants to process multiple documents, or needs to understand model capabilities and costs for Stage 2."
+---
+
 # analysis-orchestration
 
 Model selection, cost estimation, and batch processing setup for AI-assisted coding. Helps researchers configure their analysis approach with awareness of tradeoffs.

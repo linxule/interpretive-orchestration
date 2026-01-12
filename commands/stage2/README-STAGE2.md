@@ -8,7 +8,7 @@ You might notice: **This folder is empty (or minimal).**
 
 ---
 
-## 🤝 Where Stage 2 Tools Actually Live
+## Where Stage 2 Tools Actually Live
 
 Stage 2 tools are distributed based on their FUNCTION, not their stage:
 
@@ -140,7 +140,7 @@ Stage 2 tools are distributed based on their FUNCTION, not their stage:
 
 **This is collaboration, not automation.**
 
-**You direct. AI scales. You interpret.** 🤝
+**You direct. AI scales. You interpret.**
 
 ---
 
@@ -167,10 +167,10 @@ Each tool we built serves transformation purpose.
 We didn't build commands for completeness.
 We built for epistemic partnership.
 
-**Quality over quantity. Depth over breadth.** ✨
+**Quality over quantity. Depth over breadth.**
 
 ---
 
 *This folder's minimalism is philosophical, not accidental.*
 
-**Stage 2 lives throughout the plugin, wherever its functions naturally belong.** 🌟
+**Stage 2 lives throughout the plugin, wherever its functions naturally belong.**

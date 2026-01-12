@@ -1,3 +1,7 @@
+---
+description: Deep analytical reasoning via Sequential Thinking for complex decisions
+---
+
 # /qual-think-through - Deep Analytical Reasoning
 
 ## Purpose
@@ -224,12 +228,12 @@ learning. Should these be separate dimensions or properties of concepts?
 implicit assumptions vs explicit statements?
 ```
 
-**The reasoning process transfers to ANY domain.** 🧠
+**The reasoning process transfers to ANY domain.**
 
 ---
 
 *Sets down this piece, smooth and complete*
 
-The deep thinking tool - for when quick answers won't do. ✨
+The deep thinking tool - for when quick answers won't do.
 
-**Next: The wisdom navigator...** 🌊
+**Next: The wisdom navigator...**
