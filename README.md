@@ -260,9 +260,7 @@ If you're blocked, it's asking you to think. That's intentional epistemic fricti
 
 ## 🔬 Methodological Foundation
 
-This plugin implements methodology from published research:
-
-**Source:** "Appendix A: Methodological Details" and "Method" sections from possibilistic narratives study
+This plugin implements methodology from our learned practices through multiple research projects.
 
 **Key Innovations:**
 1. **Parallel discovery streams** (theoretical + empirical with mutual checking)
