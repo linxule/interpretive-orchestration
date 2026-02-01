@@ -2,7 +2,7 @@
   "name": "interpretive-orchestration",
   "metadata": {
     "description": "Epistemic Partnership System for AI-Assisted Qualitative Research - Built on Gioia/Constructivist principles",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "homepage": "https://github.com/linxule/interpretive-orchestration"
   },
   "owner": {
@@ -13,9 +13,9 @@
   "plugins": [
     {
       "name": "interpretive-orchestration",
-      "source": ".",
+      "source": "linxule/interpretive-orchestration",
       "description": "Complete epistemic partnership system featuring: Socratic onboarding, 4-stage reflexive coding, synthesis dialogue, and bundled MCP tools (Sequential Thinking, Lotus Wisdom, Markdownify). Prevents calculator mindset, enforces human-AI-human sandwich methodology, and teaches meta-cognitive awareness. Context-agnostic design works across all qualitative research domains.",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "author": {
         "names": ["Xule Lin", "Kevin Corley"],
         "email": "xule.lin@imperial.ac.uk",
