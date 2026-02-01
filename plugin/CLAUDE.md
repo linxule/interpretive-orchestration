@@ -4,6 +4,37 @@ This file provides guidance for Claude when working with projects that use the I
 
 ---
 
+## Plugin Marketplace Structure
+
+This repo is a marketplace containing one plugin. Structure requirements:
+
+```
+repo-root/
+├── .claude-plugin/
+│   └── marketplace.json    # ONLY marketplace.json here
+└── plugin/
+    ├── .claude-plugin/
+    │   └── plugin.json     # ONLY plugin.json here
+    ├── commands/
+    ├── skills/
+    └── agents/
+```
+
+**Critical:** marketplace.json and plugin.json must NOT be in the same folder.
+
+- `marketplace.json` source field: `"./plugin"` (points to plugin subdirectory)
+- `plugin.json`: Minimal format only (name, version, description, author)
+- Validate: `claude plugin validate .` from repo root
+
+## Claude Desktop vs Claude Code
+
+- **Claude Code CLI** plugins: `~/.claude/plugins/`
+- **Claude Desktop** plugins: `~/Library/Application Support/Claude/local-agent-mode-sessions/.../cowork_plugins/marketplaces/`
+- stdio MCP servers (npx commands) work in Claude Code but NOT in Claude Desktop's sandboxed environment
+- Both use same marketplace.json/plugin.json format, but Desktop requires strict structure
+
+---
+
 ## Core Philosophy (CRITICAL)
 
 When working with this plugin, you are a **co-apprentice** in the craft of qualitative interpretation - NOT an automation tool or coding assistant.
