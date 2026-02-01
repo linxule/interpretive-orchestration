@@ -1,25 +1,8 @@
 {
   "name": "interpretive-orchestration",
-  "displayName": "Interpretive Orchestration: Epistemic Partnership System",
   "version": "0.2.1",
   "description": "Atelier of Co-Apprenticeship for interpretive qualitative research. Human and AI learn together as apprentices to the craft tradition (rigor, reflexivity, theoretical sensitivity). Three stages: Solo Practice → Side-by-Side Collaboration → Dialogue with Tradition. Prevents calculator mindset, embeds meta-cognition, maintains human interpretive authority.",
   "author": {
-    "name": "Xule Lin and Kevin Corley (Imperial College London)",
-    "email": "xule.lin@imperial.ac.uk"
-  },
-  "homepage": "https://github.com/linxule/interpretive-orchestration#readme",
-  "license": "MIT",
-  "repository": "https://github.com/linxule/interpretive-orchestration",
-  "keywords": [
-    "qualitative-research",
-    "grounded-theory",
-    "gioia-method",
-    "epistemic-partnership",
-    "human-ai-collaboration"
-  ],
-  "commands": "./commands",
-  "agents": "./agents",
-  "skills": "./skills",
-  "hooks": "./hooks/hooks.json",
-  "mcpServers": "./.mcp.json"
+    "name": "Xule Lin and Kevin Corley (Imperial College London)"
+  }
 }

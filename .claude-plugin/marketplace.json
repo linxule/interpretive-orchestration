@@ -1,48 +1,13 @@
 {
-  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "interpretive-orchestration",
   "owner": {
-    "name": "Xule Lin and Kevin Corley (Imperial College London)",
-    "email": "xule.lin@imperial.ac.uk"
-  },
-  "metadata": {
-    "description": "Epistemic Partnership System for AI-Assisted Qualitative Research - Built on Gioia/Constructivist principles",
-    "version": "0.2.1"
+    "name": "Xule Lin and Kevin Corley (Imperial College London)"
   },
   "plugins": [
     {
       "name": "interpretive-orchestration",
       "source": "./",
-      "description": "Complete epistemic partnership system featuring: Socratic onboarding, 4-stage reflexive coding, synthesis dialogue, and bundled MCP tools (Sequential Thinking, Lotus Wisdom, Markdownify). Prevents calculator mindset, enforces human-AI-human sandwich methodology, and teaches meta-cognitive awareness. Context-agnostic design works across all qualitative research domains.",
-      "version": "0.2.1",
-      "author": {
-        "name": "Xule Lin and Kevin Corley (Imperial College London)",
-        "email": "xule.lin@imperial.ac.uk"
-      },
-      "homepage": "https://github.com/linxule/interpretive-orchestration#readme",
-      "repository": "https://github.com/linxule/interpretive-orchestration",
-      "license": "MIT",
-      "keywords": [
-        "qualitative-research",
-        "grounded-theory",
-        "gioia-method",
-        "interpretive-inquiry",
-        "epistemic-partnership",
-        "human-ai-collaboration",
-        "reflexive-analysis",
-        "organizational-research",
-        "constructivist",
-        "meta-cognition"
-      ],
-      "category": "research-methods",
-      "tags": [
-        "qualitative",
-        "grounded-theory",
-        "research",
-        "epistemology",
-        "partnership",
-        "social-science"
-      ]
+      "description": "Epistemic Partnership System for AI-Assisted Qualitative Research. Features Socratic onboarding, 4-stage reflexive coding, synthesis dialogue. Built on Gioia/Constructivist principles. Prevents calculator mindset, maintains human interpretive authority."
     }
   ]
 }
