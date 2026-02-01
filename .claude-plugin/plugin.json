@@ -2,7 +2,7 @@
   "name": "interpretive-orchestration",
   "displayName": "Interpretive Orchestration: Epistemic Partnership System",
   "version": "0.2.1",
-  "description": "Atelier of Co-Apprenticeship for interpretive qualitative research. Human and AI learn together as apprentices to the craft tradition (rigor, reflexivity, theoretical sensitivity). Three stages: Solo Practice → Side-by-Side Collaboration → Dialogue with Tradition. Instantiates Partnership Agency from Cognitio Emergens framework. Prevents calculator mindset, embeds meta-cognition, maintains human interpretive authority. Built with care on Gioia/Constructivist principles.",
+  "description": "Atelier of Co-Apprenticeship for interpretive qualitative research. Human and AI learn together as apprentices to the craft tradition (rigor, reflexivity, theoretical sensitivity). Three stages: Solo Practice → Side-by-Side Collaboration → Dialogue with Tradition. Prevents calculator mindset, embeds meta-cognition, maintains human interpretive authority.",
   "author": {
     "name": "Xule Lin and Kevin Corley (Imperial College London)",
     "email": "xule.lin@imperial.ac.uk"
@@ -14,116 +14,7 @@
     "qualitative-research",
     "grounded-theory",
     "gioia-method",
-    "interpretive-inquiry",
     "epistemic-partnership",
-    "human-ai-collaboration",
-    "reflexive-analysis",
-    "organizational-research"
-  ],
-  "category": "research-methods",
-  "tags": [
-    "qualitative",
-    "grounded-theory",
-    "research",
-    "epistemology",
-    "partnership",
-    "social-science"
-  ],
-  "features": [
-    "Socratic onboarding establishes philosophical stance",
-    "4-stage reflexive coding with @dialogical-coder",
-    "Synthesis dialogue with /qual-reflect",
-    "Sequential Thinking for deep analytical reasoning",
-    "Lotus Wisdom for paradox navigation",
-    "Reflexive assumption examination",
-    "Sandwich methodology enforced by design",
-    "Human interpretive authority maintained",
-    "Gioia data structure templates included",
-    "Context-agnostic (works for any domain)"
-  ],
-  "philosophy": {
-    "stance": "Interpretivist/Constructivist (Gioia & Corley tradition)",
-    "core_principles": [
-      "Co-apprenticeship: Both human and AI apprentice to craft tradition",
-      "Partnership Agency: Emergent cognition neither could achieve alone (Cognitio Emergens)",
-      "Human interpretive authority maintained throughout",
-      "Atelier methodology: Solo Practice → Side-by-Side Collaboration → Dialogue with Tradition",
-      "Craft epistemology: Build with care, reflexivity, and theoretical sensitivity",
-      "Meta-cognition embedded: Both human and AI learn and adapt",
-      "Pattern characterization, not essentialist discovery",
-      "Interpretive Intelligence: Visible reasoning prevents epistemic alienation"
-    ],
-    "prevents": [
-      "Calculator mindset (AI as mere automation)",
-      "Epistemic incoherence (mixing incompatible ontologies)",
-      "Skipping human foundation (Stage 1 required)",
-      "Mechanical coding without theoretical sensitivity"
-    ]
-  },
-  "components": {
-    "commands": {
-      "project": ["init", "status", "check-setup", "configure-analysis", "design", "advance-stage"],
-      "stage1": ["memo", "stage1-guide", "complete-stage1"],
-      "stage2": ["parallel-streams", "synthesize", "code-deductive", "characterize-patterns"],
-      "analysis": ["examine-assumptions", "think-through", "wisdom-check", "reflect"]
-    },
-    "agents": [
-      "stage1-listener",
-      "dialogical-coder",
-      "research-configurator",
-      "scholarly-companion"
-    ],
-    "hooks": [
-      "PreStage2",
-      "PostFiveDocuments",
-      "PostSynthesis",
-      "SessionEnd",
-      "EpistemicCoherence",
-      "PostPhaseTransition"
-    ],
-    "mcps_bundled": [
-      "mcp-sequentialthinking-tools",
-      "lotus-wisdom",
-      "markdownify"
-    ],
-    "mcps_optional": [
-      "mineru-mcp",
-      "zen-mcp-server",
-      "jina-ai-mcp-server",
-      "exa",
-      "zotero"
-    ],
-    "mcps_custom": [
-      "document-management-server",
-      "data-structure-server",
-      "quote-bank-server",
-      "memo-server",
-      "pattern-characterization-server"
-    ]
-  },
-  "requires": {
-    "claudeCode": ">=1.0.0",
-    "models": {
-      "recommended": "claude-opus-4",
-      "alternatives": ["claude-sonnet-4.5", "gemini-2.5-pro"]
-    }
-  },
-  "mvep": {
-    "description": "Complete Partnership Agency infrastructure - ready for transformation",
-    "components": [
-      "/qual-init (Socratic onboarding)",
-      "@dialogical-coder (4-stage reflexive coding)",
-      "@scholarly-companion (Stage 3 theoretical dialogue)",
-      "/qual-reflect (synthesis dialogue)",
-      "Sequential Thinking, Lotus Wisdom, Markdownify MCPs"
-    ],
-    "success_metric": "Transforms how you think about interpretation (not just coding speed)",
-    "argument": "Partnership Agency requires: theoretical foundation + visible reasoning + reflexive practice + philosophical coherence"
-  },
-  "pedagogical_approach": {
-    "initial_use": "Socratic onboarding, simple workflows, foundational prompts",
-    "developing_practice": "Deeper epistemic questions emerge through use",
-    "mature_partnership": "Natural meta-cognitive dialogue, reflexivity integrated",
-    "progression": "Philosophy deepens through practice, not predetermined timeline"
-  }
+    "human-ai-collaboration"
+  ]
 }

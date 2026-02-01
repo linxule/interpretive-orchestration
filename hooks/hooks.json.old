@@ -1,0 +1,114 @@
+{
+  "hooks": [
+    {
+      "name": "PreStage2",
+      "event": "PreToolUse",
+      "description": "Enforces sandwich methodology by preventing Stage 2 AI collaboration without Stage 1 human foundation. This is non-negotiable for epistemic partnership.",
+      "condition": {
+        "tool_names": [
+          "@dialogical-coder",
+          "/qual-parallel-streams",
+          "/qual-synthesize",
+          "/qual-code-deductive",
+          "/qual-characterize-patterns"
+        ]
+      },
+      "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/check-stage1-complete.js",
+      "timeout": 5000,
+      "blocking": true,
+      "philosophy": {
+        "rationale": "AI cannot develop YOUR theoretical sensitivity. Manual Stage 1 engagement creates interpretive foundation that makes Stage 2 collaboration meaningful. The sandwich starts with human bread!",
+        "prevents": "Calculator mindset where researchers skip foundational engagement and treat AI as mere automation"
+      }
+    },
+    {
+      "name": "PostFiveDocuments",
+      "event": "PostToolUse",
+      "description": "Interpretive pause after every 5 documents coded - directly from your methodology! Prompts researcher to consolidate patterns and check theoretical coherence.",
+      "condition": {
+        "tool_names": ["@dialogical-coder"],
+        "custom_check": "document_count_multiple_of_5"
+      },
+      "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/interpretive-pause.js",
+      "timeout": 10000,
+      "blocking": false,
+      "philosophy": {
+        "rationale": "From Appendix A: 'Structured interpretive pauses: after every five documents within an archetype, at transitions between archetypes, and whenever edge cases appeared.' Prevents mechanical coding without reflection.",
+        "prevents": "Pattern-matching without theoretical engagement"
+      }
+    },
+    {
+      "name": "SessionEnd",
+      "event": "SessionEnd",
+      "description": "Reflexivity prompt at end of each coding session. Captures insights, assumptions examined, and learning.",
+      "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/session-reflect.js",
+      "timeout": 15000,
+      "blocking": false,
+      "philosophy": {
+        "rationale": "Constructivist reflexivity - researcher position shapes interpretation. Regular reflection builds epistemic awareness.",
+        "prevents": "Unreflective coding that ignores researcher's interpretive role"
+      }
+    },
+    {
+      "name": "EpistemicCoherence",
+      "event": "PostToolUse",
+      "description": "Checks that analytical moves align with declared philosophical stance. Validates consistency between ontology, epistemology, and practice.",
+      "condition": {
+        "tool_names": ["@dialogical-coder"]
+      },
+      "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/check-coherence.js",
+      "timeout": 5000,
+      "blocking": false,
+      "philosophy": {
+        "rationale": "Philosophical coherence matters - can't mix objectivist discovery language with constructivist stance. Maintains internal consistency.",
+        "prevents": "Mixing incompatible ontologies that undermine analytical rigor"
+      }
+    },
+    {
+      "name": "PostSynthesis",
+      "event": "PostToolUse",
+      "description": "After synthesis, automatically generate audit trail documentation for confirmability and transparency.",
+      "condition": {
+        "tool_names": ["/qual-synthesize"]
+      },
+      "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/generate-audit-trail.js",
+      "timeout": 10000,
+      "blocking": false,
+      "philosophy": {
+        "rationale": "Confirmability through transparent documentation. Every analytical decision traced and justified.",
+        "prevents": "Black-box synthesis where decisions are opaque"
+      }
+    },
+    {
+      "name": "PostPhaseTransition",
+      "event": "PostToolUse",
+      "description": "Updates methodological rules when analytical phase changes. Rules automatically relax at their designated phase.",
+      "condition": {
+        "tool_names": [
+          "/qual-advance-stage",
+          "/qual-complete-stage1",
+          "/qual-parallel-streams",
+          "/qual-synthesize",
+          "/qual-characterize-patterns",
+          "@dialogical-coder"
+        ]
+      },
+      "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/post-phase-transition.js",
+      "timeout": 10000,
+      "blocking": false,
+      "philosophy": {
+        "rationale": "Methodological rules should adapt to analytical phase. What's forbidden during open coding becomes appropriate at synthesis. Rules are a conscience, not a cage.",
+        "prevents": "Rules remaining inappropriately restrictive after legitimate phase progression"
+      }
+    }
+  ],
+  "hook_philosophy": {
+    "purpose": "Hooks enforce methodological rigor that optional guidelines cannot achieve",
+    "principle": "Design prevents problems; guidelines only request compliance",
+    "examples": {
+      "without_hooks": "User might skip Stage 1, lose interpretive depth, treat AI as calculator",
+      "with_hooks": "PreStage2 blocks Stage 2 access, forcing foundational engagement, ensuring partnership"
+    },
+    "meta_cognition": "Hooks make philosophical commitments operational, not just aspirational"
+  }
+}

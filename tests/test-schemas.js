@@ -39,7 +39,9 @@ function testJsonFilesParse() {
     'package.json',
     '.mcp.json',
     '.claude-plugin/plugin.json',
+    '.claude-plugin/plugin-extended.json',
     '.claude-plugin/marketplace.json',
+    'hooks/hooks.json',
     'skills/project-setup/templates/config.schema.json',
     'skills/project-setup/templates/example-config.json',
     'examples/tutorial-quickstart/sample-config.json'
@@ -111,8 +113,9 @@ function testPluginJsonStructure() {
     assert(plugin.author, 'Should have author');
   });
 
-  test('plugin.json: Has philosophy section', () => {
-    const pluginPath = path.join(PROJECT_ROOT, '.claude-plugin', 'plugin.json');
+  // Extended metadata tests use plugin-extended.json (preserves custom fields)
+  test('plugin-extended.json: Has philosophy section', () => {
+    const pluginPath = path.join(PROJECT_ROOT, '.claude-plugin', 'plugin-extended.json');
     const plugin = JSON.parse(fs.readFileSync(pluginPath, 'utf8'));
 
     assert(plugin.philosophy, 'Should have philosophy');
@@ -120,8 +123,8 @@ function testPluginJsonStructure() {
     assert(plugin.philosophy.core_principles, 'Should have core_principles');
   });
 
-  test('plugin.json: Has components', () => {
-    const pluginPath = path.join(PROJECT_ROOT, '.claude-plugin', 'plugin.json');
+  test('plugin-extended.json: Has components', () => {
+    const pluginPath = path.join(PROJECT_ROOT, '.claude-plugin', 'plugin-extended.json');
     const plugin = JSON.parse(fs.readFileSync(pluginPath, 'utf8'));
 
     assert(plugin.components, 'Should have components');
@@ -178,10 +181,10 @@ function testVersionConsistency() {
   });
 }
 
-// Test: Agents listed in plugin.json exist as files
+// Test: Agents listed in plugin-extended.json exist as files
 function testAgentsExist() {
-  test('plugin.json: All listed agents exist as files', () => {
-    const pluginPath = path.join(PROJECT_ROOT, '.claude-plugin', 'plugin.json');
+  test('plugin-extended.json: All listed agents exist as files', () => {
+    const pluginPath = path.join(PROJECT_ROOT, '.claude-plugin', 'plugin-extended.json');
     const plugin = JSON.parse(fs.readFileSync(pluginPath, 'utf8'));
     const agentsDir = path.join(PROJECT_ROOT, 'agents');
 
@@ -191,8 +194,8 @@ function testAgentsExist() {
     }
   });
 
-  test('plugin.json: Agent count matches directory', () => {
-    const pluginPath = path.join(PROJECT_ROOT, '.claude-plugin', 'plugin.json');
+  test('plugin-extended.json: Agent count matches directory', () => {
+    const pluginPath = path.join(PROJECT_ROOT, '.claude-plugin', 'plugin-extended.json');
     const plugin = JSON.parse(fs.readFileSync(pluginPath, 'utf8'));
     const agentsDir = path.join(PROJECT_ROOT, 'agents');
 
