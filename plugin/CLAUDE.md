@@ -33,6 +33,23 @@ repo-root/
 - stdio MCP servers (npx commands) work in Claude Code but NOT in Claude Desktop's sandboxed environment
 - Both use same marketplace.json/plugin.json format, but Desktop requires strict structure
 
+### Reference Plugins for Structure Examples
+
+When making structural changes, consult these installed exemplar plugins:
+
+```
+~/.claude/plugins/marketplaces/
+├── claude-plugins-official/plugins/   # Official Anthropic plugins
+│   ├── plugin-dev/                    # Plugin development reference
+│   ├── feature-dev/                   # Feature development reference
+│   └── commit-commands/               # Simple command examples
+└── knowledge-work-plugins/            # Domain-specific plugins
+    ├── productivity/
+    └── bio-research/
+```
+
+**Key structural finding:** Official plugins use **flat command structure** - all `.md` files directly in `commands/` folder, no subdirectories. Our nested structure (`commands/project/`, `commands/stage1/`) may not work in Cowork.
+
 ---
 
 ## Core Philosophy (CRITICAL)
