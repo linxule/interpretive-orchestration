@@ -4,14 +4,8 @@
   "version": "0.2.1",
   "description": "Atelier of Co-Apprenticeship for interpretive qualitative research. Human and AI learn together as apprentices to the craft tradition (rigor, reflexivity, theoretical sensitivity). Three stages: Solo Practice → Side-by-Side Collaboration → Dialogue with Tradition. Instantiates Partnership Agency from Cognitio Emergens framework. Prevents calculator mindset, embeds meta-cognition, maintains human interpretive authority. Built with care on Gioia/Constructivist principles.",
   "author": {
-    "names": ["Xule Lin", "Kevin Corley"],
-    "email": "xule.lin@imperial.ac.uk",
-    "affiliations": ["Imperial College London"],
-    "ai_collaborators": {
-      "development": "Claude Opus 4.5 (Anthropic) - Co-apprentice in the atelier of interpretive craft",
-      "code_review": "Codex (OpenAI) - Robustness analysis and bug detection",
-      "architecture_review": "Gemini (Google, via Zen MCP) - Architecture validation"
-    }
+    "name": "Xule Lin and Kevin Corley (Imperial College London)",
+    "email": "xule.lin@imperial.ac.uk"
   },
   "homepage": "https://github.com/linxule/interpretive-orchestration#readme",
   "license": "MIT",
