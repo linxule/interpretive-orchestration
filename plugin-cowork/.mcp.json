@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+    },
+    "lotus-wisdom": {
+      "command": "npx",
+      "args": ["-y", "lotus-wisdom-mcp"]
+    },
+    "markdownify": {
+      "command": "npx",
+      "args": ["-y", "@iflow-mcp/markdownify-mcp"]
+    }
+  },
+  "_note": "These connectors auto-load in Claude Code CLI. For Claude Desktop (Cowork), see docs/CONNECTOR-SETUP.md for manual installation instructions."
+}
