@@ -53,7 +53,7 @@ If you're comfortable with configuration files:
 ```json
 {
   "mcpServers": {
-    "sequential-thinking": {
+    "mcp-sequentialthinking-tools": {
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
     },
