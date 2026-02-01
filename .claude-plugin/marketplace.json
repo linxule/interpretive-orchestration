@@ -6,7 +6,7 @@
   "plugins": [
     {
       "name": "interpretive-orchestration",
-      "source": "./",
+      "source": "./plugin",
       "description": "Epistemic Partnership System for AI-Assisted Qualitative Research. Features Socratic onboarding, 4-stage reflexive coding, synthesis dialogue. Built on Gioia/Constructivist principles. Prevents calculator mindset, maintains human interpretive authority."
     }
   ]

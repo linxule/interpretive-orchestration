@@ -36,18 +36,35 @@ function assert(condition, message) {
 // Test: All JSON files parse correctly
 function testJsonFilesParse() {
   const jsonFiles = [
-    'package.json',
     '.mcp.json',
     '.claude-plugin/plugin.json',
     '.claude-plugin/plugin-extended.json',
-    '.claude-plugin/marketplace.json',
     'hooks/hooks.json',
     'skills/project-setup/templates/config.schema.json',
     'skills/project-setup/templates/example-config.json',
     'examples/tutorial-quickstart/sample-config.json'
   ];
 
+  // Marketplace-level files (at root, not plugin level)
+  const marketplaceFiles = [
+    '../package.json',
+    '../.claude-plugin/marketplace.json'
+  ];
+
   for (const file of jsonFiles) {
+    test(`JSON parses: ${file}`, () => {
+      const filePath = path.join(PROJECT_ROOT, file);
+      if (fs.existsSync(filePath)) {
+        const content = fs.readFileSync(filePath, 'utf8');
+        JSON.parse(content); // Will throw if invalid
+      } else {
+        throw new Error(`File not found: ${file}`);
+      }
+    });
+  }
+
+  // Test marketplace-level files
+  for (const file of marketplaceFiles) {
     test(`JSON parses: ${file}`, () => {
       const filePath = path.join(PROJECT_ROOT, file);
       if (fs.existsSync(filePath)) {
@@ -173,7 +190,8 @@ function testMcpJsonStructure() {
 // Test: Version consistency
 function testVersionConsistency() {
   test('Version matches across files', () => {
-    const packageJson = JSON.parse(fs.readFileSync(path.join(PROJECT_ROOT, 'package.json'), 'utf8'));
+    // package.json is at marketplace root level
+    const packageJson = JSON.parse(fs.readFileSync(path.join(PROJECT_ROOT, '..', 'package.json'), 'utf8'));
     const pluginJson = JSON.parse(fs.readFileSync(path.join(PROJECT_ROOT, '.claude-plugin', 'plugin.json'), 'utf8'));
 
     assert(packageJson.version === pluginJson.version,
