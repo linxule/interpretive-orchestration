@@ -50,6 +50,32 @@ When making structural changes, consult these installed exemplar plugins:
 
 **Key structural finding:** Official plugins use **flat command structure** - all `.md` files directly in `commands/` folder, no subdirectories. Our nested structure (`commands/project/`, `commands/stage1/`) may not work in Cowork.
 
+### Commands Structure: CLI vs Cowork
+
+- **Claude Code CLI:** Nested commands work (`commands/project/init.md`)
+- **Claude Desktop/Cowork:** Requires flat structure (`commands/qual-init.md`)
+- plugin-cowork uses flat `qual-*` prefix; plugin/ keeps nested structure
+
+### MCP Compatibility Notes
+
+- MCPs using outdated SDK (< 1.1.0) may fail to connect
+- Check with `claude mcp list` to verify connection status
+- Markdownify removed v0.2.1 (SDK 1.0.1 incompatible) - use MinerU or manual conversion
+
+### Validation Workflow
+
+```bash
+# Run schema tests
+cd plugin && node tests/test-schemas.js
+
+# Validate both plugin versions
+claude plugin validate plugin/
+claude plugin validate plugin-cowork/
+
+# Check for stale references after removal
+grep -ri "removed_term" plugin/ plugin-cowork/ --include="*.md" --include="*.js" --include="*.json"
+```
+
 ---
 
 ## Core Philosophy (CRITICAL)
