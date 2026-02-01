@@ -12,10 +12,7 @@
   "plugins": [
     {
       "name": "interpretive-orchestration",
-      "source": {
-        "source": "url",
-        "url": "https://github.com/linxule/interpretive-orchestration.git"
-      },
+      "source": "./",
       "description": "Complete epistemic partnership system featuring: Socratic onboarding, 4-stage reflexive coding, synthesis dialogue, and bundled MCP tools (Sequential Thinking, Lotus Wisdom, Markdownify). Prevents calculator mindset, enforces human-AI-human sandwich methodology, and teaches meta-cognitive awareness. Context-agnostic design works across all qualitative research domains.",
       "version": "0.2.1",
       "author": {
