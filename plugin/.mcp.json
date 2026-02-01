@@ -10,7 +10,7 @@
     },
     "markdownify": {
       "command": "npx",
-      "args": ["-y", "markdownify-mcp"]
+      "args": ["-y", "@iflow-mcp/markdownify-mcp"]
     }
   }
 }
