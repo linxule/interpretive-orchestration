@@ -1,0 +1,64 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "@dialogical-coder|/qual-parallel-streams|/qual-synthesize|/qual-code-deductive|/qual-characterize-patterns",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/check-stage1-complete.js\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "@dialogical-coder",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/interpretive-pause.js\"",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/check-coherence.js\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "/qual-synthesize",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/generate-audit-trail.js\"",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "/qual-advance-stage|/qual-complete-stage1|/qual-parallel-streams|/qual-synthesize|/qual-characterize-patterns|@dialogical-coder",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/post-phase-transition.js\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/session-reflect.js\"",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}
