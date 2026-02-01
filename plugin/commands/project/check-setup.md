@@ -18,7 +18,6 @@ Please verify the following and report back to the researcher:
 Check if these servers are available and responding:
 - **Sequential Thinking** - For deep analytical reasoning
 - **Lotus Wisdom** - For paradox navigation
-- **Markdownify** - For PDF to markdown conversion
 
 ### 3. Available Commands
 List the available /qual-* commands and confirm they are loaded:
@@ -55,7 +54,9 @@ Plugin version: [version]
 Bundled MCP Servers:
 ✓ Sequential Thinking - Ready
 ✓ Lotus Wisdom - Ready
-✓ Markdownify - Ready
+
+Optional MCP Servers:
+○ MinerU - [Configured | Not configured] (for PDF parsing)
 
 Commands: [X] available
 Agents: [X] ready

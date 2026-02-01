@@ -183,7 +183,7 @@ function testMcpJsonStructure() {
     assert(mcp.mcpServers, 'Should have mcpServers');
     assert(mcp.mcpServers['mcp-sequentialthinking-tools'], 'Should have sequential thinking');
     assert(mcp.mcpServers['lotus-wisdom'], 'Should have lotus wisdom');
-    assert(mcp.mcpServers['markdownify'], 'Should have markdownify');
+    // Note: markdownify removed due to MCP SDK compatibility issues
   });
 }
 

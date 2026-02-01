@@ -31,8 +31,8 @@ This skill can operate at three capability tiers based on available MCPs:
 
 ### Tier 3: Basic (No API keys required)
 - **Search:** User provides URLs manually
-- **Fetch:** Built-in WebFetch tool
-- **Process:** Basic content retrieval
+- **Fetch:** Built-in WebFetch tool or manual download
+- **Process:** Basic content retrieval with manual conversion
 
 ## Checking Tier Availability
 
@@ -75,8 +75,8 @@ Or attempt the tool call - if it fails, fall back to next tier.
 ```
 1. User provides list of URLs
 2. WebFetch retrieves content (may be limited by paywalls)
-3. User may need to provide PDFs directly
-4. Markdownify converts PDFs to markdown
+3. User may need to download PDFs directly
+4. Manual PDF conversion (Adobe Acrobat, Google Docs, or OCR)
 5. Organize manually
 ```
 
@@ -160,11 +160,12 @@ If API keys unavailable:
    - Check preprint servers (SSRN, arXiv)
 
 3. **Converting to Markdown**
-   - Use Markdownify (bundled, no API key)
-   - `markdownify pdf-to-markdown /path/to/paper.pdf`
+   - Use MinerU if API key available
+   - Or manual conversion: Adobe Acrobat export, Google Docs OCR
+   - For batch processing: Tesseract OCR command-line tool
 
 ## Related
 
-- **MCPs:** Exa (optional), Jina (optional), Markdownify (bundled)
+- **MCPs:** Exa (optional), Jina (optional), MinerU (optional)
 - **Agents:** @scholarly-companion for analysis
 - **Skills:** document-conversion for PDF handling

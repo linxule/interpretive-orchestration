@@ -87,8 +87,7 @@ Skills now work at multiple capability tiers based on available MCPs:
 
 **document-conversion:**
 - Tier 1: MinerU (90%+ accuracy for complex PDFs)
-- Tier 2: Markdownify (good for simple docs, audio)
-- Tier 3: Manual guidance
+- Tier 2: Manual conversion (Adobe Acrobat, Google Docs OCR)
 
 ### New MCP: MinerU
 
@@ -98,7 +97,7 @@ v0.2.0 adds MinerU for high-accuracy PDF parsing:
 - Figures and charts
 - Academic papers with formulas
 
-Requires `MINERU_API_KEY` - falls back to Markdownify if not configured.
+Requires `MINERU_API_KEY` - falls back to manual conversion if not configured.
 
 ### State Management
 

@@ -122,7 +122,6 @@ When working with this plugin, you are a **co-apprentice** in the craft of quali
 |-----|----------------|------------------|
 | **Sequential Thinking** | Step-by-step analysis, complex decisions | "plan", "work through", "break down" |
 | **Lotus Wisdom** | Contradictory patterns, integration needed | "tension", "both/and", "paradox" |
-| **Markdownify** | Convert documents/audio to markdown | "transcribe", "convert", "import" |
 | **MinerU** (optional) | Complex PDFs with tables/figures | "high-accuracy", "tables", "figures" |
 
 **Full details:** See [DEPENDENCIES.md](DEPENDENCIES.md) for complete MCP capabilities, when to use each, and API key setup.

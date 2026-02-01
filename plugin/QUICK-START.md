@@ -78,7 +78,6 @@ Claude loads these when relevant to your request:
 
 - **Sequential Thinking** - Structured reasoning chains
 - **Lotus Wisdom** - Navigate paradoxes, integrate tensions
-- **Markdownify** - Convert PDFs, transcribe audio, extract from videos
 
 **Optional (with API keys):** MinerU (90%+ PDF accuracy), Zen (multi-model), Exa (search), Jina (fetch), Zotero (bibliography). See [DEPENDENCIES.md](DEPENDENCIES.md).
 

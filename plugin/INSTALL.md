@@ -106,7 +106,7 @@ Then type:
 
 Claude Code will:
 - Download the plugin
-- Install bundled MCP servers (Sequential Thinking, Lotus Wisdom, Markdownify)
+- Install bundled MCP servers (Sequential Thinking, Lotus Wisdom)
 - Set up methodology enforcement hooks
 
 ---
@@ -150,9 +150,6 @@ These tools are **bundled and work immediately** - no API keys needed:
 |------|--------------|
 | **Sequential Thinking** | Dynamic reasoning through structured thought sequences |
 | **Lotus Wisdom** | Navigate paradoxes with contemplative problem-solving |
-| **Markdownify** | Convert PDFs, transcribe audio, extract from videos/web |
-
-**Markdownify** is especially valuable - it can transcribe your interview recordings directly!
 
 **Full MCP documentation:** See [DEPENDENCIES.md](DEPENDENCIES.md) for complete capabilities and setup instructions.
 

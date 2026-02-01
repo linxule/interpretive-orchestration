@@ -52,7 +52,7 @@ function detectTier() {
   } else if (hasJina) {
     return { tier: 2, name: 'Manual Search + Jina Fetch', exa: false, jina: true };
   } else {
-    return { tier: 3, name: 'Basic (WebFetch/Markdownify)', exa: false, jina: false };
+    return { tier: 3, name: 'Basic (WebFetch + Manual)', exa: false, jina: false };
   }
 }
 
@@ -221,7 +221,7 @@ function generateTier3Workflow(urls, projectPath) {
   return {
     tier: 3,
     tier_name: 'Basic (No API Keys)',
-    note: 'Neither Exa nor Jina API keys available. Using built-in tools only.',
+    note: 'Neither Exa nor Jina API keys available. Using built-in tools and manual conversion.',
     steps: [
       {
         step: 1,
@@ -242,15 +242,19 @@ function generateTier3Workflow(urls, projectPath) {
         urls_provided: urlList,
         instruction: `Options for getting paper content:
           1. If URL accessible: Use WebFetch tool
-          2. If PDF downloaded: Use Markdownify (pdf-to-markdown)
+          2. If PDF downloaded: Manual conversion needed
           3. If paywalled: Check for open access version or preprint`
       },
       {
         step: 3,
         action: 'convert',
         description: 'Convert PDFs to markdown',
-        mcp_tool: 'markdownify',
-        instruction: 'For PDF files, use Markdownify pdf-to-markdown to convert to analyzable text.'
+        tool: 'manual',
+        instruction: `For PDF files, use manual conversion:
+          - Adobe Acrobat: Export to Word/text
+          - Google Docs: Open PDF for auto-OCR
+          - Tesseract: Command-line OCR for batch processing
+          - MinerU: If API key becomes available later`
       },
       {
         step: 4,
@@ -269,7 +273,8 @@ function generateTier3Workflow(urls, projectPath) {
     api_upgrade_suggestion: {
       for_better_experience: [
         'Set EXA_API_KEY for automatic academic search',
-        'Set JINA_API_KEY for reliable content extraction'
+        'Set JINA_API_KEY for reliable content extraction',
+        'Set MINERU_API_KEY for high-accuracy PDF conversion'
       ]
     },
     output_structure: {

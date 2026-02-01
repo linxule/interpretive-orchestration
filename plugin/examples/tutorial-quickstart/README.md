@@ -113,10 +113,10 @@ Even before AI-assisted coding, you have powerful tools:
 | `/qual-memo` | Write analytical memos |
 | `/qual-status` | Check your progress |
 
-Use **Markdownify** to convert any format:
-- PDF documents
-- Audio recordings (transcribes automatically!)
-- Word documents
+Convert your documents for analysis:
+- **PDFs:** Use MinerU (if API key) or Adobe Acrobat/Google Docs
+- **Audio:** Use Otter.ai, Rev.com, or YouTube auto-captions
+- **Word documents:** Copy/paste or use Pandoc
 
 ---
 

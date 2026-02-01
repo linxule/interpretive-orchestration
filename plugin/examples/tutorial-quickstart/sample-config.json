@@ -43,8 +43,7 @@
   "mcps": {
     "bundled": {
       "sequential_thinking": true,
-      "lotus_wisdom": true,
-      "markdownify": true
+      "lotus_wisdom": true
     },
     "optional": {
       "zen_mcp": false,

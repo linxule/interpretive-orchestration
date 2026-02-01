@@ -16,7 +16,7 @@ The plugin follows a "sandwich" methodology where human work brackets AI assista
 
 | Document | Description |
 |----------|-------------|
-| [CONNECTOR-SETUP.md](CONNECTOR-SETUP.md) | Guide for installing optional MCP connectors (Sequential Thinking, Lotus Wisdom, Markdownify) |
+| [CONNECTOR-SETUP.md](CONNECTOR-SETUP.md) | Guide for installing optional MCP connectors (Sequential Thinking, Lotus Wisdom) |
 | [HOOKS-PHILOSOPHY.md](HOOKS-PHILOSOPHY.md) | Philosophy and rationale behind each methodological hook |
 
 ## Quick Links

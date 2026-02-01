@@ -548,7 +548,7 @@
         "active_mcps": {
           "type": "array",
           "items": {"type": "string"},
-          "default": ["mcp-sequentialthinking-tools", "lotus-wisdom", "markdownify"]
+          "default": ["mcp-sequentialthinking-tools", "lotus-wisdom"]
         },
         "mcp_usage_log": {
           "type": "array",

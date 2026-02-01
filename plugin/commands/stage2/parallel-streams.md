@@ -33,7 +33,7 @@ Systematically extract theoretical patterns from your foundational literature th
 - Where do theoretical frameworks converge or diverge?
 
 ### Tools
-- Use **Markdownify** to convert PDF articles to analyzable text
+- For PDF articles: Use **MinerU** (if API key configured) or manual conversion (Adobe Acrobat, Google Docs OCR)
 - Use **Sequential Thinking** to work through complex theoretical frameworks
 - Optional: **Exa/Jina** for literature search and fetching
 

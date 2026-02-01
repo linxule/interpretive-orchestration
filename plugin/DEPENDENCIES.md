@@ -8,7 +8,6 @@ This document describes the Model Context Protocol (MCP) servers used by Interpr
 |------------|------|------------------|-------------|
 | Sequential Thinking | Bundled | No | Deep reasoning, step-by-step analysis |
 | Lotus Wisdom | Bundled | No | Paradox navigation, integration |
-| Markdownify | Bundled | No | Document/audio conversion |
 | MinerU | Optional | Yes (MINERU_API_KEY) | High-accuracy PDF parsing |
 | Jina AI | Optional | Yes (JINA_API_KEY) | Web content extraction |
 | Exa | Optional | Yes (EXA_API_KEY) | Academic literature search |
@@ -65,30 +64,6 @@ These MCPs start automatically with the plugin and work out of the box.
 
 ---
 
-### Markdownify
-
-**Package:** `markdownify-mcp`
-
-**Purpose:** Convert documents and media to analyzable markdown format.
-
-**Capabilities:**
-- PDF to markdown conversion
-- Audio transcription (interviews!)
-- YouTube video extraction
-- Web page conversion
-- Office document conversion (DOCX, XLSX, PPTX)
-- Image processing with OCR
-
-**When to Use:**
-- Transcribing interview recordings
-- Converting PDF articles and documents
-- Importing data from various formats
-- Processing web-based resources
-
-**Invoked by:** `interview-ingest` skill, `document-conversion` skill
-
----
-
 ## Optional MCPs (Require API Keys)
 
 These MCPs provide enhanced capabilities but require API key configuration.
@@ -110,14 +85,16 @@ These MCPs provide enhanced capabilities but require API key configuration.
 - Page range selection
 - Batch processing (up to 200 documents)
 
-**When to Use (vs Markdownify):**
-| Use MinerU | Use Markdownify |
-|------------|-----------------|
-| Complex tables | Simple documents |
-| Multi-column PDFs | Audio files |
-| Figures/charts | No API key available |
-| Academic papers | Cost is a concern |
-| Accuracy critical | Basic conversion sufficient |
+**When to Use MinerU:**
+| Scenario | Recommendation |
+|----------|----------------|
+| Complex tables | Use MinerU (90%+ accuracy) |
+| Multi-column PDFs | Use MinerU |
+| Figures/charts | Use MinerU |
+| Academic papers | Use MinerU |
+| Simple documents | Manual conversion (Adobe Acrobat, Google Docs OCR) |
+| Audio files | External services (Otter.ai, Rev.com, Whisper) |
+| No API key available | Manual conversion |
 
 **Invoked by:** `document-conversion` skill, `interview-ingest` skill (Tier 1)
 
@@ -231,8 +208,8 @@ This shows which skills require which MCPs:
 | `deep-reasoning` | Sequential Thinking (bundled) | None | N/A |
 | `paradox-navigation` | Lotus Wisdom (bundled) | None | N/A |
 | `coherence-check` | None | None | N/A |
-| `interview-ingest` | Markdownify (bundled) | MinerU | Markdownify |
-| `document-conversion` | Markdownify (bundled) | MinerU | Markdownify |
+| `interview-ingest` | None | MinerU | Manual conversion guidance |
+| `document-conversion` | None | MinerU | Manual conversion guidance |
 | `literature-sweep` | None | Exa + Jina | WebFetch |
 | `analysis-orchestration` | None | None | N/A |
 | `coding-workflow` | None | None | N/A |
@@ -251,13 +228,16 @@ Skills that use optional MCPs implement tiered functionality:
 
 ### interview-ingest
 - **Tier 1 (Best):** MinerU for PDFs (90%+ accuracy)
-- **Tier 2 (Good):** Markdownify for all formats
-- **Tier 3 (Basic):** Manual handling guidance
+- **Tier 2 (Manual):** Manual conversion guidance
+  - PDFs: Adobe Acrobat, Google Docs OCR, online PDF-to-text tools
+  - Audio: Otter.ai, Rev.com, YouTube auto-captions, OpenAI Whisper
 
 ### document-conversion
 - **Tier 1 (Best):** MinerU (VLM mode) for complex PDFs
-- **Tier 2 (Good):** Markdownify for simple documents
-- **Tier 3 (Basic):** Manual conversion guidance
+- **Tier 2 (Manual):** Manual conversion guidance
+  - Use Adobe Acrobat for PDF export to Word/text
+  - Use Google Docs for OCR of scanned documents
+  - Use online converters for simple format changes
 
 ---
 
@@ -307,7 +287,6 @@ else tier = 3;
 ### Free (Bundled)
 - Sequential Thinking
 - Lotus Wisdom
-- Markdownify
 
 ### Pay-as-you-go
 - MinerU: ~$0.01-0.05 per page
@@ -336,7 +315,7 @@ else tier = 3;
 ### Tool Call Fails
 1. Check API key validity (may have expired)
 2. Check rate limits on the service
-3. Fall back to next tier (e.g., Markdownify instead of MinerU)
+3. Fall back to manual conversion (see tier guidance above)
 
 ### No MCPs Available
 The plugin works without any optional MCPs. Bundled MCPs start automatically.
@@ -374,10 +353,6 @@ mkdir -p "$MCP_DIR" && cd "$MCP_DIR"
 # Clone and build Lotus Wisdom
 git clone https://github.com/XiYuan68/lotus-wisdom-mcp.git
 cd lotus-wisdom-mcp && bun install && bun run build && cd ..
-
-# Clone and build Markdownify
-git clone https://github.com/zcaceres/markdownify-mcp.git
-cd markdownify-mcp && bun install && bun run build && cd ..
 ```
 
 ### Configure Local Servers
@@ -396,10 +371,6 @@ Edit `~/.claude.json` (global) or project `.mcp.json`.
     "lotus-wisdom": {
       "command": "bun",
       "args": ["<MCP_DIR>/lotus-wisdom-mcp/dist/index.js"]
-    },
-    "markdownify": {
-      "command": "bun",
-      "args": ["<MCP_DIR>/markdownify-mcp/dist/index.js"]
     }
   }
 }

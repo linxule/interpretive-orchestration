@@ -83,8 +83,7 @@
     ],
     "mcps_bundled": [
       "mcp-sequentialthinking-tools",
-      "lotus-wisdom",
-      "markdownify"
+      "lotus-wisdom"
     ],
     "mcps_optional": [
       "mineru-mcp",
@@ -115,7 +114,7 @@
       "@dialogical-coder (4-stage reflexive coding)",
       "@scholarly-companion (Stage 3 theoretical dialogue)",
       "/qual-reflect (synthesis dialogue)",
-      "Sequential Thinking, Lotus Wisdom, Markdownify MCPs"
+      "Sequential Thinking and Lotus Wisdom MCPs for epistemic scaffolding"
     ],
     "success_metric": "Transforms how you think about interpretation (not just coding speed)",
     "argument": "Partnership Agency requires: theoretical foundation + visible reasoning + reflexive practice + philosophical coherence"

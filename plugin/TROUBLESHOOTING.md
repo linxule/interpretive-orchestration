@@ -63,14 +63,27 @@ Common issues and solutions for the Interpretive Orchestration plugin.
 
 ---
 
-### Markdownify fails on PDF conversion
+### PDF conversion issues
 
-**Cause:** PDF may be corrupted, scanned (image-based), or too large.
+**Cause:** No automated PDF conversion available (Markdownify has been removed due to SDK compatibility issues).
 
 **Solutions:**
-1. Ensure the PDF contains actual text (not scanned images)
-2. Try a smaller PDF first to test
-3. For scanned PDFs, use OCR software first
+1. **With MinerU API key:** Use MinerU for 90%+ accuracy PDF parsing
+2. **Without API key - manual options:**
+   - Adobe Acrobat: Export PDF to Word or text
+   - Google Docs: Upload PDF, it will OCR automatically
+   - Online converters: pdf2txt.com, smallpdf.com
+3. **For scanned PDFs:** Use Google Docs OCR or Adobe Scan
+
+### Audio transcription
+
+**Cause:** No bundled audio transcription available.
+
+**Solutions:**
+1. **Otter.ai** - Upload recordings for automatic transcription
+2. **Rev.com** - Professional transcription service
+3. **YouTube** - Upload as unlisted video, download auto-captions
+4. **OpenAI Whisper** - Free local transcription (requires Python setup)
 
 ---
 

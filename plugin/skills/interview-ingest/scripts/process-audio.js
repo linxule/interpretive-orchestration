@@ -17,7 +17,7 @@
  *   --list           Just list files to process, don't generate workflow
  *
  * This script:
- * 1. Detects available tier (MinerU vs Markdownify)
+ * 1. Detects available tier (MinerU vs Manual)
  * 2. Scans input directory for supported formats
  * 3. Returns workflow instructions for Claude to execute
  */
@@ -51,20 +51,18 @@ function detectTier() {
   if (hasMineru) {
     return {
       tier: 1,
-      name: 'Best (MinerU + Markdownify)',
+      name: 'Best (MinerU for PDFs)',
       mineru: true,
-      markdownify: true,
       pdf_tool: 'mineru',
-      audio_tool: 'markdownify'
+      audio_tool: 'external'
     };
   } else {
     return {
       tier: 2,
-      name: 'Good (Markdownify only)',
+      name: 'Manual (External tools)',
       mineru: false,
-      markdownify: true,
-      pdf_tool: 'markdownify',
-      audio_tool: 'markdownify'
+      pdf_tool: 'manual',
+      audio_tool: 'external'
     };
   }
 }
@@ -175,10 +173,12 @@ function getToolInstruction(format, tier, filePath) {
   switch (format) {
     case 'audio':
       return {
-        tool: 'markdownify',
-        action: 'audio-to-markdown',
-        command: `Use Markdownify audio-to-markdown on: ${filePath}`,
+        tool: 'external',
+        action: 'transcription',
+        command: `Transcribe audio using external service: ${filePath}`,
         notes: [
+          'Recommended services: Otter.ai, Rev.com, or YouTube auto-captions',
+          'For local processing: OpenAI Whisper',
           'Review transcript for accuracy',
           'Add speaker labels (Interviewer:, Participant:)',
           'Mark unclear passages with [unclear]',
@@ -192,7 +192,7 @@ function getToolInstruction(format, tier, filePath) {
           tool: 'mineru',
           action: 'parse',
           command: `Use MinerU to parse PDF with VLM mode: ${filePath}`,
-          fallback: `If MinerU fails, use Markdownify pdf-to-markdown: ${filePath}`,
+          fallback: `If MinerU fails, use manual conversion (Adobe Acrobat or Google Docs)`,
           notes: [
             'VLM mode best for tables and figures',
             'Check table accuracy after conversion',
@@ -201,10 +201,11 @@ function getToolInstruction(format, tier, filePath) {
         };
       } else {
         return {
-          tool: 'markdownify',
-          action: 'pdf-to-markdown',
-          command: `Use Markdownify pdf-to-markdown on: ${filePath}`,
+          tool: 'manual',
+          action: 'pdf-conversion',
+          command: `Manual PDF conversion needed: ${filePath}`,
           notes: [
+            'Options: Adobe Acrobat export, Google Docs OCR, or Tesseract',
             'Review table formatting',
             'Check for missing content',
             'Figures may need manual description'
@@ -214,42 +215,42 @@ function getToolInstruction(format, tier, filePath) {
 
     case 'docx':
       return {
-        tool: 'markdownify',
-        action: 'docx-to-markdown',
-        command: `Use Markdownify docx-to-markdown on: ${filePath}`,
-        notes: ['Review formatting preservation']
+        tool: 'manual',
+        action: 'docx-conversion',
+        command: `Convert DOCX to markdown: ${filePath}`,
+        notes: ['Use Pandoc or copy/paste content', 'Review formatting preservation']
       };
 
     case 'xlsx':
       return {
-        tool: 'markdownify',
-        action: 'xlsx-to-markdown',
-        command: `Use Markdownify xlsx-to-markdown on: ${filePath}`,
-        notes: ['Tables converted to markdown tables']
+        tool: 'manual',
+        action: 'xlsx-conversion',
+        command: `Export spreadsheet to text/CSV: ${filePath}`,
+        notes: ['Export as CSV, then format as markdown tables']
       };
 
     case 'pptx':
       return {
-        tool: 'markdownify',
-        action: 'pptx-to-markdown',
-        command: `Use Markdownify pptx-to-markdown on: ${filePath}`,
-        notes: ['Extracts text and image descriptions']
+        tool: 'manual',
+        action: 'pptx-conversion',
+        command: `Extract text from presentation: ${filePath}`,
+        notes: ['Export to text or copy slide content manually']
       };
 
     case 'image':
       return {
-        tool: 'markdownify',
-        action: 'image-to-markdown',
-        command: `Use Markdownify image-to-markdown on: ${filePath}`,
-        notes: ['OCR extracts text', 'Metadata preserved']
+        tool: 'manual',
+        action: 'ocr',
+        command: `OCR image to extract text: ${filePath}`,
+        notes: ['Use Tesseract, Google Lens, or similar OCR tool']
       };
 
     case 'video':
       return {
-        tool: 'markdownify',
-        action: 'youtube-to-markdown',
-        command: `Use Markdownify for video: ${filePath}`,
-        notes: ['May need to upload to YouTube first for transcription']
+        tool: 'external',
+        action: 'transcription',
+        command: `Transcribe video: ${filePath}`,
+        notes: ['Upload to YouTube as unlisted for auto-captions', 'Or use Whisper for local transcription']
       };
 
     default:

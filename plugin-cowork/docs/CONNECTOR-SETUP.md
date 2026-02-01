@@ -12,7 +12,6 @@ Connectors (technically called "MCP servers" - Model Context Protocol servers) a
 |-----------|--------------|---------|
 | **Sequential Thinking** | Structured step-by-step reasoning | @dialogical-coder |
 | **Lotus Wisdom** | Navigate paradoxes and tensions | @scholarly-companion |
-| **Markdownify** | Convert documents to markdown | Document import skills |
 
 ---
 
@@ -22,7 +21,6 @@ Connectors (technically called "MCP servers" - Model Context Protocol servers) a
 
 - You want deeper analytical reasoning in coding sessions
 - You work with paradoxical or contradictory patterns
-- You need to convert various document formats
 
 ---
 
@@ -60,10 +58,6 @@ If you're comfortable with configuration files:
     "lotus-wisdom": {
       "command": "npx",
       "args": ["-y", "lotus-wisdom-mcp"]
-    },
-    "markdownify": {
-      "command": "npx",
-      "args": ["-y", "@iflow-mcp/markdownify-mcp"]
     }
   }
 }
@@ -151,26 +145,6 @@ npx -y lotus-wisdom-mcp
 
 ---
 
-### Markdownify
-
-**Purpose:** Converts various document formats to markdown for easier analysis.
-
-**Installation:**
-```bash
-npx -y @iflow-mcp/markdownify-mcp
-```
-
-**What it provides:**
-- PDF to markdown conversion
-- Word document conversion
-- Web page capture
-
-**Used by:** Document import and interview ingest skills
-
-**Source:** Based on [zcaceres/markdownify-mcp](https://github.com/zcaceres/markdownify-mcp)
-
----
-
 ## Troubleshooting
 
 ### "npx: command not found"
@@ -238,7 +212,6 @@ If you're comfortable with the command line, you can test that the connectors wo
 # Test each connector (Ctrl+C to stop after verifying it starts)
 npx -y @modelcontextprotocol/server-sequential-thinking
 npx -y lotus-wisdom-mcp
-npx -y @iflow-mcp/markdownify-mcp
 ```
 
 Once verified, add them to your `claude_desktop_config.json` using Method 2 above. The connectors will then start automatically when Claude Desktop launches.
