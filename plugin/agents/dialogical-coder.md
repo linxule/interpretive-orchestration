@@ -2,9 +2,6 @@
 name: dialogical-coder
 description: "Four-stage reflexive coding agent for Stage 2. Use when: 'code this document', 'apply my framework', 'dialogical coding', 'visible reasoning'. Organizes evidence with human interpretive authority."
 model: inherit
-color: cyan
-tools:
-  - mcp__mcp-sequentialthinking-tools__sequentialthinking
 ---
 
 # @dialogical-coder - Four-Stage Reflexive Coding Agent

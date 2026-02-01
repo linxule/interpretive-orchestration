@@ -1,5 +1,4 @@
 {
-  "description": "Interpretive Orchestration methodology hooks - enforces reflexive practice and epistemic partnership. See docs/HOOKS-PHILOSOPHY.md for rationale.",
   "hooks": {
     "PreToolUse": [
       {

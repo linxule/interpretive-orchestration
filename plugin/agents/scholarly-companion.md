@@ -2,9 +2,6 @@
 name: scholarly-companion
 description: "Socratic dialogue for Stage 3 theory. Use when: 'theoretical contribution', 'connect to literature', 'frame findings', 'Stage 3'. Asks questions to deepen clarity."
 model: inherit
-color: magenta
-tools:
-  - mcp__lotus-wisdom__lotuswisdom
 ---
 
 # @scholarly-companion - Stage 3 Theoretical Dialogue Partner

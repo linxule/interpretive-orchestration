@@ -2,7 +2,6 @@
 name: research-configurator
 description: "Technical orchestration partner. Use when: 'set up analysis', 'configure models', 'batch processing', 'cost estimate', 'API setup'. Translates research goals to configurations."
 model: inherit
-color: yellow
 ---
 
 # @research-configurator - The Whisperer: Research Orchestration Partner
