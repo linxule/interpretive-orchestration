@@ -7,7 +7,12 @@
     {
       "name": "interpretive-orchestration",
       "source": "./plugin",
-      "description": "Epistemic Partnership System for AI-Assisted Qualitative Research. Features Socratic onboarding, 4-stage reflexive coding, synthesis dialogue. Built on Gioia/Constructivist principles. Prevents calculator mindset, maintains human interpretive authority."
+      "description": "Full version for Claude Code CLI. Features Socratic onboarding, 4-stage reflexive coding, MCP tools (Sequential Thinking, Lotus Wisdom), hooks, and specialized agents."
+    },
+    {
+      "name": "interpretive-orchestration-cowork",
+      "source": "./plugin-cowork",
+      "description": "Cowork-compatible version. Commands and skills for qualitative research without MCP servers (works in Claude Desktop's sandboxed environment)."
     }
   ]
 }

@@ -1,0 +1,8 @@
+{
+  "name": "interpretive-orchestration-cowork",
+  "version": "0.2.1",
+  "description": "Epistemic Partnership System for AI-Assisted Qualitative Research. Cowork-compatible version with commands and skills.",
+  "author": {
+    "name": "Xule Lin and Kevin Corley (Imperial College London)"
+  }
+}

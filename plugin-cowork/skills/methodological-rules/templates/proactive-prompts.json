@@ -1,0 +1,189 @@
+{
+  "_description": "Proactive methodological prompts (SHOULD_PROMPT rules). These are positive prompts that encourage good practice, not restrictions.",
+
+  "prompts": {
+    "in_vivo_check": {
+      "id": "in_vivo_check",
+      "trigger": {
+        "event": "new_code_created",
+        "phase": ["stage1_foundation", "phase1_parallel_streams"]
+      },
+      "prompt": "Could this be an in-vivo code? What's the participant's exact language here?",
+      "rationale": "In-vivo codes preserve participant voice and often become powerful first-order concepts.",
+      "methodology": ["gioia_corley", "charmaz_constructivist"],
+      "cooldown_turns": 5,
+      "suppressible": true
+    },
+
+    "memo_prompt": {
+      "id": "memo_prompt",
+      "trigger": {
+        "event": "pattern_detected",
+        "condition": "no_memo_in_last_3_codes"
+      },
+      "prompt": "You've coded several passages without a memo. What's catching your attention? What patterns are emerging?",
+      "rationale": "Memos are where theory happens. Regular memoing prevents mechanical coding.",
+      "methodology": ["gioia_corley", "charmaz_constructivist", "straussian", "glaserian"],
+      "cooldown_turns": 10,
+      "suppressible": true
+    },
+
+    "negative_case_prompt": {
+      "id": "negative_case_prompt",
+      "trigger": {
+        "event": "category_consolidation",
+        "condition": "saturation_above_70"
+      },
+      "prompt": "As you consolidate, seek cases where this pattern is absent or reversed. What would disconfirm your emerging theory?",
+      "rationale": "Negative case analysis strengthens theory by testing its boundaries.",
+      "methodology": ["gioia_corley", "straussian", "glaserian"],
+      "cooldown_turns": 15,
+      "suppressible": true
+    },
+
+    "variation_memo": {
+      "id": "variation_memo",
+      "trigger": {
+        "event": "saturation_boundary",
+        "condition": "redundancy_above_80"
+      },
+      "prompt": "You're approaching saturation. Analytic memo required: What accounts for variations in this category?",
+      "rationale": "Saturation isn't just repetition—it's understanding the full range of variation.",
+      "methodology": ["gioia_corley", "straussian"],
+      "cooldown_turns": 20,
+      "suppressible": false
+    },
+
+    "theoretical_sensitivity": {
+      "id": "theoretical_sensitivity",
+      "trigger": {
+        "event": "code_application",
+        "condition": "same_code_5_times"
+      },
+      "prompt": "This code is appearing frequently. Is it becoming a sensitizing concept? Should you explore its dimensions?",
+      "rationale": "Frequent codes often signal important constructs worth unpacking theoretically.",
+      "methodology": ["gioia_corley", "charmaz_constructivist"],
+      "cooldown_turns": 10,
+      "suppressible": true
+    },
+
+    "reflexivity_check": {
+      "id": "reflexivity_check",
+      "trigger": {
+        "event": "session_milestone",
+        "condition": "documents_coded_multiple_of_5"
+      },
+      "prompt": "Pause for reflexivity: How might your background be shaping what you're seeing? What assumptions are you bringing?",
+      "rationale": "Reflexivity strengthens constructivist analysis by making researcher position explicit.",
+      "methodology": ["charmaz_constructivist"],
+      "cooldown_turns": 25,
+      "suppressible": true
+    },
+
+    "theoretical_coding_readiness": {
+      "id": "theoretical_coding_readiness",
+      "trigger": {
+        "event": "axial_coding_attempt",
+        "phase": ["phase1_parallel_streams"]
+      },
+      "prompt": "Before connecting codes: Do you have enough open codes to see relationships? Sometimes we rush to axial coding too early.",
+      "rationale": "Premature axial coding can close off important possibilities.",
+      "methodology": ["straussian"],
+      "cooldown_turns": 15,
+      "suppressible": true
+    },
+
+    "bracketing_reminder": {
+      "id": "bracketing_reminder",
+      "trigger": {
+        "event": "session_start",
+        "methodology": "phenomenology"
+      },
+      "prompt": "Bracketing check: What preconceptions about this phenomenon are you setting aside today?",
+      "rationale": "Phenomenological reduction requires conscious bracketing of assumptions.",
+      "methodology": ["phenomenology"],
+      "cooldown_turns": 0,
+      "suppressible": true
+    },
+
+    "thick_description": {
+      "id": "thick_description",
+      "trigger": {
+        "event": "field_note_analysis",
+        "methodology": "ethnography"
+      },
+      "prompt": "Are you capturing thick description? What's the cultural meaning behind these actions, not just the behavior?",
+      "rationale": "Ethnographic analysis requires interpreting meaning within cultural context.",
+      "methodology": ["ethnography"],
+      "cooldown_turns": 10,
+      "suppressible": true
+    },
+
+    "constant_comparison": {
+      "id": "constant_comparison",
+      "trigger": {
+        "event": "code_application",
+        "phase": ["stage1_foundation", "phase1_parallel_streams"]
+      },
+      "prompt": "Compare this instance to previous ones with the same code. How is it similar? Different? Does the code need refining?",
+      "rationale": "Constant comparison is the engine of grounded theory development.",
+      "methodology": ["gioia_corley", "charmaz_constructivist", "straussian", "glaserian"],
+      "cooldown_turns": 8,
+      "suppressible": true
+    },
+
+    "synthesis_readiness": {
+      "id": "synthesis_readiness",
+      "trigger": {
+        "event": "phase_near_complete",
+        "phase": ["phase1_parallel_streams"]
+      },
+      "prompt": "Before synthesis: Are both your theoretical and empirical streams mature enough? What would each contribute to the dialogue?",
+      "rationale": "Premature synthesis weakens both streams. Each should be developed before integration.",
+      "methodology": ["gioia_corley"],
+      "cooldown_turns": 0,
+      "suppressible": false
+    }
+  },
+
+  "methodology_defaults": {
+    "gioia_corley": [
+      "in_vivo_check",
+      "memo_prompt",
+      "negative_case_prompt",
+      "variation_memo",
+      "theoretical_sensitivity",
+      "constant_comparison",
+      "synthesis_readiness"
+    ],
+    "charmaz_constructivist": [
+      "in_vivo_check",
+      "memo_prompt",
+      "theoretical_sensitivity",
+      "reflexivity_check",
+      "constant_comparison"
+    ],
+    "straussian": [
+      "memo_prompt",
+      "negative_case_prompt",
+      "variation_memo",
+      "theoretical_coding_readiness",
+      "constant_comparison"
+    ],
+    "glaserian": [
+      "memo_prompt",
+      "negative_case_prompt",
+      "constant_comparison"
+    ],
+    "phenomenology": [
+      "bracketing_reminder",
+      "memo_prompt",
+      "reflexivity_check"
+    ],
+    "ethnography": [
+      "thick_description",
+      "memo_prompt",
+      "reflexivity_check"
+    ]
+  }
+}

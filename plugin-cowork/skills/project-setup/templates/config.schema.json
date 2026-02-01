@@ -1,0 +1,1081 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Interpretive Orchestration Project Configuration",
+  "description": "Machine-readable configuration for epistemic partnership. Agents read this to adapt their collaboration style, language, and assumptions.",
+  "type": "object",
+  "required": ["project_info", "philosophical_stance", "sandwich_status"],
+  "properties": {
+    "research_design": {
+      "type": "object",
+      "description": "Research study structure - cases, waves, streams, and isolation requirements. Drives methodological rules generation.",
+      "properties": {
+        "study_type": {
+          "type": "string",
+          "enum": ["single_case", "comparative", "longitudinal", "comparative_longitudinal"],
+          "description": "Type of study design",
+          "default": "single_case"
+        },
+        "cases": {
+          "type": "array",
+          "description": "For comparative studies: each case/site being studied",
+          "items": {
+            "type": "object",
+            "required": ["id", "name"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Unique identifier (e.g., case_a, org_alpha)"
+              },
+              "name": {
+                "type": "string",
+                "description": "Descriptive name (e.g., 'TechCorp', 'Hospital A')"
+              },
+              "folder_path": {
+                "type": "string",
+                "description": "Relative path to case data folder (e.g., 'data/cases/techcorp')"
+              },
+              "description": {
+                "type": "string",
+                "description": "Brief description of this case"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["not_started", "in_progress", "analyzed"],
+                "default": "not_started"
+              }
+            }
+          },
+          "default": []
+        },
+        "waves": {
+          "type": "array",
+          "description": "For longitudinal studies: each data collection wave/timepoint",
+          "items": {
+            "type": "object",
+            "required": ["id", "name"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Unique identifier (e.g., wave_1, t1)"
+              },
+              "name": {
+                "type": "string",
+                "description": "Descriptive name (e.g., 'Pre-implementation', '6-month follow-up')"
+              },
+              "folder_path": {
+                "type": "string",
+                "description": "Relative path to wave data folder"
+              },
+              "collection_period": {
+                "type": "string",
+                "description": "When data was/will be collected (e.g., 'Jan-Mar 2025')"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["not_collected", "collected", "analyzed"],
+                "default": "not_collected"
+              }
+            }
+          },
+          "default": []
+        },
+        "streams": {
+          "type": "object",
+          "description": "Parallel analysis streams (theoretical vs empirical)",
+          "properties": {
+            "theoretical": {
+              "type": "object",
+              "properties": {
+                "folder_path": {
+                  "type": "string",
+                  "description": "Path to theoretical/literature materials",
+                  "default": "literature"
+                },
+                "sources": {
+                  "type": "array",
+                  "items": {"type": "string"},
+                  "description": "Key theoretical sources being engaged"
+                }
+              }
+            },
+            "empirical": {
+              "type": "object",
+              "properties": {
+                "folder_path": {
+                  "type": "string",
+                  "description": "Path to empirical data",
+                  "default": "data"
+                },
+                "sources": {
+                  "type": "array",
+                  "items": {"type": "string"},
+                  "description": "Data source types (interviews, observations, documents)"
+                }
+              }
+            }
+          }
+        },
+        "data_sources": {
+          "type": "array",
+          "description": "Types of data being collected/analyzed",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["interviews", "focus_groups", "observations", "field_notes", "documents", "artifacts", "surveys", "other"],
+                "description": "Type of data source"
+              },
+              "role": {
+                "type": "string",
+                "enum": ["primary", "supplementary"],
+                "description": "Role in analysis",
+                "default": "primary"
+              },
+              "count": {
+                "type": "integer",
+                "description": "Number of items (e.g., 25 interviews)"
+              },
+              "description": {
+                "type": "string"
+              }
+            }
+          },
+          "default": []
+        },
+        "isolation_config": {
+          "type": "object",
+          "description": "Methodological isolation requirements - what should stay separate during analysis",
+          "properties": {
+            "case_isolation": {
+              "type": "object",
+              "description": "Keep individual cases separate during open coding",
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "Whether to enforce case isolation"
+                },
+                "relaxes_at": {
+                  "type": "string",
+                  "enum": ["phase2_synthesis", "phase3_pattern_characterization", "stage3_synthesis", "manual"],
+                  "default": "phase3_pattern_characterization",
+                  "description": "When cross-case analysis becomes appropriate"
+                },
+                "friction_level": {
+                  "type": "string",
+                  "enum": ["silent", "nudge", "challenge", "hard_stop"],
+                  "default": "challenge",
+                  "description": "How strongly to enforce this isolation"
+                }
+              }
+            },
+            "wave_isolation": {
+              "type": "object",
+              "description": "Keep longitudinal waves separate to track emergence over time",
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "Whether to enforce wave isolation"
+                },
+                "relaxes_at": {
+                  "type": "string",
+                  "enum": ["cross_wave_analysis", "phase3_pattern_characterization", "stage3_synthesis", "manual"],
+                  "default": "cross_wave_analysis",
+                  "description": "When cross-wave analysis becomes appropriate"
+                },
+                "friction_level": {
+                  "type": "string",
+                  "enum": ["silent", "nudge", "challenge", "hard_stop"],
+                  "default": "challenge",
+                  "description": "How strongly to enforce this isolation"
+                }
+              }
+            },
+            "stream_separation": {
+              "type": "object",
+              "description": "Keep theoretical and empirical streams separate until synthesis",
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "Whether to enforce stream separation"
+                },
+                "relaxes_at": {
+                  "type": "string",
+                  "enum": ["phase2_synthesis", "phase3_pattern_characterization", "manual"],
+                  "default": "phase2_synthesis",
+                  "description": "When theory-data integration becomes appropriate"
+                },
+                "friction_level": {
+                  "type": "string",
+                  "enum": ["silent", "nudge", "challenge", "hard_stop"],
+                  "default": "nudge",
+                  "description": "How strongly to enforce this separation"
+                }
+              }
+            },
+            "custom_isolations": {
+              "type": "array",
+              "description": "Custom isolation rules for specific methodological needs",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {"type": "string"},
+                  "name": {"type": "string"},
+                  "keep_separate": {"type": "string", "description": "What to keep separate (path or concept)"},
+                  "from": {"type": "string", "description": "Separate from what"},
+                  "until_phase": {"type": "string"},
+                  "rationale": {"type": "string"},
+                  "friction_level": {
+                    "type": "string",
+                    "enum": ["silent", "nudge", "challenge", "hard_stop"],
+                    "default": "nudge"
+                  }
+                }
+              },
+              "default": []
+            }
+          }
+        },
+        "rule_overrides": {
+          "type": "array",
+          "description": "Log of methodological rule overrides for audit trail",
+          "items": {
+            "type": "object",
+            "properties": {
+              "rule_id": {"type": "string"},
+              "timestamp": {"type": "string", "format": "date-time"},
+              "justification": {"type": "string"},
+              "compensatory_moves": {
+                "type": "array",
+                "items": {"type": "string"}
+              },
+              "outcome": {
+                "type": "string",
+                "enum": ["theory_enriched", "problematized", "inconclusive", "pending"]
+              }
+            }
+          },
+          "default": []
+        },
+        "strain_tracking": {
+          "type": "object",
+          "description": "Tracks rule override patterns to detect methodological strain",
+          "properties": {
+            "override_counts": {
+              "type": "object",
+              "description": "Count of overrides per rule type in current session/phase",
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "count": {"type": "integer", "default": 0},
+                  "last_override": {"type": "string", "format": "date-time"},
+                  "phase_when_overridden": {"type": "string"}
+                }
+              }
+            },
+            "strain_threshold": {
+              "type": "integer",
+              "description": "Number of overrides before triggering methodological review",
+              "default": 3
+            },
+            "strained_rules": {
+              "type": "array",
+              "description": "Rules that have exceeded strain threshold",
+              "items": {"type": "string"},
+              "default": []
+            },
+            "strain_reviews": {
+              "type": "array",
+              "description": "Log of strain-triggered methodological reviews",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "rule_id": {"type": "string"},
+                  "triggered_at": {"type": "string", "format": "date-time"},
+                  "override_count": {"type": "integer"},
+                  "resolution": {
+                    "type": "string",
+                    "enum": ["phase_transition", "rule_adjusted", "exploration_noted", "dismissed"]
+                  },
+                  "notes": {"type": "string"}
+                }
+              },
+              "default": []
+            }
+          }
+        },
+        "methodology_preset": {
+          "type": "string",
+          "description": "Methodology preset that configured default rules and prompts",
+          "enum": ["gioia_corley", "charmaz_constructivist", "straussian", "glaserian", "phenomenology", "ethnography", "custom"],
+          "default": "gioia_corley"
+        },
+        "proactive_prompts": {
+          "type": "object",
+          "description": "Configuration for proactive methodological prompts (SHOULD_PROMPT rules)",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true
+            },
+            "cooldown_turns": {
+              "type": "integer",
+              "description": "Turns before same prompt can appear again",
+              "default": 5
+            },
+            "suppressed_prompts": {
+              "type": "array",
+              "description": "Prompts user has asked to stop showing",
+              "items": {"type": "string"},
+              "default": []
+            },
+            "prompt_history": {
+              "type": "array",
+              "description": "Recent prompts shown (for cooldown tracking)",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "prompt_id": {"type": "string"},
+                  "shown_at": {"type": "string", "format": "date-time"}
+                }
+              },
+              "default": []
+            }
+          }
+        }
+      }
+    },
+    "project_info": {
+      "type": "object",
+      "required": ["name", "research_question", "created_date"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Project name"
+        },
+        "research_question": {
+          "type": "string",
+          "description": "Central research question guiding the inquiry"
+        },
+        "domain": {
+          "type": "string",
+          "description": "Research domain (e.g., organizational behavior, healthcare, education)"
+        },
+        "created_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "researcher_name": {
+          "type": "string"
+        }
+      }
+    },
+    "philosophical_stance": {
+      "type": "object",
+      "description": "Epistemological and ontological commitments that shape analysis",
+      "required": ["ontology", "epistemology", "tradition", "ai_relationship"],
+      "properties": {
+        "ontology": {
+          "type": "string",
+          "enum": ["objectivist", "interpretivist", "critical_realist", "relativist", "custom"],
+          "description": "What reality exists"
+        },
+        "epistemology": {
+          "type": "string",
+          "enum": ["objectivist_discovery", "systematic_interpretation", "co_constructive", "custom"],
+          "description": "How knowledge is created"
+        },
+        "tradition": {
+          "type": "string",
+          "enum": ["gioia_corley", "charmaz_constructivist", "straussian", "glaserian", "gioia_hybrid", "custom"],
+          "description": "Grounded theory tradition followed"
+        },
+        "ai_relationship": {
+          "type": "string",
+          "enum": ["epistemic_partner", "interpretive_aid", "coding_tool", "exploring"],
+          "description": "How researcher conceives AI's role"
+        },
+        "vocabulary_mode": {
+          "type": "string",
+          "enum": ["constructivist", "discovery", "systematic"],
+          "description": "Language style for AI interactions",
+          "default": "constructivist"
+        },
+        "coding_verbs": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Preferred verbs for analytical work (e.g., construct, interpret, characterize)",
+          "default": ["construct", "interpret", "characterize", "organize"]
+        },
+        "avoid_verbs": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Verbs that contradict philosophical stance (e.g., discover, find, extract)",
+          "default": ["discover", "find", "extract", "uncover"]
+        },
+        "reflexivity_level": {
+          "type": "string",
+          "enum": ["minimal", "moderate", "high", "maximal"],
+          "description": "How frequently plugin prompts reflexive thinking",
+          "default": "high"
+        },
+        "interpretive_authority": {
+          "type": "string",
+          "const": "human",
+          "description": "Non-negotiable: Human maintains final interpretive authority"
+        }
+      }
+    },
+    "sandwich_status": {
+      "type": "object",
+      "description": "Tracks progress through human-AI-human sandwich methodology",
+      "required": ["current_stage", "stage1_complete"],
+      "properties": {
+        "current_stage": {
+          "type": "string",
+          "enum": ["stage1_foundation", "stage2_collaboration", "stage3_synthesis"],
+          "description": "Current stage in sandwich methodology"
+        },
+        "stage1_complete": {
+          "type": "boolean",
+          "description": "Has human completed foundational manual analysis?",
+          "default": false
+        },
+        "stage1_details": {
+          "type": "object",
+          "properties": {
+            "documents_manually_coded": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Number of data items (interviews, field notes, documents) manually coded"
+            },
+            "initial_structure_created": {
+              "type": "boolean",
+              "default": false
+            },
+            "memos_written": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "theoretical_frameworks_consulted": {
+              "type": "array",
+              "items": {"type": "string"}
+            }
+          }
+        },
+        "stage2_progress": {
+          "type": "object",
+          "properties": {
+            "phase1_parallel_streams": {"type": "string", "enum": ["not_started", "in_progress", "complete"]},
+            "phase2_synthesis": {"type": "string", "enum": ["not_started", "in_progress", "complete"]},
+            "phase3_pattern_characterization": {"type": "string", "enum": ["not_started", "in_progress", "complete"]}
+          }
+        },
+        "stage3_progress": {
+          "type": "object",
+          "properties": {
+            "evidence_organized": {"type": "boolean", "default": false},
+            "theory_developed": {"type": "boolean", "default": false},
+            "manuscript_drafted": {"type": "boolean", "default": false}
+          }
+        }
+      }
+    },
+    "data_structure": {
+      "type": "object",
+      "description": "Evolving analytical framework (Gioia-style)",
+      "properties": {
+        "aggregate_dimensions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {"type": "string"},
+              "name": {"type": "string"},
+              "definition": {"type": "string"},
+              "theoretical_foundation": {"type": "string"}
+            }
+          }
+        },
+        "second_order_themes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {"type": "string"},
+              "name": {"type": "string"},
+              "definition": {"type": "string"},
+              "parent_dimension": {"type": "string"},
+              "researcher_interpretation": {"type": "string"}
+            }
+          }
+        },
+        "first_order_concepts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {"type": "string"},
+              "name": {"type": "string"},
+              "definition": {"type": "string"},
+              "parent_theme": {"type": "string"},
+              "informant_terms": {"type": "array", "items": {"type": "string"}},
+              "example_quotes": {"type": "array", "items": {"type": "string"}}
+            }
+          }
+        },
+        "version_history": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "version": {"type": "string"},
+              "date": {"type": "string"},
+              "changes": {"type": "string"},
+              "rationale": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "mcp_integrations": {
+      "type": "object",
+      "description": "Which MCPs are active and when they're used",
+      "properties": {
+        "active_mcps": {
+          "type": "array",
+          "items": {"type": "string"},
+          "default": ["mcp-sequentialthinking-tools", "lotus-wisdom", "markdownify"]
+        },
+        "mcp_usage_log": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "mcp_name": {"type": "string"},
+              "timestamp": {"type": "string"},
+              "purpose": {"type": "string"},
+              "stage": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "epistemic_growth": {
+      "type": "object",
+      "description": "Tracks researcher's evolving understanding of interpretation",
+      "properties": {
+        "reflexive_moments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "date": {"type": "string"},
+              "prompt": {"type": "string"},
+              "reflection": {"type": "string"},
+              "insight": {"type": "string"}
+            }
+          }
+        },
+        "assumption_challenges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "date": {"type": "string"},
+              "assumption": {"type": "string"},
+              "challenge": {"type": "string"},
+              "resolution": {"type": "string"}
+            }
+          }
+        },
+        "philosophical_tensions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "tension": {"type": "string"},
+              "how_navigated": {"type": "string"},
+              "learning": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "interaction_preferences": {
+      "type": "object",
+      "description": "How plugin should interact with this researcher",
+      "properties": {
+        "teaching_moment_frequency": {
+          "type": "string",
+          "enum": ["every_interaction", "key_decisions", "weekly_summary", "minimal"],
+          "default": "key_decisions"
+        },
+        "philosophical_depth": {
+          "type": "string",
+          "enum": ["beginner", "intermediate", "advanced", "expert"],
+          "description": "Current philosophical sophistication - increases over time",
+          "default": "beginner"
+        },
+        "preferred_dialogue_style": {
+          "type": "string",
+          "enum": ["socratic_questions", "direct_explanations", "collaborative_exploration", "minimal_guidance"],
+          "default": "socratic_questions"
+        },
+        "uncertainty_comfort": {
+          "type": "string",
+          "enum": ["needs_reassurance", "comfortable_with_ambiguity", "seeks_complexity"],
+          "description": "How researcher relates to analytical uncertainty"
+        }
+      }
+    },
+    "coding_progress": {
+      "type": "object",
+      "description": "Tracks ongoing coding activity across all stages (separate from stage1_details which tracks manual foundation)",
+      "properties": {
+        "documents_coded": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Running count of documents coded (triggers interpretive pauses every 5)",
+          "default": 0
+        },
+        "quotes_extracted": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total quotes extracted and assigned to concepts",
+          "default": 0
+        },
+        "concepts_in_framework": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of active concepts in current data structure",
+          "default": 0
+        },
+        "last_coding_session": {
+          "type": ["string", "null"],
+          "format": "date-time",
+          "description": "Timestamp of last coding session"
+        }
+      }
+    },
+    "saturation_tracking": {
+      "type": "object",
+      "description": "Multi-dimensional tracking of theoretical saturation - not just repetition but understanding full range",
+      "properties": {
+        "code_generation": {
+          "type": "object",
+          "description": "Tracks new code creation rate over time",
+          "properties": {
+            "total_codes": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "codes_by_document": {
+              "type": "array",
+              "description": "New codes created per document (for rate calculation)",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "document_id": {"type": "string"},
+                  "document_name": {"type": "string"},
+                  "new_codes_created": {"type": "integer"},
+                  "timestamp": {"type": "string", "format": "date-time"}
+                }
+              },
+              "default": []
+            },
+            "generation_rate": {
+              "type": "number",
+              "description": "Rolling average of new codes per document (last 5)",
+              "default": 0
+            },
+            "stabilized_at_document": {
+              "type": ["string", "null"],
+              "description": "Document where code generation first stabilized (rate < 0.5)",
+              "default": null
+            }
+          }
+        },
+        "code_coverage": {
+          "type": "object",
+          "description": "How well codes cover the data corpus",
+          "properties": {
+            "coverage_by_code": {
+              "type": "object",
+              "description": "For each code, what % of documents/cases it appears in",
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "document_count": {"type": "integer"},
+                  "case_count": {"type": "integer"},
+                  "coverage_percent": {"type": "number"}
+                }
+              }
+            },
+            "rare_codes": {
+              "type": "array",
+              "description": "Codes appearing in <10% of documents (potential outliers or emergent themes)",
+              "items": {"type": "string"},
+              "default": []
+            },
+            "universal_codes": {
+              "type": "array",
+              "description": "Codes appearing in >80% of documents (core patterns)",
+              "items": {"type": "string"},
+              "default": []
+            }
+          }
+        },
+        "refinement": {
+          "type": "object",
+          "description": "Tracks code definition changes, splits, merges",
+          "properties": {
+            "definition_changes": {
+              "type": "array",
+              "description": "Log of code definition refinements",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "code_id": {"type": "string"},
+                  "change_type": {
+                    "type": "string",
+                    "enum": ["redefinition", "split", "merge", "reparent", "rename"]
+                  },
+                  "old_state": {"type": "string"},
+                  "new_state": {"type": "string"},
+                  "rationale": {"type": "string"},
+                  "timestamp": {"type": "string", "format": "date-time"}
+                }
+              },
+              "default": []
+            },
+            "changes_last_5_documents": {
+              "type": "integer",
+              "description": "Definition changes in last 5 coded documents",
+              "default": 0
+            },
+            "split_merge_count": {
+              "type": "integer",
+              "description": "Total splits and merges (indicates theoretical elaboration)",
+              "default": 0
+            }
+          }
+        },
+        "redundancy": {
+          "type": "object",
+          "description": "Conceptual redundancy assessment (are we hearing the same things?)",
+          "properties": {
+            "redundancy_score": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "0-1 score of how redundant recent coding has been",
+              "default": 0
+            },
+            "last_assessment": {
+              "type": ["string", "null"],
+              "format": "date-time",
+              "default": null
+            },
+            "assessment_notes": {
+              "type": "string",
+              "description": "Qualitative notes on redundancy patterns",
+              "default": ""
+            },
+            "threshold": {
+              "type": "number",
+              "description": "Redundancy score threshold for saturation signal",
+              "default": 0.85
+            }
+          }
+        },
+        "saturation_signals": {
+          "type": "object",
+          "description": "Composite saturation assessment",
+          "properties": {
+            "overall_level": {
+              "type": "string",
+              "enum": ["low", "emerging", "approaching", "high", "saturated"],
+              "description": "Overall saturation level assessment",
+              "default": "low"
+            },
+            "last_assessment": {
+              "type": ["string", "null"],
+              "format": "date-time"
+            },
+            "recommendation": {
+              "type": "string",
+              "description": "Current recommendation based on saturation level",
+              "default": ""
+            },
+            "evidence": {
+              "type": "object",
+              "description": "Evidence supporting current saturation assessment",
+              "properties": {
+                "code_generation_signal": {"type": "string"},
+                "coverage_signal": {"type": "string"},
+                "refinement_signal": {"type": "string"},
+                "redundancy_signal": {"type": "string"}
+              }
+            }
+          }
+        },
+        "thresholds": {
+          "type": "object",
+          "description": "Configurable saturation thresholds",
+          "properties": {
+            "code_generation_stable": {
+              "type": "number",
+              "description": "New codes per document rate below which generation is 'stable'",
+              "default": 0.5
+            },
+            "refinement_stable": {
+              "type": "integer",
+              "description": "Definition changes in last 5 docs below which refinement is 'stable'",
+              "default": 2
+            },
+            "redundancy_high": {
+              "type": "number",
+              "description": "Redundancy score above which redundancy is 'high'",
+              "default": 0.85
+            },
+            "coverage_adequate": {
+              "type": "number",
+              "description": "% of codes with >20% coverage for adequate coverage",
+              "default": 0.7
+            }
+          }
+        }
+      }
+    },
+    "workspace_branches": {
+      "type": "object",
+      "description": "Versioning for interpretation - support non-linear, exploratory analysis",
+      "properties": {
+        "current_branch": {
+          "type": "string",
+          "description": "Currently active interpretive branch",
+          "default": "main"
+        },
+        "branches": {
+          "type": "array",
+          "description": "All interpretive branches",
+          "items": {
+            "type": "object",
+            "required": ["id", "name", "created_at"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Unique branch identifier"
+              },
+              "name": {
+                "type": "string",
+                "description": "Descriptive name (e.g., 'alternative-theme-structure')"
+              },
+              "parent_branch": {
+                "type": ["string", "null"],
+                "description": "Branch this was forked from"
+              },
+              "forked_at_version": {
+                "type": "string",
+                "description": "Data structure version when forked"
+              },
+              "created_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "methodological_framing": {
+                "type": "string",
+                "enum": ["exploratory", "confirmatory", "negative_case", "alternative_interpretation"],
+                "description": "Why this branch exists"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["active", "merged", "abandoned"],
+                "default": "active"
+              },
+              "merge_memo": {
+                "type": "string",
+                "description": "If merged, the memo explaining synthesis decisions"
+              }
+            }
+          },
+          "default": [{"id": "main", "name": "Main Analysis", "created_at": "", "status": "active"}]
+        },
+        "branch_decisions": {
+          "type": "array",
+          "description": "Log of branching and merging decisions",
+          "items": {
+            "type": "object",
+            "properties": {
+              "action": {
+                "type": "string",
+                "enum": ["fork", "merge", "abandon", "switch"]
+              },
+              "branch_id": {"type": "string"},
+              "target_branch": {"type": "string"},
+              "timestamp": {"type": "string", "format": "date-time"},
+              "rationale": {"type": "string"}
+            }
+          },
+          "default": []
+        }
+      }
+    },
+    "researcher_team": {
+      "type": "object",
+      "description": "Multi-researcher support for collaborative qualitative analysis",
+      "properties": {
+        "primary_researcher": {
+          "type": "object",
+          "description": "Lead researcher for the project",
+          "properties": {
+            "id": {"type": "string"},
+            "name": {"type": "string"},
+            "email": {"type": "string"},
+            "role": {"type": "string", "default": "lead"},
+            "joined_at": {"type": "string", "format": "date-time"}
+          }
+        },
+        "team_members": {
+          "type": "array",
+          "description": "Additional researchers/coders on the project",
+          "items": {
+            "type": "object",
+            "required": ["id", "name"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Unique identifier for team member"
+              },
+              "name": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "role": {
+                "type": "string",
+                "enum": ["lead", "co_investigator", "coder", "auditor", "consultant"],
+                "default": "coder"
+              },
+              "joined_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["active", "inactive"],
+                "default": "active"
+              },
+              "coding_assignments": {
+                "type": "array",
+                "description": "Documents/cases assigned to this researcher",
+                "items": {"type": "string"},
+                "default": []
+              }
+            }
+          },
+          "default": []
+        },
+        "current_researcher": {
+          "type": "string",
+          "description": "ID of researcher currently active (for attribution)",
+          "default": "primary"
+        },
+        "intercoder_reliability": {
+          "type": "object",
+          "description": "Tracking for intercoder reliability exercises",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "overlap_documents": {
+              "type": "array",
+              "description": "Documents coded by multiple researchers for comparison",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "document_id": {"type": "string"},
+                  "coded_by": {
+                    "type": "array",
+                    "items": {"type": "string"}
+                  },
+                  "comparison_status": {
+                    "type": "string",
+                    "enum": ["pending", "compared", "resolved"],
+                    "default": "pending"
+                  },
+                  "agreement_notes": {"type": "string"}
+                }
+              },
+              "default": []
+            },
+            "reliability_sessions": {
+              "type": "array",
+              "description": "Log of intercoder reliability comparison sessions",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "session_id": {"type": "string"},
+                  "date": {"type": "string", "format": "date"},
+                  "participants": {
+                    "type": "array",
+                    "items": {"type": "string"}
+                  },
+                  "documents_compared": {
+                    "type": "array",
+                    "items": {"type": "string"}
+                  },
+                  "codes_discussed": {
+                    "type": "array",
+                    "items": {"type": "string"}
+                  },
+                  "outcomes": {
+                    "type": "array",
+                    "description": "Decisions made during the session",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": ["code_merged", "code_split", "definition_refined", "disagreement_noted"]
+                        },
+                        "details": {"type": "string"}
+                      }
+                    }
+                  },
+                  "notes": {"type": "string"}
+                }
+              },
+              "default": []
+            }
+          }
+        },
+        "attribution_log": {
+          "type": "array",
+          "description": "Track who made which analytical decisions",
+          "items": {
+            "type": "object",
+            "properties": {
+              "researcher_id": {"type": "string"},
+              "action": {
+                "type": "string",
+                "enum": ["coded_document", "created_code", "refined_code", "wrote_memo", "made_decision"]
+              },
+              "target_id": {"type": "string", "description": "ID of document, code, or memo"},
+              "timestamp": {"type": "string", "format": "date-time"},
+              "notes": {"type": "string"}
+            }
+          },
+          "default": []
+        }
+      }
+    }
+  }
+}
