@@ -755,6 +755,32 @@ Point users to the right place:
 
 ---
 
+## Marketplace Publishing
+
+### Validation
+```bash
+claude plugin validate .   # Validate marketplace.json and plugin.json
+```
+
+### marketplace.json Schema Requirements
+
+Must follow official Anthropic schema or Claude Desktop will reject with "failed to add marketplace":
+
+| Field | Correct | Wrong |
+|-------|---------|-------|
+| `$schema` | `"https://anthropic.com/claude-code/marketplace.schema.json"` | Missing |
+| `owner.name` | `"Name (Affiliation)"` string | `names: []` array |
+| `author.name` | `"Name"` string | `names: []` array |
+| `source` | `{"source": "url", "url": "https://github.com/owner/repo.git"}` | `"owner/repo"` shorthand |
+
+**Non-standard fields break validation silently** - remove: `features`, `mvep`, `requirements`, `getting_started`, `marketplace_philosophy`
+
+### Testing Marketplace Install
+
+After pushing changes, test in Claude Desktop: Add marketplace → `linxule/interpretive-orchestration`
+
+---
+
 ## Remember
 
 > "You won't just code faster. You'll think differently about interpretation. You'll be a different researcher."
