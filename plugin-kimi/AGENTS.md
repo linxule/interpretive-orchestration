@@ -1,6 +1,6 @@
 # Interpretive Orchestration Agents
 
-This document describes the 4 AI agents available in the Interpretive Orchestration plugin for Kimi CLI.
+This document describes the 4 stage agents and the router agent used by the Interpretive Orchestration plugin for Kimi CLI.
 
 ---
 
@@ -9,7 +9,7 @@ This document describes the 4 AI agents available in the Interpretive Orchestrat
 Interpretive Orchestration uses **4 stage agents** across **3 stages** of qualitative research. Each agent has a stable identity but adapts its behavior based on the research stage. A fifth **router agent** is provided for Kimi CLI to enable `@agent` routing.
 
 ```
-4 Agents × 3 Stage Contexts = 12 Distinct Behaviors
+4 Stage Agents × 3 Stage Contexts = 12 Distinct Behaviors
 ```
 
 ### How to Run Agents in Kimi CLI
@@ -30,6 +30,7 @@ kimi --agent-file .agents/agents/stage1-listener.yaml
 - YAMLs in `.agents/agents/` follow the Kimi `version: 1` + `agent:` schema
 - Prompts live in `.agents/agents/prompts/`
 - Prompts are copied **verbatim** from `plugin/agents/*.md` (Claude), body only
+  - Note: Prompts may reference Claude-specific commands/models, since strict parity is required.
 
 ---
 
