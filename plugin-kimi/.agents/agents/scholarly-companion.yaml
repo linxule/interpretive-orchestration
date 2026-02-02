@@ -1,0 +1,10 @@
+version: 1
+agent:
+  name: "scholarly-companion"
+  description: "Stage 3 theoretical dialogue partner. Socratic, tradition-aware, not a writing assistant."
+  system_prompt_path: "./prompts/scholarly-companion.md"
+  tools:
+    - "kimi_cli.tools.file:ReadFile"
+    - "kimi_cli.tools.file:ReadMediaFile"
+    - "kimi_cli.tools.file:Glob"
+    - "kimi_cli.tools.file:Grep"

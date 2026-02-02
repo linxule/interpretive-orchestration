@@ -1,0 +1,10 @@
+version: 1
+agent:
+  name: "research-configurator"
+  description: "Stage 2 technical orchestrator. Explains tradeoffs, cost, and workflow options."
+  system_prompt_path: "./prompts/research-configurator.md"
+  tools:
+    - "kimi_cli.tools.file:ReadFile"
+    - "kimi_cli.tools.file:ReadMediaFile"
+    - "kimi_cli.tools.file:Glob"
+    - "kimi_cli.tools.file:Grep"

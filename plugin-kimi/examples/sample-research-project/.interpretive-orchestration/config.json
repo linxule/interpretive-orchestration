@@ -1,0 +1,29 @@
+{
+  "version": 156,
+  "current_stage": "stage2",
+  "documents_manually_coded": 12,
+  "stage1_complete": true,
+  "ontology": "constructivist",
+  "epistemology": "systematic_interpretation",
+  "tradition": "gioia_corley",
+  "total_documents": 12,
+  "documents_coded": 12,
+  "memos_written": 4,
+  "codes_created": 47,
+  "created_at": "2024-03-01T09:30:00",
+  "last_updated": "2024-04-15T14:22:33",
+  "reflexivity_entries": [
+    {
+      "date": "2024-03-10",
+      "prompt": "What assumptions are you bringing about remote work?",
+      "response": "I realize I'm assuming remote work is inherently harder. Need to check this assumption."
+    },
+    {
+      "date": "2024-03-25",
+      "prompt": "How might your own remote work experience color your interpretations?",
+      "response": "I also struggled with boundaries. This might make me over-identify with participants."
+    }
+  ],
+  "project_name": "Remote Work Identity Construction",
+  "research_question": "How do software engineers construct and negotiate professional identity when transitioning to fully remote work?"
+}

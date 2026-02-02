@@ -1,0 +1,199 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Gioia Method Data Structure Template",
+  "description": "Template for building your grounded theory framework using Gioia & Corley's systematic interpretivist approach. Replace all {PLACEHOLDERS} with your domain-specific content.",
+  "methodology_note": "This structure displays analytical progression from informant-centric terms (1st-order) through researcher-induced concepts (2nd-order) to overarching theoretical constructs (aggregate dimensions).",
+
+  "aggregate_dimensions": [
+    {
+      "id": "AD1",
+      "name": "{YOUR_THEORETICAL_DIMENSION}",
+      "definition": "Overarching theoretical construct that YOU developed to organize second-order themes. This is YOUR interpretive abstraction grounded in systematic analysis.",
+      "theoretical_foundation": "{What literature or theory informed this dimension}",
+      "examples": "e.g., 'Sensemaking Under Uncertainty', 'Constructive Agency', 'Identity Work'",
+
+      "second_order_themes": [
+        {
+          "id": "AD1_T1",
+          "name": "{RESEARCHER-INDUCED CONCEPT}",
+          "definition": "Theoretical concept YOU constructed by interpreting and organizing first-order codes. This represents YOUR analytical abstraction from informant terms.",
+          "researcher_interpretation": "Why you grouped these 1st-order concepts together and what theoretical significance you see",
+          "examples": "e.g., 'Moral Conviction', 'Adaptive Routine Building', 'Collaborative Problem-Solving'",
+
+          "first_order_concepts": [
+            {
+              "id": "AD1_T1_C1",
+              "name": "{INFORMANT-CENTRIC TERM}",
+              "definition": "Code that stays close to how participants actually talk about their experience. Uses their language when possible.",
+              "informant_terms": ["actual phrases participants used"],
+              "examples": "e.g., 'I had to do something about it', 'tracking what works for me', 'we figured it out together'",
+              "example_quotes": [
+                {
+                  "document_id": "D001",
+                  "lines": "45-48",
+                  "quote": "Verbatim participant quote demonstrating this concept",
+                  "context": "Brief context note if needed"
+                }
+              ],
+              "coding_note": "How you distinguish this from related concepts"
+            },
+            {
+              "id": "AD1_T1_C2",
+              "name": "{ANOTHER_INFORMANT-CENTRIC TERM}",
+              "definition": "Second 1st-order concept under this theme...",
+              "informant_terms": ["participant phrases"],
+              "example_quotes": [
+                {
+                  "document_id": "D003",
+                  "lines": "112-115",
+                  "quote": "Another verbatim quote",
+                  "context": "Context if needed"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "AD1_T2",
+          "name": "{ANOTHER_RESEARCHER-INDUCED CONCEPT}",
+          "definition": "Another 2nd-order theme within this dimension...",
+          "researcher_interpretation": "Your analytical work here",
+
+          "first_order_concepts": [
+            {
+              "id": "AD1_T2_C1",
+              "name": "{INFORMANT-CENTRIC TERM}",
+              "definition": "Code close to participant language...",
+              "informant_terms": ["phrases"],
+              "example_quotes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AD2",
+      "name": "{SECOND_THEORETICAL_DIMENSION}",
+      "definition": "Another overarching construct organizing different themes...",
+      "theoretical_foundation": "{Supporting literature}",
+
+      "second_order_themes": [
+        {
+          "id": "AD2_T1",
+          "name": "{RESEARCHER-INDUCED CONCEPT}",
+          "definition": "Theme within second dimension...",
+          "researcher_interpretation": "Why grouped this way",
+
+          "first_order_concepts": [
+            {
+              "id": "AD2_T1_C1",
+              "name": "{INFORMANT-CENTRIC TERM}",
+              "definition": "Informant-centric code...",
+              "informant_terms": ["phrases"],
+              "example_quotes": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+
+  "structure_metadata": {
+    "version": "1.0",
+    "last_updated": "{DATE}",
+    "total_dimensions": 0,
+    "total_themes": 0,
+    "total_concepts": 0,
+    "total_quotes": 0,
+    "notes": [
+      "This structure evolves through analysis - expect multiple versions",
+      "Stage 1 creates initial structure; Stage 2 refines through AI collaboration",
+      "Concepts may move between themes as understanding deepens",
+      "Some themes may merge or split during analysis"
+    ]
+  },
+
+  "gioia_method_principles": {
+    "hierarchy": {
+      "level_1": {
+        "name": "First-Order Concepts (Informant-Centric Terms)",
+        "source": "Participant language and direct quotes",
+        "your_role": "Stay close to data, preserve participant voice",
+        "examples": "What participants actually say"
+      },
+      "level_2": {
+        "name": "Second-Order Themes (Researcher-Induced Concepts)",
+        "source": "YOUR interpretive work grouping 1st-order codes",
+        "your_role": "Construct theoretical categories from patterns",
+        "examples": "Your analytical abstractions"
+      },
+      "level_3": {
+        "name": "Aggregate Dimensions (Overarching Constructs)",
+        "source": "YOUR highest-level theoretical organization",
+        "your_role": "Build theoretical framework",
+        "examples": "Your contribution to literature"
+      }
+    },
+    "analytical_progression": "The structure itself SHOWS how you moved from data (1st) through interpretation (2nd) to theory (aggregate)",
+    "rigor_through_transparency": "Readers can trace your interpretive moves from quotes → concepts → themes → dimensions"
+  },
+
+  "usage_guidance": {
+    "stage1": {
+      "focus": "Build 1st-order concepts and initial 2nd-order themes",
+      "process": "Open coding → axial coding → initial grouping",
+      "output": "Preliminary structure (may be incomplete)"
+    },
+    "stage2_phase2": {
+      "focus": "Refine structure through AI-assisted systematic coding",
+      "process": "@dialogical-coder applies structure, suggests refinements",
+      "output": "Comprehensive structure with quotes for all concepts"
+    },
+    "stage2_phase3": {
+      "focus": "If pattern variations exist, may develop variant structures",
+      "process": "@pattern-characterizer identifies systematic differences",
+      "output": "Pattern-specific elaborations or entirely separate structures"
+    },
+    "stage3": {
+      "focus": "Final theoretical integration and manuscript preparation",
+      "process": "YOU synthesize, construct final framework, integrate with literature",
+      "output": "Publication-ready data structure with theoretical positioning"
+    }
+  },
+
+  "domain_examples": {
+    "note": "These show structure versatility - NOT what your content should be!",
+
+    "healthcare_chronic_illness": {
+      "aggregate_dimension": "Living with Uncertainty",
+      "second_order_theme": "Adaptive Routine Building",
+      "first_order_concept": "Tracking what works for me",
+      "informant_term": "I switched to just noting the really bad days"
+    },
+
+    "educational_learning": {
+      "aggregate_dimension": "Knowledge Construction Processes",
+      "second_order_theme": "Collaborative Sense-Making",
+      "first_order_concept": "Talking through confusions together",
+      "informant_term": "We figured it out by explaining to each other"
+    },
+
+    "organizational_leadership": {
+      "aggregate_dimension": "Navigating Organizational Paradoxes",
+      "second_order_theme": "Balancing Authenticity and Strategy",
+      "first_order_concept": "Being real while being professional",
+      "informant_term": "I'm myself, but I'm also playing a role"
+    }
+  },
+
+  "relationship_to_appendix_a": {
+    "note": "This template operationalizes the data structure approach described in your research appendix",
+    "original_research_had": {
+      "stage1": "Initial structure: aggregate dimensions, themes, concepts from 36 documents",
+      "stage2_phase2": "Refined to 4 dimensions, 25 themes, 104 concepts (later consolidated to 53)",
+      "stage2_phase3": "Pattern-specific elaborations for three archetypes",
+      "stage3": "Final theoretically-focused structure"
+    },
+    "your_research_will_have": "Different dimensions, themes, concepts - but SAME systematic structure"
+  }
+}

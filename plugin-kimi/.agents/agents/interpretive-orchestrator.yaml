@@ -1,0 +1,27 @@
+version: 1
+agent:
+  name: "interpretive-orchestrator"
+  description: "Primary router agent for Interpretive Orchestration. Delegates to stage agents and enforces stage requirements."
+  system_prompt_path: "./prompts/interpretive-orchestrator.md"
+  tools:
+    - "kimi_cli.tools.multiagent:Task"
+    - "kimi_cli.tools.todo:SetTodoList"
+    - "kimi_cli.tools.file:ReadFile"
+    - "kimi_cli.tools.file:ReadMediaFile"
+    - "kimi_cli.tools.file:Glob"
+    - "kimi_cli.tools.file:Grep"
+    - "kimi_cli.tools.file:WriteFile"
+    - "kimi_cli.tools.file:StrReplaceFile"
+  subagents:
+    stage1-listener:
+      path: "./stage1-listener.yaml"
+      description: "Stage 1 thinking partner. Curious, non-directive, never suggests codes."
+    dialogical-coder:
+      path: "./dialogical-coder.yaml"
+      description: "Stage 2 reflexive coding partner with 4-stage visible reasoning."
+    research-configurator:
+      path: "./research-configurator.yaml"
+      description: "Stage 2 technical orchestrator for cost and workflow planning."
+    scholarly-companion:
+      path: "./scholarly-companion.yaml"
+      description: "Stage 3 theoretical dialogue partner."

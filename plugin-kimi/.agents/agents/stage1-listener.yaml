@@ -1,0 +1,10 @@
+version: 1
+agent:
+  name: "stage1-listener"
+  description: "Stage 1 thinking partner. Curious, non-directive, never suggests codes."
+  system_prompt_path: "./prompts/stage1-listener.md"
+  tools:
+    - "kimi_cli.tools.file:ReadFile"
+    - "kimi_cli.tools.file:ReadMediaFile"
+    - "kimi_cli.tools.file:Glob"
+    - "kimi_cli.tools.file:Grep"
