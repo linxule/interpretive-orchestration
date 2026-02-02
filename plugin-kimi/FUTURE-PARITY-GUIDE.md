@@ -52,6 +52,11 @@
 - Agent prompt files in `.agents/agents/prompts/` are copied **verbatim** from Claude agent docs in `plugin/agents/*.md` (body only, excluding frontmatter).
 - When Claude agent text changes, re-copy the body to keep strict word-for-word parity.
 
+**One-command sync (recommended):**
+```bash
+python3 plugin-kimi/scripts/sync_prompts_from_claude.py
+```
+
 ---
 
 ## Component Port Matrix

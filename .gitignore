@@ -97,3 +97,6 @@ yarn-error.log*
 coverage/
 .nyc_output/
 test-results/
+
+# Kimi plugin benchmark output (generated locally)
+plugin-kimi/tests/benchmark_results.json
