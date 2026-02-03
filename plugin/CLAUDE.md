@@ -864,5 +864,35 @@ This plugin aims for transformation, not automation. Every interaction should de
 
 ---
 
+## Kimi CLI Plugin Maintenance
+
+The repo now contains TWO complete plugins with 100% feature parity:
+- `plugin/` - Claude Code CLI plugin (JavaScript, 12 skills)
+- `plugin-kimi/` - Kimi CLI plugin (Python, 11 skills)
+
+When updating plugin features:
+1. Make changes in `plugin/` first (Claude Code version)
+2. Use `plugin-kimi/FUTURE-PARITY-GUIDE.md` for porting process
+3. Port JavaScript scripts to Python using qual-shared infrastructure
+4. Update both READMEs and documentation files
+
+**Porting patterns:**
+- JavaScript → Python: Use `subprocess.run()` for calling sibling scripts (matches execSync pattern)
+- Mustache templates → Jinja2 templates
+- Node.js fs → Python pathlib + qual-shared StateManager
+- Add `uv run --script` headers with inline dependencies for auto-installation
+
+**Testing:**
+- Tests run standalone: `python3 test_*.py` (no pytest required)
+- Both plugins have separate test suites in their `tests/` directories
+- Kimi tests: integration (8), end-to-end (2), performance (benchmarks), skill-specific (21)
+
+**Dependencies for Kimi plugin:**
+- pyyaml>=6.0 (config loading)
+- jinja2>=3.1.0 (templates)
+- rich>=13.0.0 (visualization)
+
+---
+
 *Interpretive Orchestration: Epistemic Partnership System*
 *Built by Xule Lin and Kevin Corley (Imperial College London), with Claude Opus 4.5 (Anthropic), reviewed by Codex (OpenAI) and Gemini (Google)*
