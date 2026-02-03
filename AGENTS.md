@@ -144,9 +144,10 @@ Read:
 
 ### Reference
 - `plugin-kimi/AGENTS.md` — Agent documentation
-- `plugin-kimi/MVP-SCOPE.md` — What's in/out
+- `plugin-kimi/🎉-100-PERCENT-PARITY-ACHIEVED.md` — Parity completion summary
+- `plugin-kimi/MVP-SCOPE.md` — Scope and version history
 - `plugin-kimi/FUTURE-PARITY-GUIDE.md` — Maintenance process
-- `workshop-notes/guides/for-kimi-team/KIMI-TEAM-CONTEXT-PACKAGE.md` — Methodology
+- `workshop-notes/guides/for-kimi-team/KIMI-TEAM-CONTEXT-PACKAGE.md` — Methodology (local)
 
 ---
 

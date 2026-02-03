@@ -76,16 +76,26 @@ This document defines the Minimum Viable Product (MVP) for the Kimi CLI implemen
 | Document conversion guidance | ✅ Complete | `.agents/skills/qual-convert/` |
 | Reasoning buffer (batched I/O) | ✅ Complete | `.agents/skills/qual-shared/scripts/reasoning_buffer.py` |
 
-### What's OUT of MVP (Post-MVP Features)
+### What Was OUT of MVP (Now Implemented in v1.0.1)
+
+**Completed in v1.0.1 (2026-02-02):**
+- ✅ Cost estimation and model selection (qual-analysis-orchestration)
+- ✅ Methodology presets (6 traditions)
+- ✅ Isolation rules (case, wave, stream)
+- ✅ Strain detection
+- ✅ Saturation tracking (multi-dimensional)
+- ✅ Workspace branching (git-like exploratory analysis)
+- ✅ Visualization dashboard (rich library)
+- ✅ Multi-researcher support with ICR
+
+### What's Still OUT (Future Features)
 
 | Feature | Priority | Target Release |
 |---------|----------|----------------|
-| True parallel streams (Task tool) | P1 | v1.1 |
-| Chinese localization | P1 | v1.1 |
-| Epistemic drift detection algorithm | P1 | v1.2 |
-| Dynamic agent creation | P2 | v1.3 |
-| Workspace branching (git-like) | P2 | v1.3 |
-| Multi-researcher support | P2 | v1.4 |
+| True parallel streams (Task tool) | P1 | v1.2 |
+| Chinese localization | P1 | v1.2 |
+| Epistemic drift detection algorithm | P1 | v1.3 |
+| Dynamic agent creation | P2 | v1.4 |
 | Advanced MCP coordination | P2 | v1.4 |
 | Performance optimization (caching) | P2 | v1.4 |
 | Plugin marketplace integration | P3 | v2.0 |

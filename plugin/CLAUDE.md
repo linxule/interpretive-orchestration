@@ -2,6 +2,8 @@
 
 This file provides guidance for Claude when working with projects that use the Interpretive Orchestration plugin.
 
+**Note:** This documentation applies to the **Claude Code CLI plugin** (`plugin/`). For the Kimi CLI version, see `plugin-kimi/` which has 100% feature parity with Python-based implementations.
+
 ---
 
 ## Plugin Marketplace Structure
