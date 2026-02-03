@@ -12,14 +12,15 @@
 The Kimi CLI implementation of Interpretive Orchestration is **complete and production-ready**. All core functionality, philosophical commitments, and supporting infrastructure are in place.
 
 **Key Metrics:**
-- ✅ 9 Skills (5 core + 4 advanced)
+- ✅ 11 Skills (7 core + 4 advanced)
 - ✅ 4 stage agents + 1 router agent
-- ✅ 11 Python infrastructure modules
+- ✅ 20 Python infrastructure modules (qual-shared + methodological-rules)
 - ✅ 3 Gioia methodology scripts
 - ✅ 2 Document processing scripts
+- ✅ 9 Methodological rules scripts (Phase 1-3 complete)
 - ✅ 3 Test suites (integration, E2E, performance)
 - ✅ Complete example project
-- ✅ 100% feature parity with Claude Code version
+- ✅ **100% TRUE feature parity with Claude Code version**
 
 ---
 
@@ -33,6 +34,8 @@ The Kimi CLI implementation of Interpretive Orchestration is **complete and prod
 | **qual-status** | Progress dashboard & stage tracking | ✅ Complete |
 | **qual-coding** | Dialogical coding methodology | ✅ Complete |
 | **qual-reflection** | MCP integration (Sequential Thinking, Lotus Wisdom) | ✅ Complete |
+| **qual-analysis-orchestration** | Cost estimation & Kimi K2.5 planning | ✅ Complete |
+| **qual-methodological-rules** | Isolation rules, presets, strain, saturation, branching | ✅ Complete |
 | **qual-shared** | Shared infrastructure (state, logging, routing, friction) | ✅ Complete |
 
 ### Advanced Skills (P1 - Included)

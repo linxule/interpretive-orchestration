@@ -1,0 +1,41 @@
+# Kimi API Pricing Configuration
+# Source: https://platform.moonshot.ai/docs/pricing/chat
+# Last Updated: 2026-02-02
+
+models:
+  kimi-k2.5:
+    display_name: "Kimi K2.5"
+    input_price: 0.60      # per million tokens
+    cached_input_price: 0.10  # 83% discount on cached input
+    output_price: 3.00     # per million tokens
+    cache_discount: 0.83   # percentage saved on cache hits
+    quality_tier: "flagship"
+    multimodal: true
+    release_date: "2026-01"
+    description: "Flagship agentic model with vision capabilities"
+    recommended_for:
+      - "Deep interpretive coding"
+      - "Pattern characterization"
+      - "Theoretical synthesis"
+      - "Multimodal analysis (images/video)"
+
+# Token estimation baselines
+baselines:
+  tokens_per_page: 500  # Conservative estimate for qualitative data
+  output_ratios:
+    brief: 0.3       # Codes only
+    standard: 0.5    # Codes with rationale
+    detailed: 1.0    # Full 4-stage dialogical process
+
+# Comparison with Claude (for migrating users)
+claude_comparison:
+  opus:
+    input_price: 15.00
+    output_price: 75.00
+    cost_ratio: "25x more expensive than Kimi K2.5"
+  sonnet:
+    input_price: 3.00
+    output_price: 15.00
+    cost_ratio: "5x more expensive than Kimi K2.5"
+
+version: "1.0"

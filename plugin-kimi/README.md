@@ -127,6 +127,8 @@ Shows:
 | `qual-status` | flow | Progress dashboard |
 | `qual-coding` | standard | Dialogical coding |
 | `qual-reflection` | standard | MCP reasoning tools |
+| `qual-analysis-orchestration` | standard | Cost estimation & planning |
+| `qual-methodological-rules` | standard | Isolation rules & methodology presets |
 | `qual-shared` | — | Shared infrastructure |
 
 ### Agents
