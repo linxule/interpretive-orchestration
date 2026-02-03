@@ -98,13 +98,13 @@ Read these in order:
 
 Read:
 1. `plugin-kimi/FUTURE-PARITY-GUIDE.md`
-2. `workshop-notes/guides/for-developers/KIMI-CLI-PORT-MAPPING.md`
+2. `workshop-notes/guides/for-developers/KIMI-CLI-PORT-MAPPING.md` (local docs)
 
 ### I want to port to another platform (Codex, etc.)
 
 Study:
-1. `workshop-notes/guides/for-developers/KIMI-CLI-PORT-MAPPING.md`
-2. `plugin-kimi/skills/qual-shared/scripts/` (reference implementation)
+1. `workshop-notes/guides/for-developers/KIMI-CLI-PORT-MAPPING.md` (local docs)
+2. `plugin-kimi/.agents/skills/qual-shared/scripts/` (reference implementation)
 3. Use `plugin-kimi/` as your template
 
 ### I need to fix a bug
