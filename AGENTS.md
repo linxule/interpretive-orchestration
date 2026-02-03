@@ -19,7 +19,7 @@ This handoff guide tells you everything that was accomplished and how to continu
 ## 📂 What's in This Repository
 
 ```
-/Users/xulelin/Documents/possibilities/qualitative-ai-plugin/
+repo-root/
 │
 ├── AGENTS.md                          # ← You are here
 ├── README.md                          # Human-facing project overview
@@ -33,8 +33,10 @@ This handoff guide tells you everything that was accomplished and how to continu
 ├── plugin-kimi/                       # Kimi CLI plugin (COMPLETE)
 │   ├── README.md                      # Kimi plugin user guide
 │   ├── AGENTS.md                      # Agent reference
-│   ├── skills/                        # 9 skills for Kimi
-│   ├── agents/                        # 4 agents (YAML)
+│   ├── .agents/
+│   │   ├── skills/                    # 11 skills for Kimi
+│   │   ├── agents/                    # 5 YAML files (4 agents + router)
+│   │   └── contexts/                  # 3 stage contexts
 │   ├── examples/                      # Sample project
 │   └── tests/                         # Test suites
 │
@@ -151,13 +153,15 @@ Read:
 ## 🧪 Testing
 
 ```bash
-# Run all tests
-cd plugin-kimi
-python -m pytest tests/ -v
-
-# Run performance benchmarks
+# Run all tests (no pytest required - tests run standalone)
 cd plugin-kimi/tests
-python test_performance.py
+python3 test_integration.py
+python3 test_end_to_end.py
+python3 test_performance.py
+
+# Run skill-specific tests
+python3 .agents/skills/qual-analysis-orchestration/scripts/test_estimate_costs.py
+python3 .agents/skills/qual-methodological-rules/scripts/test_saturation_tracker.py
 ```
 
 ---

@@ -36,13 +36,19 @@ This plugin implements **Partnership Agency** from [Cognitio Emergens](https://a
 
 ### Prerequisites
 - Kimi CLI installed
-- Python 3.8+
+- Python 3.10+ (required for advanced features)
+- uv (recommended) or pip for dependency installation
 
 ### Install Plugin
 
 ```bash
 # Project-local (recommended): copy the single .agents folder
 cp -r plugin-kimi/.agents ./.agents
+
+# Install Python dependencies
+cd .agents
+uv pip install -r requirements.txt
+# Or with pip: pip3 install -r requirements.txt
 
 # Optional: install skills globally (agents still referenced by file path)
 cp -r plugin-kimi/.agents/skills ~/.config/agents/skills/

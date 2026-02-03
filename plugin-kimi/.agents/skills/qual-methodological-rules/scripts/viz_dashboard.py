@@ -29,14 +29,29 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Optional, Any
 
-from rich.console import Console
-from rich.panel import Panel
-from rich.table import Table
-from rich.tree import Tree
-from rich.layout import Layout
-from rich.text import Text
-from rich.progress import BarColumn, Progress
-from rich import box
+try:
+    from rich.console import Console
+    from rich.panel import Panel
+    from rich.table import Table
+    from rich.tree import Tree
+    from rich.layout import Layout
+    from rich.text import Text
+    from rich.progress import BarColumn, Progress
+    from rich import box
+except ImportError:
+    print("""
+Error: 'rich' library not installed.
+
+Install with uv:
+    cd plugin-kimi/.agents && uv pip install -r requirements.txt
+
+Or with pip:
+    pip3 install rich>=13.0.0
+
+Or run with uv (auto-installs dependencies):
+    uv run viz_dashboard.py --project-path /path/to/project
+""", file=sys.stderr)
+    sys.exit(1)
 
 # Import check_phase for phase detection
 from check_phase import get_current_phase

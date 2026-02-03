@@ -1,10 +1,13 @@
 # Qualitative AI Plugin - Kimi Agent Dependencies
 # Install with: uv pip install -r requirements.txt
 
-# Template rendering
+# For estimate_costs.py (YAML config loading)
+pyyaml>=6.0
+
+# For generate_rules.py (template rendering)
 jinja2>=3.1.0
 
-# CLI visualization (for viz_dashboard.py)
+# For viz_dashboard.py (CLI visualization)
 rich>=13.0.0
 
 # Optional: MCP protocol support (if needed)

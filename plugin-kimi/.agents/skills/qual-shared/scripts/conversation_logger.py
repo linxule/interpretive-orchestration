@@ -32,7 +32,7 @@ class ConversationLogger:
     def log(self, event: Dict[str, Any]) -> None:
         """
         Log an event to both JSONL and Markdown.
-        
+
         Args:
             event: Dict with keys:
                 - event_type: str (e.g., "coded_document", "reflexivity_prompt")
@@ -42,18 +42,33 @@ class ConversationLogger:
         """
         # Ensure directory exists
         os.makedirs(self.config_dir, exist_ok=True)
-        
+
         # Add timestamp
         event_with_ts = {
             **event,
             "timestamp": datetime.now().isoformat()
         }
-        
+
         # Write to JSONL (append-only)
         self._append_jsonl(event_with_ts)
-        
+
         # Write to Markdown (human-readable)
         self._append_md(event_with_ts)
+
+    def log_event(self, event_type: str, content: Dict[str, Any], agent: str = "system") -> None:
+        """
+        Convenience method for logging events (alias for log with structured params).
+
+        Args:
+            event_type: Type of event (e.g., "methodology_preset_applied")
+            content: Event-specific data
+            agent: Agent name (default: "system")
+        """
+        self.log({
+            "event_type": event_type,
+            "agent": agent,
+            "content": content
+        })
     
     def _append_jsonl(self, event: Dict[str, Any]) -> None:
         """Append event as JSON line with file locking."""
