@@ -29,7 +29,10 @@ from pathlib import Path
 # Add qual-shared to path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "qual-shared" / "scripts"))
 
-from state_manager import StateManager
+try:
+    from conversation_logger import ConversationLogger
+except ImportError:
+    ConversationLogger = None
 
 
 BranchFraming = Literal["exploratory", "confirmatory", "negative_case", "alternative_interpretation"]
@@ -45,7 +48,6 @@ class WorkspaceBranch:
         self.config_dir = os.path.join(project_path, ".interpretive-orchestration")
         self.config_file = os.path.join(self.config_dir, "config.json")
         self.journal_file = os.path.join(self.config_dir, "reflexivity-journal.md")
-        self.state_mgr = StateManager(project_path)
 
     def _load_config(self) -> Optional[Dict[str, Any]]:
         """Load configuration from disk."""

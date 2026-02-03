@@ -168,7 +168,10 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 SHARED_DIR = os.path.join(SCRIPT_DIR, '../../qual-shared/scripts')
 sys.path.insert(0, SHARED_DIR)
 
-from conversation_logger import ConversationLogger
+try:
+    from conversation_logger import ConversationLogger
+except ImportError:
+    ConversationLogger = None
 
 
 # Valid roles for team members
@@ -236,11 +239,12 @@ def log_to_journal(project_path: str, message: str, logger: Optional[Conversatio
         message: Message to log
         logger: Optional ConversationLogger instance
     """
-    if logger is None:
+    if logger is None and ConversationLogger is not None:
         logger = ConversationLogger(project_path)
 
     # Log in both formats
-    logger.log({
+    if logger:
+        logger.log({
         'event_type': 'team_activity',
         'agent': 'researcher_team',
         'content': {
@@ -934,7 +938,7 @@ Examples:
         }), file=sys.stderr)
         sys.exit(1)
 
-    logger = ConversationLogger(project_path)
+    logger = ConversationLogger(project_path) if ConversationLogger else None
     result = None
 
     # Execute command

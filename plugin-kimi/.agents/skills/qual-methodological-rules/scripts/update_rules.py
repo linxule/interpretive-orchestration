@@ -20,14 +20,14 @@ from pathlib import Path
 from datetime import datetime
 
 # Import sibling scripts
+import subprocess
+
 try:
     from check_phase import check_phase
-    from generate_rules import generate_rules
 except ImportError:
     # Fallback: add current directory to path
     sys.path.insert(0, str(Path(__file__).parent))
     from check_phase import check_phase
-    from generate_rules import generate_rules
 
 # Import qual-shared
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "qual-shared" / "scripts"))
@@ -132,12 +132,25 @@ def update_rules(project_path: str):
         }
 
     # Regenerate all rules (ensures consistency)
-    generate_result = generate_rules(str(project_path))
+    generate_script = Path(__file__).parent / "generate_rules.py"
 
-    if not generate_result.get('success'):
+    try:
+        result = subprocess.run(
+            [sys.executable, str(generate_script), "--project-path", str(project_path)],
+            capture_output=True,
+            text=True,
+            check=False
+        )
+        if result.returncode != 0:
+            return {
+                "success": False,
+                "error": f"Failed to regenerate rules: {result.stderr}"
+            }
+        generate_result = json.loads(result.stdout)
+    except Exception as e:
         return {
             "success": False,
-            "error": f"Failed to regenerate rules: {generate_result.get('error', 'Unknown error')}"
+            "error": f"Failed to regenerate rules: {e}"
         }
 
     # Log the transition
