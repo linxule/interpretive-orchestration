@@ -910,6 +910,14 @@ When updating plugin features:
 - jinja2>=3.1.0 (templates)
 - rich>=13.0.0 (visualization)
 
+**Docs organization:**
+- Root `AGENTS.md` is the AI entry point — must only reference tracked (public) files, never gitignored paths
+- `workshop-notes/` (root and plugin-kimi) is gitignored — local-only dev context, handoff guides, build artifacts
+- `plugin/docs/local/` is gitignored — methods paper drafts, reflexive journal
+- Avoid celebratory/milestone docs in tracked files — consolidate into CHANGELOG.md instead
+- `plugin-kimi/MVP-SCOPE.md` is the scope/requirements doc; `CHANGELOG.md` is for version history and credits
+- When removing tracked docs, grep for references across all `*.md` files before deleting
+
 ---
 
 *Interpretive Orchestration: Epistemic Partnership System*
