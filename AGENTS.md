@@ -1,22 +1,10 @@
 # AGENTS.md: AI Assistant Entry Point
 
-**Welcome, AI Assistant!** 👋
-
 This is your entry point for understanding and working with the Interpretive Orchestration project.
 
 ---
 
-## 🚀 Quick Start
-
-### If you're continuing this work:
-
-➡️ **GO TO:** `workshop-notes/guides/ai-continuation/AI-HANDOFF-GUIDE.md`
-
-This handoff guide tells you everything that was accomplished and how to continue.
-
----
-
-## 📂 What's in This Repository
+## What's in This Repository
 
 ```
 repo-root/
@@ -25,43 +13,41 @@ repo-root/
 ├── README.md                          # Human-facing project overview
 │
 ├── plugin/                            # Claude Code plugin (ORIGINAL)
-│   ├── skills/                        # 12 skills for Claude
+│   ├── CLAUDE.md                      # Plugin instructions & maintenance guide
+│   ├── ARCHITECTURE.md                # Full architecture reference
+│   ├── skills/                        # 12 skills (JavaScript)
 │   ├── agents/                        # 4 agents (markdown)
 │   ├── commands/                      # Commands system
 │   └── hooks/                         # JavaScript hooks
 │
-├── plugin-kimi/                       # Kimi CLI plugin (COMPLETE)
-│   ├── README.md                      # Kimi plugin user guide
-│   ├── AGENTS.md                      # Agent reference
-│   ├── .agents/
-│   │   ├── skills/                    # 12 skills for Kimi
-│   │   ├── agents/                    # 5 YAML files (4 agents + router)
-│   │   └── contexts/                  # 3 stage contexts
-│   ├── examples/                      # Sample project
-│   └── tests/                         # Test suites
+├── plugin-cowork/                     # Claude Desktop/Cowork plugin
+│   ├── README.md                      # Cowork plugin guide
+│   └── commands/                      # 17 qual-* commands (flat structure)
 │
-└── workshop-notes/                    # PROJECT DOCUMENTATION
-    ├── README.md                      # Documentation index
-    ├── guides/                        # ORGANIZED GUIDES
-    │   ├── ai-continuation/           # For future AI assistants
-    │   ├── for-kimi-team/             # For Kimi.ai team
-    │   └── for-developers/            # For technical development
-    ├── kimi-port/                     # Kimi port project
-    └── archive/                       # Archived older files
+└── plugin-kimi/                       # Kimi CLI plugin (COMPLETE)
+    ├── README.md                      # Kimi plugin user guide
+    ├── AGENTS.md                      # Agent reference
+    ├── CHANGELOG.md                   # Version history & credits
+    ├── .agents/
+    │   ├── skills/                    # 12 skills for Kimi (Python)
+    │   ├── agents/                    # 5 YAML files (4 agents + router)
+    │   └── contexts/                  # 3 stage contexts
+    ├── examples/                      # Sample project
+    └── tests/                         # Test suites
 ```
 
 ---
 
-## 🎯 Project Overview
+## Project Overview
 
 **Interpretive Orchestration** is a methodology for human-AI partnership in qualitative research.
 
-### Core Concept: The 3-Stage Sandwich
+### The 3-Stage Sandwich
 
 ```
 Stage 1 (Foundation):    Human codes manually (10+ docs)
          ↓
-Stage 2 (Collaboration): Human + AI partnership  
+Stage 2 (Collaboration): Human + AI partnership
          ↓
 Stage 3 (Synthesis):     Human synthesizes with AI dialogue
 ```
@@ -85,100 +71,81 @@ Stage 3 (Synthesis):     Human synthesizes with AI dialogue
 
 ---
 
-## 📋 For Different Tasks
+## For Different Tasks
 
-### I want to understand what was done
+### I want to understand the project
 
-Read these in order:
-1. `workshop-notes/guides/ai-continuation/AI-HANDOFF-GUIDE.md`
-2. `plugin-kimi/CHANGELOG.md`
+1. This file (overview, architecture, non-negotiables)
+2. `plugin/ARCHITECTURE.md` (full technical architecture)
+3. `plugin-kimi/examples/sample-research-project/README.md` (workflow example)
+
+### I need to update the Claude Code plugin
+
+1. `plugin/CLAUDE.md` (instructions, skill list, maintenance guide)
+2. `plugin/ARCHITECTURE.md` (architecture reference)
 
 ### I need to update the Kimi plugin
 
-Read:
-1. `plugin-kimi/FUTURE-PARITY-GUIDE.md`
-2. `workshop-notes/guides/for-developers/KIMI-CLI-PORT-MAPPING.md` (local docs)
+1. `plugin-kimi/FUTURE-PARITY-GUIDE.md` (porting process)
+2. `plugin/CLAUDE.md` → "Kimi CLI Plugin Maintenance" section (conventions, doc checklist)
+3. `plugin-kimi/CHANGELOG.md` (version history)
 
-### I want to port to another platform (Codex, etc.)
+### I want to port to another platform
 
-Study:
-1. `workshop-notes/guides/for-developers/KIMI-CLI-PORT-MAPPING.md` (local docs)
+1. `plugin-kimi/FUTURE-PARITY-GUIDE.md` (porting patterns: JS→Python mapping)
 2. `plugin-kimi/.agents/skills/qual-shared/scripts/` (reference implementation)
 3. Use `plugin-kimi/` as your template
 
 ### I need to fix a bug
 
-Check:
-1. Does the bug exist in Claude version too? (`plugin/`)
-2. Fix in Kimi version (`plugin-kimi/`)
-3. Run tests: `cd plugin-kimi && python -m pytest tests/`
-
-### I want to understand the methodology
-
-Read:
-1. `workshop-notes/guides/for-kimi-team/KIMI-TEAM-CONTEXT-PACKAGE.md`
-2. `plugin-kimi/examples/sample-research-project/README.md`
+1. Check if the bug exists in Claude version too (`plugin/`)
+2. Fix in the affected plugin(s)
+3. Run tests: `bun test` (Claude) or `python3 plugin-kimi/tests/test_integration.py` (Kimi)
 
 ---
 
-## ✅ Current Status
+## Current Status
 
 | Component | Status |
 |-----------|--------|
-| **Claude Code Plugin** | ✅ Complete, maintained |
-| **Kimi CLI Plugin** | ✅ Complete, production-ready |
-| **Feature Parity** | ✅ **100% TRUE PARITY** (all skills ported) |
-| **Documentation** | ✅ Organized |
-| **Tests** | ✅ All passing |
-| **Example Project** | ✅ Working |
+| **Claude Code Plugin** | 12 skills, maintained |
+| **Kimi CLI Plugin** | 12 skills, production-ready |
+| **Cowork Plugin** | 17 commands, maintained |
+| **Feature Parity** | 12/12 skills across Claude & Kimi |
+| **Tests** | All passing |
 
 ---
 
-## 📚 Key Documents
+## Key Documents
 
-### Start Here
-- `workshop-notes/guides/ai-continuation/AI-HANDOFF-GUIDE.md` — For continuing
-- `plugin-kimi/README.md` — For using the plugin
-- `workshop-notes/README.md` — Documentation index
-
-### Reference
-- `plugin-kimi/AGENTS.md` — Agent documentation
-- `plugin-kimi/CHANGELOG.md` — Version history and build credits
-- `plugin-kimi/MVP-SCOPE.md` — Scope and requirements
-- `plugin-kimi/FUTURE-PARITY-GUIDE.md` — Maintenance process
-- `workshop-notes/guides/for-kimi-team/KIMI-TEAM-CONTEXT-PACKAGE.md` — Methodology (local)
+| Document | Purpose |
+|----------|---------|
+| `plugin/CLAUDE.md` | Claude plugin instructions & Kimi maintenance guide |
+| `plugin/ARCHITECTURE.md` | Full architecture reference |
+| `plugin-kimi/README.md` | Kimi plugin user guide |
+| `plugin-kimi/AGENTS.md` | Agent documentation for Kimi |
+| `plugin-kimi/CHANGELOG.md` | Version history and build credits |
+| `plugin-kimi/FUTURE-PARITY-GUIDE.md` | Maintenance and porting process |
+| `plugin-kimi/MVP-SCOPE.md` | Scope, requirements, known limitations |
+| `plugin-cowork/README.md` | Cowork plugin guide |
 
 ---
 
-## 🧪 Testing
+## Testing
 
 ```bash
-# Run all tests (no pytest required - tests run standalone)
-cd plugin-kimi/tests
-python3 test_integration.py
-python3 test_end_to_end.py
-python3 test_performance.py
+# Claude Code plugin
+bun test
 
-# Run skill-specific tests
-python3 .agents/skills/qual-analysis-orchestration/scripts/test_estimate_costs.py
-python3 .agents/skills/qual-methodological-rules/scripts/test_saturation_tracker.py
+# Kimi CLI plugin (tests run standalone, no pytest required)
+python3 plugin-kimi/tests/test_integration.py
+python3 plugin-kimi/tests/test_end_to_end.py
+python3 plugin-kimi/tests/test_performance.py
 ```
 
 ---
 
-## 🎓 Learning Path
-
-**New to this project?** Follow this path:
-
-1. **Read:** `workshop-notes/guides/ai-continuation/AI-HANDOFF-GUIDE.md`
-2. **Explore:** `plugin-kimi/examples/sample-research-project/`
-3. **Study:** `workshop-notes/guides/for-kimi-team/KIMI-TEAM-CONTEXT-PACKAGE.md`
-4. **Review:** `plugin-kimi/skills/qual-shared/scripts/`
-5. **Understand:** `plugin-kimi/FUTURE-PARITY-GUIDE.md`
-
----
-
-## ⚠️ Critical Rules
+## Critical Rules
 
 When working on this project:
 
@@ -187,39 +154,15 @@ When working on this project:
 3. **Keep 4-stage reasoning visible**
 4. **Preserve agent personalities**
 5. **Run tests before committing changes**
-6. **Update documentation with code changes**
+6. **Update documentation with code changes** (see checklist in `plugin/CLAUDE.md`)
 
 ---
 
-## 📞 Quick Reference
+## Local Development Notes
 
-| What | Where |
-|------|-------|
-| Claude plugin | `plugin/` |
-| Kimi plugin | `plugin-kimi/` |
-| Documentation | `workshop-notes/` |
-| Guides | `workshop-notes/guides/` |
-| Kimi port files | `workshop-notes/kimi-port/` |
-| Example project | `plugin-kimi/examples/` |
-| Tests | `plugin-kimi/tests/` |
-| Archive | `workshop-notes/archive/` |
+If a `workshop-notes/` directory exists locally, it contains additional development context (AI handoff guides, Kimi port artifacts, methodology notes). These are gitignored and not required for working on the project.
 
 ---
 
-## 🎯 Mission
-
-This project demonstrates **Partnership Agency** — the highest form of human-AI collaboration in qualitative research.
-
-The goal is not automation. The goal is **transformation**: helping researchers think more deeply, rigorously, and reflexively.
-
----
-
-**Welcome to the project! Start with the handoff guide and you'll be up to speed quickly.**
-
-➡️ `workshop-notes/guides/ai-continuation/AI-HANDOFF-GUIDE.md`
-
----
-
-*Last updated: 2026-02-02*
-
-**Status: COMPLETE AND READY FOR CONTINUATION** ✅
+*Interpretive Orchestration: Epistemic Partnership System*
+*Built by Xule Lin and Kevin Corley (Imperial College London)*
