@@ -48,6 +48,80 @@ Is your AI use consistent with your stated relationship?
 | Interpretive aid | Using AI for organization, your interpretation | AI making interpretive claims |
 | Coding tool | AI applies YOUR codes | AI creating codes |
 
+## Invocation Pattern
+
+```
+Check the coherence of my approach:
+
+My declared stance:
+- Ontology: [from config]
+- Epistemology: [from config]
+- Tradition: [from config]
+
+Recent analytical decision: [describe]
+
+Is this coherent? What tensions exist?
+```
+
+## Example Checks
+
+### Language Check
+```
+Check my language coherence:
+
+Declared stance: Constructivist
+In my last session, I wrote:
+"Analysis revealed that participants discover their own paths..."
+
+Is this consistent?
+```
+
+**Response might be:**
+```
+Tension detected:
+- "revealed" and "discover" suggest objectivist language
+- Your constructivist stance would prefer:
+  "Analysis constructed an understanding that participants
+  characterize their own paths..."
+
+Consider: Is this a slip in language, or are your underlying
+assumptions shifting? Both are okay, but be aware.
+```
+
+### Method Check
+```
+Check my method coherence:
+
+Declared epistemology: Systematic interpretation (Gioia)
+Current practice: I'm not using inter-rater reliability, but I am
+keeping detailed audit trails and seeking disconfirming cases.
+
+Is this coherent with Gioia method?
+```
+
+### AI Relationship Check
+```
+Check my AI relationship:
+
+Declared: Epistemic partner
+Current practice: I've been accepting all of @dialogical-coder's
+suggestions without much questioning.
+
+Is this coherent?
+```
+
+**Response might be:**
+```
+Tension detected:
+- Epistemic partnership implies dialogue, not acceptance
+- You committed to "questioning both AI outputs AND your assumptions"
+
+Recommendation: Before accepting next suggestion, ask:
+- Why does this interpretation make sense?
+- What alternative readings exist?
+- What would I lose if this code changed?
+```
+
 ## Usage
 
 ```bash
@@ -103,4 +177,4 @@ The danger is unexamined drift.
 
 ---
 
-*Ported from Claude Code plugin's coherence-check skill*
+*Part of Interpretive Orchestration for Kimi CLI*

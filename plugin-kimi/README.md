@@ -135,6 +135,7 @@ Shows:
 | `qual-reflection` | standard | MCP reasoning tools |
 | `qual-analysis-orchestration` | standard | Cost estimation & planning |
 | `qual-methodological-rules` | standard | Isolation rules & methodology presets |
+| `qual-coherence-check` | standard | Philosophical coherence examination |
 | `qual-shared` | — | Shared infrastructure |
 
 ### Agents

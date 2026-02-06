@@ -73,6 +73,10 @@ python3 plugin-kimi/scripts/sync_prompts_from_claude.py
 | interview-ingest | qual-ingest | Direct |
 | deep-reasoning | qual-reflection | Merged |
 | paradox-navigation | qual-reflection | Merged |
+| coherence-check | qual-coherence-check | Direct |
+| analysis-orchestration | qual-analysis-orchestration | Direct |
+| methodological-rules | qual-methodological-rules | Direct |
+| document-conversion | qual-convert | Direct |
 
 ### Scripts (JS → Python)
 

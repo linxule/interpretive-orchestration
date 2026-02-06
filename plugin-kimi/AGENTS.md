@@ -304,6 +304,7 @@ The agent's identity remains stable, but the context provides stage-appropriate 
 | Check progress | /flow:qual-status |
 | Deep reflection | /skill:qual-reflection |
 | Gioia structure | /skill:qual-gioia |
+| Coherence check | /skill:qual-coherence-check |
 
 ---
 

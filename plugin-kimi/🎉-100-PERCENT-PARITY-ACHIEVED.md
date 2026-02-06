@@ -28,7 +28,7 @@ The initial Kimi CLI port (built by ~10 Kimi agents + Codex) achieved **90% core
 
 ## Complete Feature Inventory
 
-### Skills: 11 Total (Was 9, Now 11)
+### Skills: 12 Total (Was 9, Now 12)
 
 | # | Skill | Lines | Scripts | Status |
 |---|-------|-------|---------|--------|
@@ -41,8 +41,9 @@ The initial Kimi CLI port (built by ~10 Kimi agents + Codex) achieved **90% core
 | 7 | qual-ingest | — | — | ✅ Original |
 | 8 | qual-convert | — | — | ✅ Original |
 | 9 | qual-shared | 11 modules | 11 | ✅ Original |
-| **10** | **qual-analysis-orchestration** | **1 script** | **1** | **✅ NEW (Today)** |
-| **11** | **qual-methodological-rules** | **9 scripts** | **9** | **✅ NEW (Today)** |
+| **10** | **qual-analysis-orchestration** | **1 script** | **1** | **✅ NEW** |
+| **11** | **qual-methodological-rules** | **9 scripts** | **9** | **✅ NEW** |
+| **12** | **qual-coherence-check** | **1 script** | **1** | **✅ NEW** |
 
 ### Scripts Ported Today: 10 Python Modules
 
@@ -185,7 +186,7 @@ Plan your analysis with confidence:
 
 | Metric | Before | After | Change |
 |--------|--------|-------|--------|
-| Skills | 9 | 11 | +2 ✅ |
+| Skills | 9 | 12 | +3 ✅ |
 | Python Modules | 11 | 20 | +9 ✅ |
 | Total Lines | ~3,500 | ~8,200 | +4,700 ✅ |
 | Feature Gaps | 8 | 0 | **-8 ✅** |

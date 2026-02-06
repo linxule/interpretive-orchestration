@@ -12,12 +12,20 @@ Usage:
 
 import argparse
 import json
-import os
 import sys
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+# Import qual-shared infrastructure
+sys.path.insert(0, str(Path(__file__).parent.parent.parent / "qual-shared" / "scripts"))
+try:
+    from state_manager import StateManager
+except ImportError:
+    StateManager = None
 
 
 # Language patterns for different stances
-LANGUAGE_PATTERNS = {
+LANGUAGE_PATTERNS: Dict[str, Dict[str, List[str]]] = {
     "constructivist": {
         "preferred": [
             "construct", "interpret", "characterize", "build", "develop",
@@ -61,7 +69,7 @@ LANGUAGE_PATTERNS = {
 }
 
 # AI relationship patterns
-AI_RELATIONSHIP_PATTERNS = {
+AI_RELATIONSHIP_PATTERNS: Dict[str, Dict[str, List[str]]] = {
     "epistemic_partner": {
         "coherent": [
             "question", "dialogue", "challenge", "explore together",
@@ -93,7 +101,7 @@ AI_RELATIONSHIP_PATTERNS = {
 }
 
 # Technical exceptions - these don't indicate stance
-TECHNICAL_EXCEPTIONS = [
+TECHNICAL_EXCEPTIONS: List[str] = [
     "find file", "find the file", "find document",
     "identify error", "identify bug", "identify issue",
     "discover cause", "discover bug", "reveal error",
@@ -101,9 +109,22 @@ TECHNICAL_EXCEPTIONS = [
 ]
 
 
-def read_config(project_path):
-    config_path = os.path.join(project_path, ".interpretive-orchestration", "config.json")
-    if not os.path.exists(config_path):
+def read_config(project_path: Path) -> Optional[Dict[str, Any]]:
+    """
+    Read raw project config for philosophical stance data.
+
+    Note: We read the raw config.json rather than using StateManager because
+    coherence checking requires the nested philosophical_stance structure
+    which StateManager's ProjectState dataclass does not expose.
+
+    Args:
+        project_path: Path to project directory
+
+    Returns:
+        dict: Raw config data, or None if not found
+    """
+    config_path = project_path / ".interpretive-orchestration" / "config.json"
+    if not config_path.exists():
         return None
     try:
         with open(config_path, "r") as f:
@@ -112,12 +133,22 @@ def read_config(project_path):
         return None
 
 
-def read_recent_activity(project_path, count=20):
-    log_path = os.path.join(project_path, ".interpretive-orchestration", "conversation-log.jsonl")
-    if not os.path.exists(log_path):
+def read_recent_activity(project_path: Path, count: int = 20) -> List[Dict[str, Any]]:
+    """
+    Read recent conversation log entries.
+
+    Args:
+        project_path: Path to project directory
+        count: Number of recent entries to return
+
+    Returns:
+        list: Recent activity log entries
+    """
+    log_path = project_path / ".interpretive-orchestration" / "conversation-log.jsonl"
+    if not log_path.exists():
         return []
 
-    logs = []
+    logs: List[Dict[str, Any]] = []
     try:
         with open(log_path, "r") as f:
             lines = [line.strip() for line in f if line.strip()]
@@ -133,13 +164,32 @@ def read_recent_activity(project_path, count=20):
     return logs
 
 
-def is_technical_context(text):
+def is_technical_context(text: str) -> bool:
+    """
+    Check if text is in a technical context where stance language is irrelevant.
+
+    Args:
+        text: Text to check
+
+    Returns:
+        bool: True if technical context detected
+    """
     lower_text = text.lower()
     return any(exc in lower_text for exc in TECHNICAL_EXCEPTIONS)
 
 
-def analyze_language_coherence(text, stance):
-    results = {"coherent": [], "tensions": [], "suggestions": []}
+def analyze_language_coherence(text: str, stance: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Analyze text for language coherence with declared philosophical stance.
+
+    Args:
+        text: Text to analyze
+        stance: Philosophical stance configuration
+
+    Returns:
+        dict: Analysis results with coherent, tensions, and suggestions
+    """
+    results: Dict[str, Any] = {"coherent": [], "tensions": [], "suggestions": []}
 
     if not text or not stance:
         return results
@@ -181,8 +231,18 @@ def analyze_language_coherence(text, stance):
     return results
 
 
-def analyze_ai_relationship(activity, declared_relationship):
-    results = {"coherent": [], "tensions": [], "suggestions": []}
+def analyze_ai_relationship(activity: List[Dict[str, Any]], declared_relationship: str) -> Dict[str, Any]:
+    """
+    Analyze AI interaction patterns against declared relationship.
+
+    Args:
+        activity: Recent conversation activity entries
+        declared_relationship: Declared AI relationship type
+
+    Returns:
+        dict: Analysis results with coherent and tension patterns
+    """
+    results: Dict[str, Any] = {"coherent": [], "tensions": [], "suggestions": []}
 
     if not activity or not declared_relationship:
         return results
@@ -211,10 +271,25 @@ def analyze_ai_relationship(activity, declared_relationship):
     return results
 
 
-def generate_full_report(config, recent_activity, text_to_analyze):
+def generate_full_report(
+    config: Dict[str, Any],
+    recent_activity: Optional[List[Dict[str, Any]]],
+    text_to_analyze: Optional[str],
+) -> Dict[str, Any]:
+    """
+    Generate comprehensive coherence report.
+
+    Args:
+        config: Project configuration
+        recent_activity: Recent conversation log entries
+        text_to_analyze: Optional text for language analysis
+
+    Returns:
+        dict: Full coherence report
+    """
     phil_stance = config.get("philosophical_stance", {})
 
-    report = {
+    report: Dict[str, Any] = {
         "stance_declared": {
             "ontology": phil_stance.get("ontology", "not specified"),
             "epistemology": phil_stance.get("epistemology", "not specified"),
@@ -305,20 +380,56 @@ def generate_full_report(config, recent_activity, text_to_analyze):
     return report
 
 
-def main():
-    parser = argparse.ArgumentParser(description="Check philosophical coherence")
-    parser.add_argument("--project-path", required=True, help="Path to qualitative project root")
-    parser.add_argument("--text", help="Text to analyze for language coherence")
-    parser.add_argument("--recent-activity", action="store_true", help="Analyze recent conversation log")
-    parser.add_argument("--full-report", action="store_true", help="Generate comprehensive report")
+def main() -> int:
+    """CLI entry point."""
+    parser = argparse.ArgumentParser(
+        description="Check philosophical coherence"
+    )
+    parser.add_argument(
+        "--project-path",
+        type=str,
+        required=True,
+        help="Path to qualitative project root",
+    )
+    parser.add_argument(
+        "--text",
+        type=str,
+        help="Text to analyze for language coherence",
+    )
+    parser.add_argument(
+        "--recent-activity",
+        action="store_true",
+        help="Analyze recent conversation log",
+    )
+    parser.add_argument(
+        "--full-report",
+        action="store_true",
+        help="Generate comprehensive report",
+    )
+
     args = parser.parse_args()
 
-    resolved_path = os.path.realpath(args.project_path)
+    # Path traversal protection
+    resolved_path = Path(args.project_path).resolve()
+    config_target = resolved_path / ".interpretive-orchestration" / "config.json"
+    try:
+        config_target.resolve().relative_to(resolved_path)
+    except ValueError:
+        print(json.dumps({
+            "success": False,
+            "error": "Path traversal detected - invalid project path",
+        }), file=sys.stderr)
+        return 1
+
     config = read_config(resolved_path)
 
     if not config:
-        print(json.dumps({"success": False, "error": "Project not initialized", "suggestion": "Run qual-init to initialize your project"}))
-        sys.exit(1)
+        print(json.dumps({
+            "success": False,
+            "error": "Project not initialized",
+            "suggestion": "Run qual-init to initialize your project",
+        }), file=sys.stderr)
+        return 1
 
     recent_activity = None
     if args.recent_activity or args.full_report:
@@ -328,8 +439,8 @@ def main():
 
     print(json.dumps({"success": True, **report}, indent=2))
 
-    sys.exit(1 if len(report["tensions_detected"]) > 3 else 0)
+    return 1 if len(report["tensions_detected"]) > 3 else 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
