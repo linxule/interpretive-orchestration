@@ -98,5 +98,11 @@ coverage/
 .nyc_output/
 test-results/
 
+# Python virtual environments
+.venv/
+
+# Kimi plugin development leftovers
+plugin-kimi/stage2-collaboration/
+
 # Kimi plugin benchmark output (generated locally)
 plugin-kimi/tests/benchmark_results.json

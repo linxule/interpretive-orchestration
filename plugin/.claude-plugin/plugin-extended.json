@@ -92,19 +92,22 @@
       "exa",
       "zotero"
     ],
-    "mcps_custom": [
-      "document-management-server",
-      "data-structure-server",
-      "quote-bank-server",
-      "memo-server",
-      "pattern-characterization-server"
-    ]
+    "mcps_planned": {
+      "_note": "Future MCP servers - not yet implemented",
+      "servers": [
+        "document-management-server",
+        "data-structure-server",
+        "quote-bank-server",
+        "memo-server",
+        "pattern-characterization-server"
+      ]
+    }
   },
   "requires": {
     "claudeCode": ">=1.0.0",
     "models": {
-      "recommended": "claude-opus-4",
-      "alternatives": ["claude-sonnet-4.5", "gemini-2.5-pro"]
+      "recommended": "claude-opus-4-6",
+      "alternatives": ["claude-sonnet-4-5", "gemini-2.5-pro"]
     }
   },
   "mvep": {

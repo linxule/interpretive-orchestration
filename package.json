@@ -26,9 +26,9 @@
     "claude-code-plugin"
   ],
   "scripts": {
-    "test": "node tests/run-tests.js",
-    "test:hooks": "node tests/test-hooks.js",
-    "test:schemas": "node tests/test-schemas.js"
+    "test": "node plugin/tests/run-tests.js",
+    "test:hooks": "node plugin/tests/test-hooks.js",
+    "test:schemas": "node plugin/tests/test-schemas.js"
   },
   "engines": {
     "node": ">=18.0.0"

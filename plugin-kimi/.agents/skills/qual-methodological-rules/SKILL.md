@@ -296,19 +296,17 @@ The research-configurator agent uses this skill during Stage 2 setup:
 - Manual rule updates (no hooks system)
 - **Same philosophical foundation**, different enforcement mechanism
 
-## Future Phases (Not Yet Implemented)
+## Implemented Phases
 
-### Phase 2: Strain & Saturation
-- Track rule override patterns
+### Phase 2: Strain & Saturation (v1.0.1)
+- Track rule override patterns (`strain_check.py`)
 - Detect when methodology is evolving
-- Multi-dimensional saturation tracking
+- Multi-dimensional saturation tracking (`saturation_tracker.py`)
 
-### Phase 3: Advanced Features
-- Workspace branching (exploratory analysis)
-- Visualization dashboard
-- Multi-researcher support
-
-See `/Users/xulelin/.claude/plans/humming-splashing-fairy.md` for full roadmap.
+### Phase 3: Advanced Features (v1.0.1)
+- Workspace branching for exploratory analysis (`workspace_branch.py`)
+- Visualization dashboard (`viz_dashboard.py`)
+- Multi-researcher support with ICR sessions (`researcher_team.py`)
 
 ## Philosophy
 
@@ -332,5 +330,4 @@ See `/Users/xulelin/.claude/plans/humming-splashing-fairy.md` for full roadmap.
 
 ---
 
-*Phase 1 Complete - Core rule system functional.*
-*Phase 2 & 3 coming soon: strain detection, saturation tracking, branching.*
+*All phases complete - Core rule system, strain detection, saturation tracking, branching, visualization, and multi-researcher support all functional.*

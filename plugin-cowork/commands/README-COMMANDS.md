@@ -1,90 +1,54 @@
-# Commands Directory: Organizational Logic
+# Commands: Cowork (Claude Desktop) Version
 
-## Why This Structure?
+## Structure
 
-Commands are organized by **FUNCTION** (not just stage), because tools are used across multiple stages.
+Claude Desktop requires a **flat command structure** - all commands are directly in `commands/` with a `qual-` prefix. This differs from the Claude Code CLI version which uses nested subdirectories.
 
-```
-commands/
-├── project/        Cross-stage meta-commands
-├── analysis/       Epistemic tools (used in all stages)
-├── stage1/         Stage-specific guidance
-└── stage2/         Stage-specific guidance
-```
+## All Commands
 
-### project/ - Meta-Commands
-**Function:** Project setup, navigation, and stage transitions (transcend stages)
-- `init.md` - Initialize project with Socratic onboarding
-- `status.md` - Navigate atelier journey, see progress
-- `check-setup.md` - Verify plugin installation and configuration
-- `configure-analysis.md` - Model selection, cost estimation, batch processing
-- `design.md` - Configure research design (cases, waves, isolation rules)
-- `advance-stage.md` - Transition between stages with validation
+### Project Commands
+| Command | Purpose |
+|---------|---------|
+| `qual-init` | Initialize project with Socratic onboarding |
+| `qual-status` | Navigate atelier journey, see progress |
+| `qual-check-setup` | Verify plugin installation and configuration |
+| `qual-configure-analysis` | Model selection, cost estimation, batch processing |
+| `qual-design` | Configure research design (cases, waves, isolation rules) |
+| `qual-advance-stage` | Transition between stages with validation |
 
-**When used:** Beginning + throughout for orientation and stage management
+### Stage 1 Commands
+| Command | Purpose |
+|---------|---------|
+| `qual-memo` | Capture analytical memos during manual coding |
+| `qual-stage1-guide` | Comprehensive guidance for Stage 1 manual coding |
+| `qual-complete-stage1` | Validate foundation and transition to Stage 2 |
 
-### analysis/ - Epistemic Tools
-**Function:** Thinking and synthesis tools (stage-agnostic)
-- `reflect.md` - Synthesis dialogue
-- `think-through.md` - Sequential Thinking (deep reasoning)
-- `wisdom-check.md` - Lotus Wisdom (paradox navigation)
-- `examine-assumptions.md` - Reflexive assumption examination (philosophical coherence)
+### Stage 2 Commands
+| Command | Purpose |
+|---------|---------|
+| `qual-parallel-streams` | Run theoretical + empirical streams |
+| `qual-synthesize` | Synthesize findings across streams |
+| `qual-code-deductive` | Deductive coding with existing framework |
+| `qual-characterize-patterns` | Systematic pattern characterization |
 
-**When used:** Stage 1 (planning), Stage 2 (challenges), Stage 3 (theorization)
-
-### stage1/ - Solo Practice Guidance
-**Function:** Stage 1 philosophy and transition commands
-- `README-STAGE1.md` - Philosophy of solo practice
-- `memo.md` - Capture analytical memos during manual coding
-- `stage1-guide.md` - Comprehensive guidance for Stage 1 manual coding
-- `complete-stage1.md` - Validate foundation and transition to Stage 2
-
-**When used:** Understanding Stage 1, capturing insights, completing Stage 1
-
-### stage2/ - Collaboration Organization
-**Function:** Explain where Stage 2 tools live (they're distributed!)
-- `README-STAGE2.md` - Tool location map
-
-**When used:** Understanding why commands aren't all in stage2/
+### Analysis Commands (Stage-Agnostic)
+| Command | Purpose |
+|---------|---------|
+| `qual-reflect` | Synthesis dialogue |
+| `qual-think-through` | Sequential Thinking for deep reasoning |
+| `qual-wisdom-check` | Lotus Wisdom for paradox navigation |
+| `qual-examine-assumptions` | Reflexive assumption examination |
 
 ---
 
-## The Logic (For First-Time Visitors)
+## Why Flat Structure?
 
-**Principle:** Organize by what tools DO, not just when they're used.
+Claude Desktop plugins require all command files directly in the `commands/` folder. The `qual-` prefix groups them logically while maintaining discoverability.
 
-**Why?**
-- `/qual-think-through` is used in Stage 1, 2, AND 3
-- Putting it in "stage1/" would hide it from Stage 2/3 users
-- Functional organization makes tools discoverable
-
-**Outcome:**
-- **project/** = "Setup and navigation" (meta)
-- **analysis/** = "Thinking and synthesis" (tools)
-- **stage1/**, **stage2/** = "Guidance and philosophy" (explanatory)
+The Claude Code CLI version uses nested directories (`commands/project/`, `commands/analysis/`, etc.) which isn't supported in Desktop mode.
 
 ---
 
 ## For AI Agents Reading This
 
-**When you need:**
-- Project setup/status → `commands/project/`
-- Deep thinking/synthesis → `commands/analysis/`
-- Stage-specific philosophy → `commands/stage1/` or `stage2/`
-
-**All commands have:**
-- Purpose explanation
-- Philosophical foundation
-- Implementation guidance for Claude
-- Context-agnostic examples
-
----
-
-## The Craft Detail
-
-**This organization embodies:**
-- Functional clarity over rigid categorization
-- Discoverability over perfect taxonomy
-- Pragmatic access over theoretical purity
-
-**A small example of craft thinking in infrastructure design.**
+All 17 commands are in this flat directory. Use the `qual-` prefix table above to find the right command for the researcher's current need.

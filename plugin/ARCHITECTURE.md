@@ -233,7 +233,7 @@ interpretive-orchestration/
 │   ├── commands/ (7 + READMEs) - Simple triggers that invoke skills
 │   └── hooks/ (5 scripts + config) - Enforcement & prompting
 │
-├── 🧩 Skills (NEW - 11 skills!)
+├── 🧩 Skills (12 skills)
 │   ├── project-setup/ - Socratic onboarding + project creation
 │   │   ├── SKILL.md, scripts/, templates/, examples/
 │   ├── gioia-methodology/ - Data structure building + validation
@@ -704,7 +704,7 @@ Epistemic Ambidexterity
 **Contribution:** Building as scholarship, philosopher-builder synthesis
 
 ### For Developers (Technical)
-**Architecture:** 11 skills, 7 commands, 4 agents, 5 hooks, 8+ MCPs
+**Architecture:** 12 skills, 7 commands, 4 agents, 5 hooks, 8+ MCPs
 **Design:** Skills-first architecture, commands as triggers, graceful degradation for optional MCPs
 **Quality:** Atomic state writes, schema validation, structured hook remediation
 

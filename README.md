@@ -177,7 +177,7 @@ Skills are auto-discoverable capability packages that Claude loads when relevant
 | `deep-reasoning` | "think through", "plan" | Sequential Thinking integration |
 | `paradox-navigation` | "tension", "both/and" | Lotus Wisdom integration |
 
-**Full list:** See [CLAUDE.md](CLAUDE.md) for all 11 skills and their triggers.
+**Full list:** See [CLAUDE.md](plugin/CLAUDE.md) for all 12 skills and their triggers.
 
 ---
 

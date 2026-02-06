@@ -30,7 +30,7 @@ kimi --agent-file .agents/agents/stage1-listener.yaml
 - YAMLs in `.agents/agents/` follow the Kimi `version: 1` + `agent:` schema
 - Prompts live in `.agents/agents/prompts/`
 - Prompts are copied **verbatim** from `plugin/agents/*.md` (Claude), body only
-  - Note: Prompts may reference Claude-specific commands/models, since strict parity is required.
+  - Note: Prompts may reference Claude-specific commands/models (e.g., Opus, Sonnet), since strict parity is required. At runtime, Kimi CLI uses its own model (K2.5). The sync script (`scripts/sync_prompts_from_claude.py`) keeps prompts aligned.
 
 ---
 
