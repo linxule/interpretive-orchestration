@@ -868,7 +868,7 @@ This plugin aims for transformation, not automation. Every interaction should de
 
 The repo now contains TWO complete plugins with 100% feature parity:
 - `plugin/` - Claude Code CLI plugin (JavaScript, 12 skills)
-- `plugin-kimi/` - Kimi CLI plugin (Python, 11 skills)
+- `plugin-kimi/` - Kimi CLI plugin (Python, 12 skills)
 
 When updating plugin features:
 1. Make changes in `plugin/` first (Claude Code version)

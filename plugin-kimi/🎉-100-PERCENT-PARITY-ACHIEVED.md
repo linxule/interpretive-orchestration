@@ -110,7 +110,7 @@ The initial Kimi CLI port (built by ~10 Kimi agents + Codex) achieved **90% core
 
 | Feature Category | Claude | Kimi (Before) | Kimi (After) | Parity |
 |------------------|--------|---------------|--------------|--------|
-| **Core Workflow** | 12 skills | 9 skills | 11 skills | ✅ Functional |
+| **Core Workflow** | 12 skills | 9 skills | 12 skills | ✅ Exact |
 | **Stage Agents** | 4 | 4 | 4 | ✅ Exact |
 | **Philosophy** | 5 commitments | 5 commitments | 5 commitments | ✅ Exact |
 | **Cost Estimation** | ✓ | ✗ | ✓ | ✅ **NEW** |
@@ -384,7 +384,7 @@ Lin, X., & Corley, K. Interpretive Orchestration: Epistemic Partnership System
 ```
 
 **Claude Code Plugin:** `plugin/` (12 skills, JavaScript/Node.js)
-**Kimi CLI Plugin:** `plugin-kimi/` (11 skills, Python/YAML)
+**Kimi CLI Plugin:** `plugin-kimi/` (12 skills, Python/YAML)
 **Feature Parity:** 100% ✓
 
 ---

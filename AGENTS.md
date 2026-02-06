@@ -34,7 +34,7 @@ repo-root/
 │   ├── README.md                      # Kimi plugin user guide
 │   ├── AGENTS.md                      # Agent reference
 │   ├── .agents/
-│   │   ├── skills/                    # 11 skills for Kimi
+│   │   ├── skills/                    # 12 skills for Kimi
 │   │   ├── agents/                    # 5 YAML files (4 agents + router)
 │   │   └── contexts/                  # 3 stage contexts
 │   ├── examples/                      # Sample project
