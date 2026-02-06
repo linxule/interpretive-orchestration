@@ -882,10 +882,29 @@ When updating plugin features:
 - Node.js fs → Python pathlib + qual-shared StateManager
 - Add `uv run --script` headers with inline dependencies for auto-installation
 
+**Kimi skill conventions (check against established skills before porting):**
+- Import StateManager from qual-shared with try/except fallback (`StateManager = None`)
+- StateManager only exposes flat ProjectState fields — scripts needing nested config (e.g. `philosophical_stance`) must read raw config.json directly
+- Use `pathlib.Path` not `os.path`; add type hints and Google-style docstrings
+- Exit pattern: `main() -> int` with `sys.exit(main())` at module level
+- Errors to stderr: `print(json.dumps(...), file=sys.stderr)`
+- SKILL.md frontmatter (name + description) is the newer convention; some older skills lack it
+- Standard footer: `*Part of Interpretive Orchestration for Kimi CLI*`
+
+**When adding a new Kimi skill, update ALL of these docs:**
+- `plugin-kimi/README.md` — Skills Reference table
+- `plugin-kimi/AGENTS.md` — Quick Reference table
+- `plugin-kimi/FUTURE-PARITY-GUIDE.md` — Component Port Matrix
+- `plugin-kimi/🎉-100-PERCENT-PARITY-ACHIEVED.md` — Skill inventory + stats
+- `plugin-kimi/✅-PRODUCTION-READY.md` — Key Metrics + Core/Advanced Skills tables
+- Root `AGENTS.md` — Skill count in directory tree
+- `plugin/CLAUDE.md` — Cross-platform reference line
+
 **Testing:**
 - Tests run standalone: `python3 test_*.py` (no pytest required)
 - Both plugins have separate test suites in their `tests/` directories
 - Kimi tests: integration (8), end-to-end (2), performance (benchmarks), skill-specific (21)
+- Root package.json test scripts point to `plugin/tests/` (not `tests/`)
 
 **Dependencies for Kimi plugin:**
 - pyyaml>=6.0 (config loading)
