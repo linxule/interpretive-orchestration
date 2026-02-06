@@ -895,8 +895,7 @@ When updating plugin features:
 - `plugin-kimi/README.md` — Skills Reference table
 - `plugin-kimi/AGENTS.md` — Quick Reference table
 - `plugin-kimi/FUTURE-PARITY-GUIDE.md` — Component Port Matrix
-- `plugin-kimi/🎉-100-PERCENT-PARITY-ACHIEVED.md` — Skill inventory + stats
-- `plugin-kimi/✅-PRODUCTION-READY.md` — Key Metrics + Core/Advanced Skills tables
+- `plugin-kimi/CHANGELOG.md` — Version history and skill inventory
 - Root `AGENTS.md` — Skill count in directory tree
 - `plugin/CLAUDE.md` — Cross-platform reference line
 

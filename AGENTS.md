@@ -91,8 +91,7 @@ Stage 3 (Synthesis):     Human synthesizes with AI dialogue
 
 Read these in order:
 1. `workshop-notes/guides/ai-continuation/AI-HANDOFF-GUIDE.md`
-2. `plugin-kimi/✅-PRODUCTION-READY.md`
-3. `plugin-kimi/FINAL-BUILD-SUMMARY.md`
+2. `plugin-kimi/CHANGELOG.md`
 
 ### I need to update the Kimi plugin
 
@@ -144,8 +143,8 @@ Read:
 
 ### Reference
 - `plugin-kimi/AGENTS.md` — Agent documentation
-- `plugin-kimi/🎉-100-PERCENT-PARITY-ACHIEVED.md` — Parity completion summary
-- `plugin-kimi/MVP-SCOPE.md` — Scope and version history
+- `plugin-kimi/CHANGELOG.md` — Version history and build credits
+- `plugin-kimi/MVP-SCOPE.md` — Scope and requirements
 - `plugin-kimi/FUTURE-PARITY-GUIDE.md` — Maintenance process
 - `workshop-notes/guides/for-kimi-team/KIMI-TEAM-CONTEXT-PACKAGE.md` — Methodology (local)
 

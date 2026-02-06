@@ -200,8 +200,7 @@ The MVP is considered successful when:
 
 ## Related Documents
 
-- [IMPLEMENTATION-ROADMAP.md](./IMPLEMENTATION-ROADMAP.md) - Development timeline
-- [FINAL-BUILD-SUMMARY.md](./FINAL-BUILD-SUMMARY.md) - What's been built
+- [CHANGELOG.md](./CHANGELOG.md) - Version history and build credits
 - [README.md](./README.md) - User-facing documentation
 - [examples/sample-research-project/](./examples/sample-research-project/) - Working example
 

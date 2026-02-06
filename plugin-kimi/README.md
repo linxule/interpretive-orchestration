@@ -273,9 +273,8 @@ Tests cover:
 
 ## Documentation
 
-- `IMPLEMENTATION-ROADMAP.md` — Development plan
-- `BUILD-SUMMARY.md` — What's been built
-- `PROGRESS.md` — Current status
+- `CHANGELOG.md` — Version history and build credits
+- `MVP-SCOPE.md` — Scope definition and requirements
 - `.agents/skills/*/SKILL.md` — Individual skill docs
 
 ---
