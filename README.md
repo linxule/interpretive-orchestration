@@ -2,9 +2,9 @@
 
 > Not a tool for faster coding. A partner for deeper thinking.
 
-**🚀 Ready to start?** → [INSTALL.md](INSTALL.md) (complete setup from scratch)
+**🚀 Ready to start?** → [INSTALL.md](plugin/INSTALL.md) (complete setup from scratch)
 
-**📋 Already set up?** → [QUICK-START.md](QUICK-START.md) (quick reference)
+**📋 Already set up?** → [QUICK-START.md](plugin/QUICK-START.md) (quick reference)
 
 **📖 Want depth?** → Keep reading below
 
@@ -121,7 +121,7 @@ If something feels "heavy" - that's intentional epistemic friction preventing th
 
 ## 🚀 Getting Started
 
-**New to Claude Code?** See [INSTALL.md](INSTALL.md) for complete hand-holding setup instructions (Windows, macOS, Linux).
+**New to Claude Code?** See [INSTALL.md](plugin/INSTALL.md) for complete hand-holding setup instructions (Windows, macOS, Linux).
 
 **Want a pre-configured environment?** Use the [Starter Project](https://github.com/linxule/interpretive-orchestration-starter) - a ready-to-use VS Code workspace with beginner-friendly settings.
 
@@ -239,10 +239,10 @@ If you're blocked, it's asking you to think. That's intentional epistemic fricti
 
 | Start Here | Go Deeper |
 |------------|-----------|
-| [INSTALL.md](INSTALL.md) - Complete setup | [DESIGN-PHILOSOPHY.md](DESIGN-PHILOSOPHY.md) - Why partnership |
-| [QUICK-START.md](QUICK-START.md) - 5-min guide | [ARCHITECTURE.md](ARCHITECTURE.md) - Technical details |
-| [TROUBLESHOOTING.md](TROUBLESHOOTING.md) - Issues | [CLAUDE.md](CLAUDE.md) - Agent behavior |
-| [UPGRADE-GUIDE.md](UPGRADE-GUIDE.md) - v0.1→v0.2 | [DEPENDENCIES.md](DEPENDENCIES.md) - MCP ecosystem |
+| [INSTALL.md](plugin/INSTALL.md) - Complete setup | [DESIGN-PHILOSOPHY.md](plugin/DESIGN-PHILOSOPHY.md) - Why partnership |
+| [QUICK-START.md](plugin/QUICK-START.md) - 5-min guide | [ARCHITECTURE.md](plugin/ARCHITECTURE.md) - Technical details |
+| [TROUBLESHOOTING.md](plugin/TROUBLESHOOTING.md) - Issues | [CLAUDE.md](plugin/CLAUDE.md) - Agent behavior |
+| [UPGRADE-GUIDE.md](plugin/UPGRADE-GUIDE.md) - v0.1→v0.2 | [DEPENDENCIES.md](plugin/DEPENDENCIES.md) - MCP ecosystem |
 
 ---
 
@@ -316,7 +316,7 @@ your-project/
 
 **The folder structure teaches the methodology.**
 
-**Note:** The plugin is ~90% markdown prompts, ~10% JavaScript hooks. See [ARCHITECTURE.md](ARCHITECTURE.md) for technical details.
+**Note:** The plugin is ~90% markdown prompts, ~10% JavaScript hooks. See [ARCHITECTURE.md](plugin/ARCHITECTURE.md) for technical details.
 
 ---
 
