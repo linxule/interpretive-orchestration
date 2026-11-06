@@ -1,76 +1,85 @@
-# Commands Directory: Organizational Logic
+# Commands: organizational logic
 
-## Why This Structure?
+## How commands are packaged
 
-Commands are organized by **FUNCTION** (not just stage), because tools are used across multiple stages.
+Since 0.3.0, every `/qual-*` command is a skill. Each one lives in its own folder at `skills/qual-<name>/SKILL.md`, and the folder name is the command name. In Claude Code you type `/qual-init`, `/qual-status` and so on, as before. The old `commands/` folder is gone.
 
-```
-commands/
-├── project/        Cross-stage meta-commands
-├── analysis/       Epistemic tools (used in all stages)
-├── stage1/         Stage-specific guidance
-└── stage2/         Stage-specific guidance
-```
+There are 17 commands. The skills folder is flat, so the grouping below is by function, not by folder.
 
-### project/ - Meta-Commands
-**Function:** Project setup, navigation, and stage transitions (transcend stages)
-- `init.md` - Initialize project with Socratic onboarding
-- `status.md` - Navigate atelier journey, see progress
-- `check-setup.md` - Verify plugin installation and configuration
-- `configure-analysis.md` - Model selection, cost estimation, batch processing
-- `design.md` - Configure research design (cases, waves, isolation rules)
-- `advance-stage.md` - Transition between stages with validation
+## Why group by function
 
-**When used:** Beginning + throughout for orientation and stage management
+Commands are grouped by FUNCTION (not just stage), because tools are used across multiple stages.
 
-### analysis/ - Epistemic Tools
-**Function:** Thinking and synthesis tools (stage-agnostic)
-- `reflect.md` - Synthesis dialogue
-- `think-through.md` - Sequential Thinking (deep reasoning)
-- `wisdom-check.md` - Lotus Wisdom (paradox navigation)
-- `examine-assumptions.md` - Reflexive assumption examination (philosophical coherence)
+### Project: setup, navigation and stage transitions
 
-**When used:** Stage 1 (planning), Stage 2 (challenges), Stage 3 (theorization)
+These commands work across all stages:
 
-### stage1/ - Solo Practice Guidance
-**Function:** Stage 1 philosophy and transition commands
-- `README-STAGE1.md` - Philosophy of solo practice
-- `memo.md` - Capture analytical memos during manual coding
-- `stage1-guide.md` - Comprehensive guidance for Stage 1 manual coding
-- `complete-stage1.md` - Validate foundation and transition to Stage 2
+- `/qual-init` - initialize a project with Socratic onboarding
+- `/qual-status` - see your progress through the atelier journey
+- `/qual-check-setup` - verify the plugin installation and MCP servers
+- `/qual-configure-analysis` - model selection, cost estimation and batch processing
+- `/qual-design` - configure research design (cases, waves, isolation rules)
+- `/qual-advance-stage` - move between stages with validation
 
-**When used:** Understanding Stage 1, capturing insights, completing Stage 1
+When used: at the start, then throughout for orientation and stage management.
 
-### stage2/ - Collaboration Organization
-**Function:** Explain where Stage 2 tools live (they're distributed!)
-- `README-STAGE2.md` - Tool location map
+### Analysis: epistemic tools for every stage
 
-**When used:** Understanding why commands aren't all in stage2/
+These commands are thinking and synthesis tools:
+
+- `/qual-reflect` - synthesis dialogue
+- `/qual-think-through` - deep reasoning, thinking step by step before responding
+- `/qual-wisdom-check` - paradox navigation with Lotus Wisdom
+- `/qual-examine-assumptions` - reflexive examination of assumptions (philosophical coherence)
+
+When used: Stage 1 (planning), Stage 2 (challenges), Stage 3 (theorization).
+
+### Stage 1: solo practice
+
+These commands support manual coding without automating it:
+
+- `/qual-memo` - capture analytical memos during manual coding
+- `/qual-stage1-guide` - guidance for Stage 1 manual coding
+- `/qual-complete-stage1` - validate your foundation and move to Stage 2
+
+The philosophy of solo practice is in [README-STAGE1.md](README-STAGE1.md).
+
+### Stage 2: collaboration
+
+These commands follow the three Stage 2 phases:
+
+- `/qual-parallel-streams` - Phase 1, theoretical and empirical streams
+- `/qual-synthesize` - Phase 2, merge the streams into unified patterns
+- `/qual-code-deductive` - Phase 2, apply established patterns to the remaining data
+- `/qual-characterize-patterns` - Phase 3, dimensional analysis of patterns
+
+When Stage 1 is not complete, Claude Code asks you to confirm before these 4 commands run. [README-STAGE2.md](README-STAGE2.md) maps where the other Stage 2 tools live.
 
 ---
 
-## The Logic (For First-Time Visitors)
+## The logic (for first-time visitors)
 
 **Principle:** Organize by what tools DO, not just when they're used.
 
 **Why?**
 - `/qual-think-through` is used in Stage 1, 2, AND 3
-- Putting it in "stage1/" would hide it from Stage 2/3 users
+- Listing it under Stage 1 would hide it from Stage 2/3 users
 - Functional organization makes tools discoverable
 
 **Outcome:**
-- **project/** = "Setup and navigation" (meta)
-- **analysis/** = "Thinking and synthesis" (tools)
-- **stage1/**, **stage2/** = "Guidance and philosophy" (explanatory)
+- **Project** = "Setup and navigation" (meta)
+- **Analysis** = "Thinking and synthesis" (tools)
+- **Stage 1**, **Stage 2** = "Guidance and stage-specific work"
 
 ---
 
-## For AI Agents Reading This
+## For AI agents reading this
 
-**When you need:**
-- Project setup/status → `commands/project/`
-- Deep thinking/synthesis → `commands/analysis/`
-- Stage-specific philosophy → `commands/stage1/` or `stage2/`
+When you need:
+
+- project setup or status: `skills/qual-init/`, `skills/qual-status/` and the other project commands
+- deep thinking or synthesis: `skills/qual-think-through/`, `skills/qual-reflect/`, `skills/qual-wisdom-check/`, `skills/qual-examine-assumptions/`
+- stage-specific philosophy: [README-STAGE1.md](README-STAGE1.md) or [README-STAGE2.md](README-STAGE2.md)
 
 **All commands have:**
 - Purpose explanation
@@ -80,7 +89,7 @@ commands/
 
 ---
 
-## The Craft Detail
+## The craft detail
 
 **This organization embodies:**
 - Functional clarity over rigid categorization

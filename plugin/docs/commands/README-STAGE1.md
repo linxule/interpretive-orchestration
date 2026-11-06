@@ -1,8 +1,8 @@
-# Stage 1 Commands: Why This Folder Exists (And Why It's Intentionally Minimal)
+# Stage 1 commands: why there are so few (and why that's intentional)
 
-## The Philosophy of This Folder
+## The philosophy of Stage 1 tools
 
-You might notice: **This folder has very few (or no) command files.**
+You might notice: **Stage 1 has very few commands.**
 
 **This is intentional, not oversight.**
 
@@ -63,6 +63,8 @@ You might notice: **This folder has very few (or no) command files.**
 ### ❌ @dialogical-coder
 **Why blocked:** Would bypass the manual engagement that builds depth
 
+In Claude Code, a hook checks your Stage 1 status. If Stage 1 is not complete, Claude Code asks you to confirm before @dialogical-coder or a Stage 2 command runs. You can stop there, or go ahead knowingly.
+
 ### ❌ Automated coding commands
 **Why blocked:** Stage 1 IS the manual work
 
@@ -104,7 +106,7 @@ When you feel:
 
 ---
 
-## Why We Don't Provide More Commands Here
+## Why We Don't Provide More Stage 1 Commands
 
 **Because:**
 - Commands imply AI automation
@@ -141,7 +143,7 @@ Run `/qual-complete-stage1` to validate your foundation and transition to Stage 
 
 ---
 
-*This folder stays minimal because Stage 1 is about YOUR engagement, not our tools.*
+*Stage 1 stays minimal because it is about YOUR engagement, not our tools.*
 
 **Go read your data. Code it yourself. Write memos. Think.**
 

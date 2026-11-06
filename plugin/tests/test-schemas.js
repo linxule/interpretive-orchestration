@@ -298,6 +298,17 @@ function testHooksConfig() {
     });
   }
 
+  test('kimi.plugin.json: every hook runs a known script through run-hook.js', () => {
+    const manifest = JSON.parse(fs.readFileSync(path.join(PROJECT_ROOT, '..', 'kimi.plugin.json'), 'utf8'));
+    assert(Array.isArray(manifest.hooks) && manifest.hooks.length > 0, 'Kimi manifest should list hooks');
+    for (const hook of manifest.hooks) {
+      const match = hook.command.match(/^node plugin\/hooks\/run-hook\.js ([\w-]+\.js)$/);
+      assert(match, `Kimi hook should run plugin/hooks/run-hook.js from the repo root: ${hook.command}`);
+      assert(adapter.includes(`'${match[1]}'`), `run-hook.js has no triggers for ${match[1]}`);
+      assert(!hook.matcher || hook.matcher.startsWith('^'), `Kimi matchers are unanchored regexes; anchor ${hook.matcher}`);
+    }
+  });
+
   test('Codex manifest points at the Codex hooks file', () => {
     const manifest = JSON.parse(fs.readFileSync(path.join(PROJECT_ROOT, '.codex-plugin', 'plugin.json'), 'utf8'));
     assert(manifest.hooks === './hooks/codex-hooks.json', 'Codex should load codex-hooks.json, not hooks.json');

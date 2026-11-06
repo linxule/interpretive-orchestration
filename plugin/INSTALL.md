@@ -99,14 +99,16 @@ cd ~/my-qualitative-research
 claude
 ```
 
-Then type:
+Then add the marketplace and install the plugin:
 ```
-/plugin install linxule/interpretive-orchestration
+/plugin marketplace add linxule/interpretive-orchestration
+/plugin install interpretive-orchestration@interpretive-orchestration
 ```
 
 Claude Code will:
 - Download the plugin
-- Install bundled MCP servers (Sequential Thinking, Lotus Wisdom)
+- Add the `/qual-*` commands, agents and skills
+- Set up the bundled Lotus Wisdom MCP server
 - Set up methodology enforcement hooks
 
 ---
@@ -142,14 +144,29 @@ This starts the Socratic onboarding dialogue that establishes:
 
 ---
 
+## Other platforms
+
+The plugin also installs in OpenAI Codex, GitHub Copilot CLI and Kimi Code. Each needs Node.js 18 or later.
+
+- Codex: run `codex plugin marketplace add linxule/interpretive-orchestration`, then `codex plugin add interpretive-orchestration@interpretive-orchestration`. When Codex next starts, it asks you to review the plugin's hooks: choose Trust all and continue.
+- Copilot CLI: run `copilot plugin marketplace add linxule/interpretive-orchestration`, then `copilot plugin install interpretive-orchestration@interpretive-orchestration`.
+- Kimi Code: run `/plugins install https://github.com/linxule/interpretive-orchestration` inside Kimi Code.
+
+Some checks behave differently on these platforms. The README explains [what works on each platform](../README.md#what-works-on-each-platform).
+
+---
+
 ## What Gets Installed Automatically
 
-These tools are **bundled and work immediately** - no API keys needed:
+This tool is **bundled and works immediately** - no API key needed:
 
 | Tool | What It Does |
 |------|--------------|
-| **Sequential Thinking** | Dynamic reasoning through structured thought sequences |
-| **Lotus Wisdom** | Navigate paradoxes with contemplative problem-solving |
+| **[Lotus Wisdom](https://github.com/linxule/lotus-wisdom-mcp)** | Navigate paradoxes with contemplative problem-solving |
+
+Lotus Wisdom runs on your computer through Node.js and updates itself each time it starts.
+
+Deep reasoning (`/qual-think-through`) no longer needs an MCP server. The plugin asks the model to think deeply and step by step before it responds.
 
 **Full MCP documentation:** See [DEPENDENCIES.md](DEPENDENCIES.md) for complete capabilities and setup instructions.
 
@@ -224,4 +241,4 @@ Remember: The friction is intentional. Slow down to think deeply.
 
 **Welcome to the atelier.**
 
-*Built by Xule Lin and Kevin Corley (Imperial College London), with Claude Opus 4.5 (Anthropic) as co-apprentice, reviewed by Codex (OpenAI) and Gemini (Google)*
+*Built by Xule Lin (SKEMA Business School) and Kevin Corley (Imperial College London), with Claude Opus 4.5 (Anthropic) as co-apprentice, reviewed by Codex (OpenAI) and Gemini (Google)*

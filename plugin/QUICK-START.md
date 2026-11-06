@@ -23,11 +23,15 @@
 /qual-status              # Check: Where am I in the journey?
 /qual-check-setup         # Verify: Is everything configured?
 /qual-configure-analysis  # Setup: Model and batch configuration
+/qual-design              # Design: Cases, waves, isolation rules
+/qual-advance-stage       # Move: Next stage, with validation
 ```
 
 ### Stage 1 (Solo Practice)
 ```bash
+/qual-stage1-guide        # Learn: Guidance for manual coding
 /qual-memo                # Write: Analytical memo from coding
+/qual-complete-stage1     # Finish: Validate foundation, open Stage 2
 ```
 
 ### Stage 2 (Collaboration)
@@ -38,9 +42,11 @@
 /qual-synthesize             # Merge: Integrate streams
 ```
 
+If Stage 1 is not complete, Claude Code asks you to confirm before these commands or @dialogical-coder run.
+
 ### Analysis & Reflection
 ```bash
-/qual-think-through       # Deep: Structured reasoning (Sequential Thinking)
+/qual-think-through       # Deep: Step-by-step structured reasoning
 /qual-wisdom-check        # Navigate: Paradox integration (Lotus Wisdom)
 /qual-examine-assumptions # Meta: Check philosophical coherence
 /qual-reflect             # Synthesize: End-of-session dialogue
@@ -74,10 +80,9 @@ Claude loads these when relevant to your request:
 
 ---
 
-## Bundled MCPs (No API Keys)
+## Bundled MCP (No API Key)
 
-- **Sequential Thinking** - Structured reasoning chains
-- **Lotus Wisdom** - Navigate paradoxes, integrate tensions
+- **[Lotus Wisdom](https://github.com/linxule/lotus-wisdom-mcp)** - Navigate paradoxes, integrate tensions
 
 **Optional (with API keys):** MinerU (90%+ PDF accuracy), Zen (multi-model), Exa (search), Jina (fetch), Zotero (bibliography). See [DEPENDENCIES.md](DEPENDENCIES.md).
 

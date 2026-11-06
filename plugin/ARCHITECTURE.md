@@ -26,7 +26,7 @@ graph TB
     end
 
     subgraph Enforcement["ENFORCEMENT"]
-        PreStage2[PreStage2 Hook<br/>Blocks without Stage 1]
+        PreStage2[PreStage2 Hook<br/>Asks to confirm without Stage 1]
         Framework --> PreStage2
     end
 
@@ -36,10 +36,12 @@ graph TB
         Config[@research-configurator<br/>The Whisperer<br/>Technical orchestration]
         Coder[@dialogical-coder<br/>4-stage reflexive coding]
         Reflect[/qual-reflect<br/>Synthesis dialogue]
+        Synth[/qual-synthesize<br/>Merge streams]
 
         S2 --> Config
         Config --> Coder
         Coder --> Reflect
+        Reflect --> Synth
 
         Think2[/qual-think-through]
         Wisdom[/qual-wisdom-check]
@@ -54,6 +56,9 @@ graph TB
 
         Coder -.Triggers.-> Pause
         Coder -.Triggers.-> Coherence
+
+        Audit[PostSynthesis<br/>Audit trail]
+        Synth -.Triggers.-> Audit
     end
 
     subgraph Stage3["STAGE 3: Dialogue with Tradition"]
@@ -66,21 +71,12 @@ graph TB
         S3 --> Scholar
         Scholar -.Uses.-> Think3
         Scholar -.Uses.-> Wisdom3
-
-        Audit[PostSynthesis<br/>Audit trail]
-        Scholar -.Triggers.-> Audit
     end
 
     subgraph MCPs["EPISTEMIC SCAFFOLDING - MCPs"]
-        SeqThink[Sequential Thinking<br/>Deep reasoning]
         LotusW[Lotus Wisdom<br/>Paradox navigation]
-        Markdownify[Markdownify<br/>Document conversion]
         Zen[Zen MCP<br/>Multi-model validation]
         Jina[Jina + Exa<br/>Literature]
-
-        Think1 -.Invokes.-> SeqThink
-        Think2 -.Invokes.-> SeqThink
-        Think3 -.Invokes.-> SeqThink
 
         Wisdom -.Invokes.-> LotusW
         Wisdom3 -.Invokes.-> LotusW
@@ -110,9 +106,9 @@ graph TB
 
 ## Component Inventory
 
-### Skills (11) - NEW!
+### Skills (12 auto-loaded, plus 17 commands)
 
-Skills are auto-discoverable capability packages. Claude loads them when relevant to the user's request.
+Skills are auto-discoverable capability packages. Claude loads them when relevant to the user's request. Since 0.3.0 the `/qual-*` commands are skills too (see Commands below).
 
 **Core Skills:**
 | Skill | Triggers On | Purpose |
@@ -122,30 +118,44 @@ Skills are auto-discoverable capability packages. Claude loads them when relevan
 | `project-dashboard` | "status", "progress", "where am I" | Progress visualization |
 | `analysis-orchestration` | "cost", "model", "configure" | Model selection + cost estimation |
 | `coding-workflow` | "batch", "systematic coding" | Document coding management |
+| `methodological-rules` | "generate rules", "isolation rules", after `/qual-design` | Rule generation + phase updates |
 
 **Composite MCP Skills (with graceful degradation):**
 | Skill | Tiers | Purpose |
 |-------|-------|---------|
 | `literature-sweep` | Exa+Jina → Jina → WebFetch | Academic literature search + fetch |
-| `interview-ingest` | MinerU → Markdownify → manual | Audio/PDF conversion |
-| `document-conversion` | MinerU vs Markdownify | Intelligent format conversion |
+| `interview-ingest` | MinerU → manual | Audio/PDF conversion |
+| `document-conversion` | MinerU → manual | Intelligent format conversion |
 
-**Mindset Skills (MCP wrappers):**
+**Mindset Skills:**
 | Skill | Invokes | Purpose |
 |-------|---------|---------|
-| `deep-reasoning` | Sequential Thinking MCP | Step-by-step analytical thinking |
+| `deep-reasoning` | None (asks the model to think deeply and step by step) | Step-by-step analytical thinking |
 | `paradox-navigation` | Lotus Wisdom MCP | Navigate contradictions |
 | `coherence-check` | None (self-contained) | Philosophical assumption check |
 
 **Shared Infrastructure:**
 - `_shared/scripts/` - State I/O (read-config.js, update-progress.js, append-log.js, query-status.js)
 
-### Commands (7)
+### Commands (17)
+
+Each command is a skill at `skills/qual-<name>/SKILL.md`.
+
 | Command | Purpose | Stage | Triggers Skill |
 |---------|---------|-------|----------------|
 | `/qual-init` | Socratic onboarding | Entry | `project-setup` |
 | `/qual-status` | Journey navigation | All | `project-dashboard` |
+| `/qual-check-setup` | Verify installation | Entry | - |
 | `/qual-configure-analysis` | Technical orchestration | Stage 2 | `analysis-orchestration` |
+| `/qual-design` | Research design (cases, waves, isolation) | Entry | `methodological-rules` |
+| `/qual-advance-stage` | Move between stages | All | - |
+| `/qual-memo` | Analytical memos | Stage 1 | - |
+| `/qual-stage1-guide` | Manual coding guidance | Stage 1 | - |
+| `/qual-complete-stage1` | Validate the Stage 1 foundation | Stage 1 | `methodological-rules` |
+| `/qual-parallel-streams` | Theoretical + empirical streams | Stage 2 | - |
+| `/qual-synthesize` | Merge streams | Stage 2 | - |
+| `/qual-code-deductive` | Apply established patterns | Stage 2 | - |
+| `/qual-characterize-patterns` | Dimensional analysis | Stage 2 | - |
 | `/qual-reflect` | Synthesis dialogue | 2 & 3 | - |
 | `/qual-think-through` | Deep reasoning | All | `deep-reasoning` |
 | `/qual-wisdom-check` | Paradox navigation | All | `paradox-navigation` |
@@ -159,27 +169,29 @@ Skills are auto-discoverable capability packages. Claude loads them when relevan
 | `@dialogical-coder` | Stage 2 | Reflexive coding | 4-stage visible reasoning (THE CROWN JEWEL) |
 | `@scholarly-companion` | Stage 3 | Theoretical dialogue | Socratic questioning, not writing |
 
-### Hooks (5 - All Implemented!)
+### Hooks (6)
 | Hook | Trigger | Purpose | Philosophy |
 |------|---------|---------|------------|
-| PreStage2 | Before Stage 2 tools | Enforce Solo Practice completion | Atelier door locks |
+| PreStage2 | Before Stage 2 tools | Enforce Solo Practice completion (asks the researcher to confirm) | Atelier door locks |
 | PostFiveDocuments | Every 5 coded | Interpretive pause | From methodology! |
-| SessionEnd | Session close | Reflexivity prompt | Constructivist practice |
+| SessionEnd | Session close | Reflexivity prompt (logged; Claude Code does not show it) | Constructivist practice |
 | EpistemicCoherence | After coding | Philosophy check | Language consistency |
 | PostSynthesis | After synthesis | Audit trail generation | Confirmability |
+| PostPhaseTransition | After stage or phase changes | Update methodological rules | Rules relax as the analysis matures |
+
+`hooks/hooks.json` runs every hook through an adapter, `hooks/run-hook.js`, which connects the scripts to Claude Code. [docs/HOOKS-PHILOSOPHY.md](docs/HOOKS-PHILOSOPHY.md#how-the-hooks-are-wired) explains the wiring.
 
 ### MCPs (Bundled + Optional)
 
 **Bundled (No API Keys Required):**
 | MCP | Function | When Used | Epistemic Role |
 |-----|----------|-----------|----------------|
-| Sequential Thinking | Deep reasoning | All stages | Systematic analysis |
 | Lotus Wisdom | Paradox navigation | Tensions | Transcend contradictions |
-| Markdownify | Convert documents | Document import | Data preparation (PDFs, audio, video, web) |
 
 **Optional (Require API Keys):**
 | MCP | Function | When Used | Epistemic Role |
 |-----|----------|-----------|----------------|
+| MinerU | Parse complex PDFs | Document import | Data preparation |
 | Zen MCP | Multi-model validation | Major decisions | Triangulation |
 | Jina | Fetch articles | Literature work | Knowledge access |
 | Exa | Search literature | Discovery | Knowledge discovery |
@@ -207,14 +219,14 @@ PreStage2 Hook (Validates completion)
 Stage 2: @dialogical-coder (4-stage coding)
     ├→ Every 5: PostFiveDocuments pause
     ├→ Each: EpistemicCoherence check
-    └→ Throughout: /qual-reflect synthesis
+    ├→ Throughout: /qual-reflect synthesis
+    └→ /qual-synthesize: PostSynthesis audit trail
     ↓
 Stage 2 Complete: Evidence organized
     ↓
 Stage 3: @scholarly-companion (Theoretical dialogue)
     ├→ /qual-think-through (framework building)
-    ├→ /qual-wisdom-check (integration)
-    └→ PostSynthesis: Audit trail
+    └→ /qual-wisdom-check (integration)
     ↓
 Theory Articulated
 ```
@@ -230,10 +242,10 @@ interpretive-orchestration/
 │
 ├── 🎭 Active Components
 │   ├── agents/ (4) - Dialogue partners for each stage
-│   ├── commands/ (7 + READMEs) - Simple triggers that invoke skills
-│   └── hooks/ (5 scripts + config) - Enforcement & prompting
+│   └── hooks/ (6 scripts + run-hook.js adapter + hooks.json) - Enforcement & prompting
 │
-├── 🧩 Skills (12 skills)
+├── 🧩 Skills (12 skills + 17 qual-* commands)
+│   ├── qual-*/ - The /qual-* commands, one SKILL.md each
 │   ├── project-setup/ - Socratic onboarding + project creation
 │   │   ├── SKILL.md, scripts/, templates/, examples/
 │   ├── gioia-methodology/ - Data structure building + validation
@@ -243,20 +255,21 @@ interpretive-orchestration/
 │   ├── project-dashboard/ - Progress visualization
 │   ├── literature-sweep/ - Academic literature (3-tier graceful degradation)
 │   ├── interview-ingest/ - Audio/PDF conversion (3-tier)
-│   ├── document-conversion/ - Format conversion (MinerU/Markdownify)
-│   ├── deep-reasoning/ - Sequential Thinking wrapper
+│   ├── document-conversion/ - Format conversion (MinerU/manual)
+│   ├── deep-reasoning/ - Step-by-step reasoning prompt
 │   ├── paradox-navigation/ - Lotus Wisdom wrapper
 │   ├── coherence-check/ - Philosophical alignment
+│   ├── methodological-rules/ - Rule generation + phase updates
 │   └── _shared/ - State I/O scripts (read-config, update-progress, etc.)
 │
 ├── 📚 Meta-Research
-│   └── docs/ (3 + index) - Methods paper, journal, navigation
+│   └── docs/ - Hook philosophy, rules system, command guides
 │
-├── 🌱 Future
-│   └── examples/ (placeholder)
+├── 🌱 Examples
+│   └── examples/tutorial-quickstart/
 │
 └── ⚙️ Configuration (hidden)
-    └── [.claude-plugin/, .mcp.json, .gitignore]
+    └── [.claude-plugin/, .codex-plugin/, .mcp.json]
 ```
 
 ---
@@ -280,14 +293,14 @@ interpretive-orchestration/
 │                                                           │
 │ Tools: Minimal AI (thinking tools for planning)          │
 │ Agent: @stage1-listener (thinking partner, NOT coder)    │
-│ MCP: Sequential Thinking, Lotus Wisdom (guidance)         │
+│ MCP: Lotus Wisdom (guidance)                              │
 │                                                           │
 │ ✓ Creates: Initial framework, theoretical foundation     │
 └──────────────────────────────────────────────────────────┘
                          ↓
               ┌──────────────────┐
               │ 🔒 PreStage2 Hook│
-              │   Validates ✓    │
+              │   Checks, asks   │
               └──────────────────┘
                          ↓
 ┌──────────────────────────────────────────────────────────┐
@@ -302,8 +315,8 @@ interpretive-orchestration/
 │                                                           │
 │ Tools: Full collaboration suite                          │
 │ Agent: Whisperer + Coder                                 │
-│ MCP: All 8 active (epistemic scaffolding)                │
-│ Hooks: Pauses every 5, coherence checks                  │
+│ MCP: Lotus Wisdom + optional MCPs (scaffolding)          │
+│ Hooks: Pauses every 5, coherence checks, audit trail     │
 │                                                           │
 │ ✓ Creates: Coded data, refined framework, patterns       │
 └──────────────────────────────────────────────────────────┘
@@ -320,8 +333,7 @@ interpretive-orchestration/
 │                                                           │
 │ Tools: Theoretical dialogue + integration                │
 │ Agent: Scholarly companion                               │
-│ MCP: Sequential Thinking, Lotus Wisdom (synthesis)       │
-│ Hook: PostSynthesis audit trail                          │
+│ MCP: Lotus Wisdom (synthesis)                            │
 │                                                           │
 │ ✓ Creates: Theory, manuscript, contribution              │
 └──────────────────────────────────────────────────────────┘
@@ -424,7 +436,7 @@ graph LR
 │ EPISTEMIC SCAFFOLDING (MCPs)                            │
 ├─────────────────────────────────────────────────────────┤
 │                                                          │
-│  🧠 Sequential Thinking                                 │
+│  🧠 Step-by-step reasoning (no MCP; a prompt)           │
 │     When: Complex decisions, systematic reasoning       │
 │     Invoked by: /qual-think-through                     │
 │     Used in: ALL stages                                 │
@@ -434,9 +446,9 @@ graph LR
 │     Invoked by: /qual-wisdom-check                      │
 │     Used in: Theoretical integration (Stages 2 & 3)     │
 │                                                          │
-│  📄 Markdownify                                          │
-│     When: Converting documents (PDF, audio, video, web) │
-│     Invoked by: /qual-import-pdf and similar            │
+│  📄 MinerU (Optional - requires API key)                │
+│     When: Converting complex PDFs                       │
+│     Invoked by: document-conversion, interview-ingest   │
 │     Used in: Data preparation (all stages)              │
 │                                                          │
 │  🎯 Zen MCP (Optional - requires API key)                                              │
@@ -444,7 +456,7 @@ graph LR
 │     Invoked by: Via commands or @research-configurator  │
 │     Used in: Quality checking (Stage 2)                 │
 │                                                          │
-│  📚 Literature Tools (Jina, Exa, Markdownify, Zotero)   │
+│  📚 Literature Tools (Jina, Exa, Zotero)                │
 │     When: Phase 1 parallel streams, manuscript prep     │
 │     Used in: Stream A (theoretical), Stage 3 (writing)  │
 │                                                          │
@@ -484,10 +496,10 @@ All skills use shared state scripts for reliable config management:
 
 ```bash
 # Read current state
-node skills/_shared/scripts/read-config.js --project-path /path
+node "${CLAUDE_PLUGIN_ROOT}/skills/_shared/scripts/read-config.js" --project-path /path
 
 # Update progress
-node skills/_shared/scripts/update-progress.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/_shared/scripts/update-progress.js" \
   --project-path /path \
   --stage1-documents 12 \
   --memos 5
@@ -540,7 +552,7 @@ Hooks now return structured JSON for better error handling:
        │
        ↓
 ┌──────────────────────┐
-│ PreToolUse Hooks     │ ← PreStage2: Block if Stage 1 incomplete
+│ PreToolUse Hooks     │ ← PreStage2: Ask to confirm if Stage 1 incomplete
 └──────┬───────────────┘
        │
        ↓
@@ -553,7 +565,7 @@ Hooks now return structured JSON for better error handling:
 ┌──────────────────────┐
 │ PostToolUse Hooks    │ ← PostFiveDocuments: Pause
 └──────┬───────────────┘  ← EpistemicCoherence: Check
-       │                  ← PostSynthesis: Audit
+       │                  ← PostSynthesis: Audit (Stop hook of /qual-synthesize)
        ↓
 ┌──────────────────────┐
 │ SessionEnd Hook      │ ← Reflexivity prompt
@@ -704,7 +716,7 @@ Epistemic Ambidexterity
 **Contribution:** Building as scholarship, philosopher-builder synthesis
 
 ### For Developers (Technical)
-**Architecture:** 12 skills, 7 commands, 4 agents, 5 hooks, 8+ MCPs
+**Architecture:** 12 skills, 17 commands (as skills), 4 agents, 6 hooks, 1 bundled + 5 optional MCPs
 **Design:** Skills-first architecture, commands as triggers, graceful degradation for optional MCPs
 **Quality:** Atomic state writes, schema validation, structured hook remediation
 
@@ -750,6 +762,6 @@ Epistemic Ambidexterity
 
 *Built by: Xule Lin, Kevin Corley & Claude 4.5, co-apprentices*
 *Frameworks: Cognitio Emergens (Lin) | Interpretive Orchestration (Lin & Corley)*
-*Last updated: December 11, 2025 (Skills infrastructure added)*
+*Last updated: November 6, 2026 (0.3.0: commands as skills, hook adapter)*
 
 **The atelier's blueprint - preserved and enhanced.** 🎨🙏

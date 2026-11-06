@@ -7,6 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.3.0] - 2026-11-06 - Current Claude Code and other platforms
+
+This release brings the plugin up to date with Claude Code 2.1 and makes it installable in other agent tools. The methodology, agent prompts and command prompts are unchanged, apart from the fixes listed here.
+
+### Changed
+
+- Commands are now skills. The 17 `/qual-*` commands moved from `commands/` to `skills/qual-*/SKILL.md`. In Claude Code you still type `/qual-init`; before this change, nested command folders made the names `/interpretive-orchestration:project:init`.
+- Hooks now fire. They matched tools and events that no longer exist, used exit codes Claude Code ignores and wrote output nowhere. A new adapter, `hooks/run-hook.js`, connects the unchanged hook scripts to the current hook protocol:
+  - the Stage 1 check runs before `@dialogical-coder` and the 4 Stage 2 commands; when Stage 1 is incomplete, Claude Code shows the researcher their progress and asks whether to go ahead
+  - the interpretive pause, coherence check and phase transition run after `@dialogical-coder`, and after background agents finish
+  - the audit trail and phase transition run when the commands they follow finish, through hooks in those skills' frontmatter
+- Agents can start again. `@dialogical-coder` and `@scholarly-companion` listed only MCP tools in `tools:`, which left them unable to read files; they now inherit the session's tools.
+- Script paths in skills use `${CLAUDE_PLUGIN_ROOT}`, so they work from the researcher's project folder.
+- The 17 skills that run scripts start with a one-line note on finding the plugin folder when a platform leaves `${CLAUDE_PLUGIN_ROOT}` unfilled, and `/qual-status` passes `--project-path` to its scripts.
+- Docs and skills no longer mention commands that never existed, such as `/qual-get-perspectives`.
+- Lotus Wisdom now runs as `lotus-wisdom-mcp@latest`, so it updates itself.
+- Author affiliation: Xule Lin (SKEMA Business School).
+
+### Removed
+
+- Sequential Thinking MCP server. Providers increasingly block such tools, and asking the model to think deeply and step by step before responding gives the same result. `/qual-think-through` and `deep-reasoning` now do that.
+- `plugin-cowork/`. Claude Desktop and Cowork are no longer targets; the plugin focuses on Claude Code.
+- `plugin-kimi/`, the Python port for the archived kimi-cli. Kimi Code now installs the main plugin directly. The port remains in the `v0.2.5` tag.
+- A tracked `.claude/settings.local.json`.
+
+### Added
+
+- Installs in OpenAI Codex, GitHub Copilot CLI and Kimi Code, from the same plugin folder. Each has its own manifest (`.codex-plugin/plugin.json` with `.agents/plugins/marketplace.json`; `.claude-plugin/` for Copilot; `kimi.plugin.json` at the repo root). The hook adapter handles each platform's payloads and limits, verified live on codex-cli 0.165.0, Copilot CLI 1.0.106 and Kimi Code. The README lists what works where.
+- A session-start hook gives the AI the plugin's non-negotiable principles and the researcher's Stage 1 progress in every session of a research project. Agent tools never load a plugin's CLAUDE.md, so before this a plain "code this for me" reached the AI with no Stage 1 check.
+- `CITATION.cff`, citing Lin and Corley (2026), Strategic Organization, https://doi.org/10.1177/14761270261448645
+- Tests for skill format, agent tool lists, hook wiring, the hook adapter and version consistency across every manifest
+
+---
+
 ## [0.2.1] - 2026-01-12 - Agent Quality & Stage Commands
 
 ### Added

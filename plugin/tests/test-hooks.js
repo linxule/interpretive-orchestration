@@ -187,7 +187,9 @@ function makeProject(config) {
 function runAdapter(script, payload, extraEnv = {}) {
   const { spawnSync } = require('child_process');
   const env = { ...process.env, ...extraEnv };
-  if (!extraEnv.COPILOT_PLUGIN_ROOT) delete env.COPILOT_PLUGIN_ROOT;
+  for (const name of ['COPILOT_PLUGIN_ROOT', 'KIMI_PLUGIN_ROOT']) {
+    if (!extraEnv[name]) delete env[name];
+  }
   const result = spawnSync(process.execPath, [path.join(HOOKS_DIR, 'run-hook.js'), script], {
     input: payload ? JSON.stringify(payload) : '',
     encoding: 'utf8',
@@ -301,6 +303,48 @@ function testHookAdapterBehaviour() {
     assert(runAdapter('check-stage1-complete.js', prompt('$qual-code-deductive')).json, 'Short form should trigger too');
     assert(runAdapter('check-stage1-complete.js', prompt('$qual-status please')).raw === '', 'Other skills pass silently');
     assert(runAdapter('check-stage1-complete.js', prompt('code this for me')).raw === '', 'Plain prompts pass silently');
+  });
+
+  // Payload shapes captured from Kimi Code (client_type kimi_code_cli).
+  const kimi = { KIMI_PLUGIN_ROOT: path.join(HOOKS_DIR, '..', '..') };
+  const kimiSession = `kimi-test-${process.pid}`;
+
+  test('adapter (Kimi): denies @dialogical-coder once, then lets the confirmed retry through', () => {
+    const call = {
+      hook_event_name: 'PreToolUse', tool_name: 'Agent', cwd: incomplete, session_id: kimiSession,
+      client_type: 'kimi_code_cli', tool_input: { subagent_type: 'dialogical-coder', prompt: 'code R01' }
+    };
+    const first = runAdapter('check-stage1-complete.js', call, kimi);
+    assert(first.json && first.json.hookSpecificOutput.permissionDecision === 'deny', 'First call should be denied');
+    assert(first.json.hookSpecificOutput.permissionDecisionReason.includes('ask whether they want to proceed'), 'Should ask the researcher');
+    assert(runAdapter('check-stage1-complete.js', call, kimi).raw === '', 'Confirmed retry should pass');
+    assert(runAdapter('check-stage1-complete.js', call, kimi).json, 'A later call is checked again');
+    runAdapter('check-stage1-complete.js', call, kimi);
+  });
+
+  test('adapter (Kimi): stance comes with the first prompt of a session, once', () => {
+    const prompt = {
+      hook_event_name: 'UserPromptSubmit', cwd: incomplete, session_id: `${kimiSession}-stance`,
+      client_type: 'kimi_code_cli', prompt: [{ type: 'text', text: 'code this for me' }], is_steer: false
+    };
+    const first = runAdapter('session-stance.js', prompt, kimi);
+    assert(first.json && first.json.message.includes('Stage 1 is NOT complete'), 'First prompt should carry the stance');
+    assert(runAdapter('session-stance.js', prompt, kimi).raw === '', 'Later prompts should not repeat it');
+    assert(runAdapter('session-stance.js', prompt).raw === '', 'Other platforms use SessionStart instead');
+  });
+
+  test('adapter (Kimi): audit trail waits for the end of the turn after /qual-synthesize loads', () => {
+    const skillLoaded = {
+      hook_event_name: 'PostToolUse', tool_name: 'Skill', cwd: complete, session_id: kimiSession,
+      tool_input: { skill: 'interpretive-orchestration:qual-synthesize' }, tool_output: 'loaded'
+    };
+    assert(runAdapter('generate-audit-trail.js', skillLoaded, kimi).raw === '', 'Nothing runs when the skill loads');
+    const stop = { hook_event_name: 'Stop', cwd: complete, session_id: kimiSession, stop_hook_active: false };
+    runAdapter('generate-audit-trail.js', stop, kimi);
+    assert(fs.existsSync(path.join(complete, 'outputs', 'audit-trail.md')), 'Audit trail should be written at Stop');
+    fs.rmSync(path.join(complete, 'outputs'), { recursive: true, force: true });
+    runAdapter('generate-audit-trail.js', stop, kimi);
+    assert(!fs.existsSync(path.join(complete, 'outputs', 'audit-trail.md')), 'A later Stop does not run it again');
   });
 
   // Payload shapes captured from Copilot CLI 1.0.106.

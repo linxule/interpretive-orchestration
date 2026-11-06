@@ -1,16 +1,19 @@
 #!/usr/bin/env node
 
 /**
- * Hook adapter: connects the methodology hooks to Claude Code's hook protocol.
+ * Hook adapter: connects the methodology hooks to each platform's hook protocol.
  *
- * Claude Code matches hooks by tool name (Agent, Skill) and sends a JSON
- * payload on stdin. The methodology hooks were written for specific agents and
- * commands, and print plain text for the researcher. This adapter:
+ * Claude Code, Codex, Copilot CLI and Kimi Code send a JSON payload on stdin.
+ * The methodology hooks were written for specific agents and commands, and
+ * print plain text for the researcher. This adapter:
  *
  *   1. reads the payload and works out which agent or skill the call targets
  *   2. skips quietly unless that target is one the hook was written for
  *   3. runs the original hook script from the researcher's project directory
- *   4. turns its output into the JSON Claude Code reads
+ *   4. turns its output into the JSON the platform reads
+ *
+ * Platform differences are handled next to the code they affect, under
+ * ON_COPILOT, ON_KIMI and the Codex prompt check.
  *
  * Run without a payload (for example from a terminal), the hook script runs
  * exactly as before and its output passes straight through.
@@ -52,6 +55,21 @@ const PENDING_DIR = path.join(os.tmpdir(), 'interpretive-orchestration-hooks');
 // additionalContext only at the top level of the hook output.
 const ON_COPILOT = Boolean(process.env.COPILOT_PLUGIN_ROOT);
 
+// Kimi Code's PreToolUse hooks can only allow or deny ("ask" counts as allow),
+// and no other hook output reaches the model or the researcher. So the Stage 1
+// check denies once and lets the confirmed retry through.
+const ON_KIMI = Boolean(process.env.KIMI_PLUGIN_ROOT);
+
+const KIMI_HOLD_NOTE =
+  'Interpretive Orchestration held this call back: the Stage 1 check did not pass. ' +
+  'Tell the researcher what the check found (below) and ask whether they want to proceed ' +
+  'anyway, and why. If they confirm, make the same call again; the check lets the next call ' +
+  'for this agent or skill through once.';
+
+// Kimi ignores the hooks in a skill's frontmatter. The plugin's Stop hook stands
+// in for them, and runs only after one of the hook's skills was loaded.
+const SKILL_STOP_SCRIPTS = new Set(['generate-audit-trail.js', 'post-phase-transition.js']);
+
 // Codex has no Skill tool: a skill is named in the prompt as $name or
 // $interpretive-orchestration:name.
 const SKILL_MENTION = /\$(?:interpretive-orchestration:)?([a-z0-9-]+)/g;
@@ -76,12 +94,25 @@ function baseName(name) {
   return String(name || '').split(':').pop();
 }
 
+// Kimi Code sends the prompt as content parts: [{ type: 'text', text }].
+function promptText(payload) {
+  const prompt = payload.prompt;
+  if (Array.isArray(prompt)) return prompt.map(part => (part && part.text) || '').join('\n');
+  return String(prompt || '');
+}
+
+// Kimi Code discards SessionStart output, so there the stance runs on the
+// first prompt of each session, the one event whose output Kimi shows.
+function isKimiStance(script, payload) {
+  return ON_KIMI && script === 'session-stance.js' && payload.hook_event_name === 'UserPromptSubmit';
+}
+
 function targetOf(payload) {
   const event = payload.hook_event_name;
   const input = payload.tool_input || {};
   if (event === 'PreToolUse' || event === 'PostToolUse') {
     // Copilot CLI sends agent_type and a lowercase skill tool.
-    if (payload.tool_name === 'Agent' || payload.tool_name === 'Task') {
+    if (['Agent', 'Task', 'AgentSwarm'].includes(payload.tool_name)) {
       return { kind: 'agent', name: baseName(input.subagent_type || input.agent_type) };
     }
     if (payload.tool_name === 'Skill' || payload.tool_name === 'skill') {
@@ -92,7 +123,7 @@ function targetOf(payload) {
     return { kind: 'skill', name: baseName(payload.command_name) };
   }
   if (event === 'UserPromptSubmit') {
-    const names = [...String(payload.prompt || '').matchAll(SKILL_MENTION)].map(match => match[1]);
+    const names = [...promptText(payload).matchAll(SKILL_MENTION)].map(match => match[1]);
     return { kind: 'skill', name: names };
   }
   if (isCopilotSlashCommand(payload)) {
@@ -100,9 +131,48 @@ function targetOf(payload) {
     return { kind: 'skill', name: match ? baseName(match[1]) : '' };
   }
   if (event === 'SubagentStop') {
-    return { kind: 'agent', name: baseName(payload.agent_type) };
+    return { kind: 'agent', name: baseName(payload.agent_type || payload.agent_name) };
   }
   return { kind: 'other', name: '' };
+}
+
+function kimiMarker(payload, ...parts) {
+  const session = String(payload.session_id || 'session').replace(/[^\w-]/g, '');
+  return path.join(PENDING_DIR, [session, ...parts.map(part => String(part).replace(/[^\w.-]/g, ''))].join('.'));
+}
+
+// Consumes a one-use marker and says whether it was there. With keep, the
+// marker stays and records that something already happened once.
+function takeMarker(marker, keep = false) {
+  if (!fs.existsSync(marker)) {
+    if (keep) putMarker(marker);
+    return false;
+  }
+  if (!keep) fs.unlinkSync(marker);
+  return true;
+}
+
+function putMarker(marker) {
+  fs.mkdirSync(PENDING_DIR, { recursive: true });
+  fs.writeFileSync(marker, '');
+}
+
+// Kimi only: true when a triggered call should exit without running the script.
+function kimiSkip(script, payload) {
+  const event = payload.hook_event_name;
+  const target = targetOf(payload);
+  if (event === 'PreToolUse') {
+    return takeMarker(kimiMarker(payload, target.name, script, 'confirmed'));
+  }
+  // The Skill tool returns once the instructions load, before the skill's work is done.
+  if (event === 'PostToolUse' && target.kind === 'skill' && SKILL_STOP_SCRIPTS.has(script)) {
+    putMarker(kimiMarker(payload, script, 'stop'));
+    return true;
+  }
+  if (event === 'Stop') {
+    return !(SKILL_STOP_SCRIPTS.has(script) && takeMarker(kimiMarker(payload, script, 'stop')));
+  }
+  return false;
 }
 
 // Copilot CLI's userPromptTransformed event: a typed slash command arrives
@@ -178,7 +248,10 @@ function main() {
   }
 
   const payload = readPayload();
-  if (payload && !isTriggered(script, payload)) process.exit(0);
+  const kimiStance = Boolean(payload) && isKimiStance(script, payload);
+  if (kimiStance && takeMarker(kimiMarker(payload, script, 'shown'), true)) process.exit(0);
+  if (payload && !kimiStance && !isTriggered(script, payload)) process.exit(0);
+  if (payload && ON_KIMI && kimiSkip(script, payload)) process.exit(0);
   if (payload && deferForBackgroundAgent(script, payload)) process.exit(0);
 
   const result = spawnSync(process.execPath, [path.join(__dirname, script)], {
@@ -199,8 +272,19 @@ function main() {
   const forClaude = details ? `${text}\n\nStructured details: ${details}` : text;
   const event = payload.hook_event_name;
 
-  if (event === 'PreToolUse') {
-    if (flagged) {
+  if (kimiStance) {
+    if (text) emit({ message: text });
+  } else if (event === 'PreToolUse') {
+    if (flagged && ON_KIMI) {
+      putMarker(kimiMarker(payload, targetOf(payload).name, script, 'confirmed'));
+      emit({
+        hookSpecificOutput: {
+          hookEventName: 'PreToolUse',
+          permissionDecision: 'deny',
+          permissionDecisionReason: `${KIMI_HOLD_NOTE}\n\n${forClaude}`
+        }
+      });
+    } else if (flagged) {
       emit({
         hookSpecificOutput: {
           hookEventName: 'PreToolUse',

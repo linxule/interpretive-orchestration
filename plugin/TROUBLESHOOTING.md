@@ -11,14 +11,14 @@ Common issues and solutions for the Interpretive Orchestration plugin.
 **Cause:** The plugin may not be installed correctly.
 
 **Solutions:**
-1. Check if the plugin is installed:
+1. Check if the plugin is installed. In a terminal, run:
    ```
-   /plugin list
+   claude plugin list
    ```
-2. If not listed, reinstall:
+2. If not listed, reinstall from inside Claude Code:
    ```
    /plugin marketplace add linxule/interpretive-orchestration
-   /plugin install linxule/interpretive-orchestration
+   /plugin install interpretive-orchestration@interpretive-orchestration
    ```
 3. Restart Claude Code and try again
 
@@ -40,14 +40,11 @@ Common issues and solutions for the Interpretive Orchestration plugin.
 
 ## MCP Server Issues
 
-### Sequential Thinking not responding
+### "Sequential Thinking" server missing
 
-**Cause:** The MCP server may have failed to start.
+**Cause:** Version 0.3.0 removed the Sequential Thinking MCP server. Nothing is wrong.
 
-**Solutions:**
-1. Restart Claude Code
-2. Check if Node.js is installed: `node --version` (need v18+)
-3. Try manually starting: `npx -y @modelcontextprotocol/server-sequential-thinking`
+`/qual-think-through` and the deep-reasoning skill now ask the model to think deeply and step by step before responding. They need no server.
 
 ---
 
@@ -57,9 +54,11 @@ Common issues and solutions for the Interpretive Orchestration plugin.
 
 **Solutions:**
 1. Restart Claude Code
-2. Check npm installation: `npm -v`
-3. Clear npm cache: `npm cache clean --force`
-4. Try: `npx -y lotus-wisdom-mcp`
+2. Check if Node.js is installed: `node --version` (need v18+)
+3. Check npm installation: `npm -v`
+4. Clear npm cache: `npm cache clean --force`
+5. Try: `npx -y lotus-wisdom-mcp@latest`
+6. If Node.js is not an option, use the hosted Lotus Wisdom server instead. See [DEPENDENCIES.md](DEPENDENCIES.md#lotus-wisdom).
 
 ---
 
@@ -89,25 +88,30 @@ Common issues and solutions for the Interpretive Orchestration plugin.
 
 ## Hook Issues
 
-### "Stage 1 not complete" error when trying to use @dialogical-coder
+### "Stage 1 not complete" prompt when using @dialogical-coder or a Stage 2 command
 
-**Cause:** This is intentional! The plugin enforces the "sandwich methodology" - you must complete Stage 1 manual coding before AI-assisted coding.
+**Cause:** This is intentional! The plugin enforces the "sandwich methodology" - Stage 1 manual coding comes before AI-assisted coding. When Stage 1 is not complete, Claude Code shows what the check found and asks you to confirm before @dialogical-coder, `/qual-parallel-streams`, `/qual-synthesize`, `/qual-code-deductive` or `/qual-characterize-patterns` runs.
 
 **Solutions:**
 1. Complete manual coding of 10-15 documents
-2. Update your project config to mark Stage 1 as complete
+2. Run `/qual-complete-stage1` to validate your foundation and mark Stage 1 complete
 3. Run `/qual-status` to check your progress
+4. If you have a reason to go ahead now, confirm the prompt and tell Claude why
 
 ---
 
 ### Hooks not triggering
 
-**Cause:** Hooks may not be properly configured or the event isn't matching.
+**Cause:** Hooks may not be properly configured, or the call is not one the hook was written for.
+
+Each hook fires only for specific agents and commands. For example, the interpretive pause follows @dialogical-coder, not other agents. Before version 0.3.0, the hooks did not fire at all in current Claude Code.
 
 **Solutions:**
-1. Check that hooks are enabled in your project
-2. Verify the hooks.json file exists in the plugin
-3. Restart Claude Code to reload hooks
+1. Check you have version 0.3.0 or later. In a terminal, run `claude plugin list`
+2. Check Node.js is installed: `node --version` (the hooks run on Node.js)
+3. Run `/hooks` in Claude Code to see the registered hooks
+4. Check you are in your project folder, the one with `.interpretive-orchestration/`
+5. Restart Claude Code to reload hooks
 
 ---
 

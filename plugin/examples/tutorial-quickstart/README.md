@@ -29,7 +29,7 @@ Before starting:
 
 ```
 /plugin marketplace add linxule/interpretive-orchestration
-/plugin install linxule/interpretive-orchestration
+/plugin install interpretive-orchestration@interpretive-orchestration
 ```
 
 Verify installation:
@@ -37,7 +37,7 @@ Verify installation:
 /qual-check-setup
 ```
 
-You should see all green checkmarks for bundled MCPs and commands.
+You should see green checkmarks for the bundled Lotus Wisdom MCP and the commands.
 
 ---
 
@@ -108,7 +108,7 @@ Even before AI-assisted coding, you have powerful tools:
 
 | Command | Purpose |
 |---------|---------|
-| `/qual-think-through` | Deep reasoning with Sequential Thinking |
+| `/qual-think-through` | Deep, step-by-step reasoning |
 | `/qual-wisdom-check` | Navigate paradoxes with Lotus Wisdom |
 | `/qual-memo` | Write analytical memos |
 | `/qual-status` | Check your progress |
@@ -123,9 +123,10 @@ Convert your documents for analysis:
 ## Next Steps
 
 After completing Stage 1:
-1. Use `@dialogical-coder` for AI-assisted coding
-2. Run `/qual-parallel-streams` to begin dual-stream analysis
-3. Continue to Stage 2 and beyond
+1. Run `/qual-complete-stage1` to validate your foundation
+2. Use `@dialogical-coder` for AI-assisted coding
+3. Run `/qual-parallel-streams` to begin dual-stream analysis
+4. Continue to Stage 2 and beyond
 
 ---
 
@@ -146,7 +147,7 @@ your-documents/
 
 ## Getting Help
 
-- **Plugin overview:** Read `../../README.md`
+- **Plugin overview:** Read `../../../README.md`
 - **Installation issues:** See `../../TROUBLESHOOTING.md`
 - **Philosophical foundation:** See `../../DESIGN-PHILOSOPHY.md`
 - **Architecture:** See `../../ARCHITECTURE.md`

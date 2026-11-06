@@ -1,65 +1,60 @@
-# Stage 2 Commands: Human-AI Collaborative Enhancement
+# Stage 2 commands: human-AI collaborative enhancement
 
-## Why Commands Live Elsewhere
+## Where Stage 2 tools live
 
-You might notice: **This folder is empty (or minimal).**
+Stage 2 tools are spread across the plugin by FUNCTION, not by stage. Every command is a skill in `skills/qual-<name>/`.
 
-**This is intentional organization, not incompleteness.**
+### Stage 2 commands
+✅ `/qual-parallel-streams` - Phase 1, launch theoretical and empirical streams
+✅ `/qual-synthesize` - Phase 2, merge the streams into unified patterns
+✅ `/qual-code-deductive` - Phase 2, apply established patterns to the remaining data
+✅ `/qual-characterize-patterns` - Phase 3, dimensional analysis of patterns
 
----
-
-## Where Stage 2 Tools Actually Live
-
-Stage 2 tools are distributed based on their FUNCTION, not their stage:
-
-### In `/commands/analysis/`
-✅ `/qual-reflect` - Synthesis dialogue (used throughout Stage 2)
-
-### In `/agents/`
+### Agents in `agents/`
 ✅ `@dialogical-coder` - The core Stage 2 collaborative coding agent
 
-### In `/commands/project/`
-✅ `/qual-status` - Shows Stage 2 progress
-
-### MCP Tools (Available Throughout)
+### Analysis commands (available throughout)
+✅ `/qual-reflect` - Synthesis dialogue (used throughout Stage 2)
 ✅ `/qual-think-through` - Deep reasoning
 ✅ `/qual-wisdom-check` - Paradox navigation
 ✅ `/qual-examine-assumptions` - Coherence checking
+
+### Project commands
+✅ `/qual-status` - Shows Stage 2 progress
+
+### Supporting skills (loaded when relevant)
+✅ `literature-sweep` - Search and fetch papers for Stream A (uses Exa and Jina if configured)
+✅ `coding-workflow` - Track batch coding progress and audit documentation
+
+When Stage 1 is not complete, Claude Code asks you to confirm before @dialogical-coder or one of the 4 Stage 2 commands runs.
 
 ---
 
 ## 🎯 Stage 2 Overview: The Three Phases
 
 ### Phase 1: Parallel Discovery
-**FUTURE:** Commands for this will include:
 - `/qual-parallel-streams` - Launch theoretical + empirical analysis
-- `/qual-search-literature` - Exa search for Stream A
-- `/qual-fetch-article` - Jina retrieval for literature
-
-**Current MVEP:** Use existing MCP tools + manual coordination
+- `literature-sweep` skill - Literature search and retrieval for Stream A
 
 ### Phase 2: Synthesis & Deductive Coding
-**CURRENT TOOLS:**
+- `/qual-synthesize` - Merge the streams
+- `/qual-code-deductive` - Apply your framework to the remaining documents
 - `@dialogical-coder` - Apply your framework to documents
 - `/qual-reflect` - Synthesis dialogue after coding batches
 - `/qual-think-through` - Work through integration challenges
 - `/qual-wisdom-check` - Navigate tensions
-- `/qual-get-perspectives` - Multi-model validation (Zen MCP)
 
 **This is the heart of collaborative work!**
 
 ### Phase 3: Pattern Characterization
-**FUTURE:** Commands for this will include:
-- `/qual-characterize-patterns` - Identify systematic variations
-- `/qual-dimensional-analysis` - Analyze variation dimensions
-
-**Current MVEP:** Use `/qual-reflect` + `/qual-think-through` for this work
+- `/qual-characterize-patterns` - Identify systematic variations and their dimensions
+- `/qual-reflect` + `/qual-think-through` - Talk through what the variations mean
 
 ---
 
 ## Why This Organizational Choice?
 
-### Option A: Put everything in stage2/
+### Option A: List everything under Stage 2
 - Pro: Clear stage designation
 - Con: Users searching for "thinking tools" wouldn't find them
 
@@ -72,11 +67,11 @@ Stage 2 tools are distributed based on their FUNCTION, not their stage:
 - `/qual-reflect` spans Stage 2 and 3
 - Functional organization makes tools more discoverable
 
-**Stage designation comes from /qual-status, not folder location.**
+**Stage designation comes from /qual-status, not where a command is listed.**
 
 ---
 
-## Stage 2 Workflow (With Current MVEP Tools)
+## Stage 2 Workflow
 
 ### Beginning Stage 2
 
@@ -119,12 +114,10 @@ Stage 2 tools are distributed based on their FUNCTION, not their stage:
 
 **If systematic differences emerge:**
 ```
-# Use existing tools
+/qual-characterize-patterns
 /qual-reflect Notice different pattern types emerging...
 /qual-think-through How should I characterize these variations systematically?
 /qual-wisdom-check Patterns seem contradictory but both valid...
-
-# Future: Specialized commands will streamline this
 ```
 
 ---
@@ -144,20 +137,6 @@ Stage 2 tools are distributed based on their FUNCTION, not their stage:
 
 ---
 
-## Future Expansion (Phase 2 of Plugin Development)
-
-**Eventually this folder might contain:**
-- `/qual-parallel-streams` - Orchestrates Phase 1
-- `/qual-synthesize` - Guides Phase 2 synthesis
-- `/qual-characterize-patterns` - Supports Phase 3 analysis
-- `/qual-code-batch` - Batch processing interface
-
-**But MVEP works without these** - core partnership is functional now.
-
-**We build more as community needs emerge, not because we can.**
-
----
-
 ## A Note on Minimalism
 
 **Fewer commands ≠ less capable**
@@ -171,6 +150,6 @@ We built for epistemic partnership.
 
 ---
 
-*This folder's minimalism is philosophical, not accidental.*
+*This minimalism is philosophical, not accidental.*
 
 **Stage 2 lives throughout the plugin, wherever its functions naturally belong.**
