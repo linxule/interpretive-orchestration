@@ -10,7 +10,7 @@
       "name": "interpretive-orchestration",
       "source": "./plugin",
       "description": "Socratic onboarding, 4-stage reflexive coding, methodology hooks, specialized agents and the Lotus Wisdom MCP for the sandwich methodology.",
-      "version": "0.3.1",
+      "version": "0.3.2",
       "category": "research"
     }
   ]

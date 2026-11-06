@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.3.2] - 2026-11-06 - Say how to record Stage 1 counts
+
+### Changed
+
+- The project dashboard now says how to record your Stage 1 counts when none are recorded but `manual-codes/` or `memos/` has files. Since 0.3.1, progress uses only recorded counts, so such a project shows Stage 1 at 0%.
+- `/qual-status` shows the same hint only when nothing is recorded. Before, it kept showing whenever `manual-codes/` held more files than you had coded, which raw transcripts make normal.
+
+---
+
 ## [0.3.1] - 2026-11-06 - Fixes from a review of the scripts and docs
 
 This release fixes bugs that Codex and Kimi found in the skill scripts and docs, which the 0.3.0 review did not cover. Kimi then reviewed Codex's fixes and found the same bugs at other call sites. What the plugin does is unchanged.

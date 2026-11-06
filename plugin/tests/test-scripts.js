@@ -254,6 +254,18 @@ async function run() {
       assert(JSON.stringify(q.recommendations).includes('update-progress.js'), 'expected a record-your-counts hint');
       assert(json(runFile('project-dashboard/scripts/calculate-progress.js', p)).stage1_progress === 0);
     });
+    test('D1: the dashboard says how to record Stage 1 counts until they are recorded', () => {
+      const p = project();
+      for (let i = 0; i < 4; i++) write(p, `stage1-foundation/manual-codes/raw-${i}.md`, 'Raw transcript');
+      write(p, 'stage1-foundation/memos/memo.md', 'memo');
+      const dashboard = format => runFile('project-dashboard/scripts/generate-dashboard.js', p, ['--format', format]).stdout;
+      for (const format of ['ascii', 'markdown']) assert(dashboard(format).includes('update-progress.js'), `no hint in ${format}`);
+      assert(json({ stdout: dashboard('json') }).progress.stage1.record_counts_hint, 'no hint in json');
+      assert(runFile('_shared/scripts/update-progress.js', p, ['--documents-coded', '2', '--memos-written', '1']).status === 0);
+      assert(!dashboard('ascii').includes('update-progress.js'), 'hint should go once counts are recorded');
+      assert(!JSON.stringify(json(runFile('_shared/scripts/query-status.js', p)).recommendations).includes('update-progress.js'),
+        '/qual-status hint should go once counts are recorded');
+    });
     test('K6: a malformed data inventory is reported, never replaced', () => {
       const p = project(); const inv = write(p, 'stage1-foundation/data-inventory.json', '{"documents": [');
       const input = path.join(p, 'input'); fs.mkdirSync(input); fs.writeFileSync(path.join(input, 'a.mp3'), 'x');

@@ -42,6 +42,30 @@ function readConfig(projectPath) {
   }
 }
 
+function countVisibleFiles(dirPath, extensions = null) {
+  try {
+    return fs.readdirSync(dirPath, { withFileTypes: true })
+      .filter(entry => entry.isFile() && !entry.name.startsWith('.'))
+      .filter(entry => !extensions || extensions.some(ext => entry.name.endsWith(ext)))
+      .length;
+  } catch (error) {
+    return 0;
+  }
+}
+
+// Progress uses recorded counts, so a project that never recorded them shows
+// nothing, however many files it has. Say so, and say how to record them.
+function recordCountsHint(config, projectPath, docs, memos) {
+  if (config.sandwich_status?.stage1_complete) return null;
+  const files = countVisibleFiles(path.join(projectPath, 'stage1-foundation', 'manual-codes'));
+  const memoFiles = countVisibleFiles(path.join(projectPath, 'stage1-foundation', 'memos'), ['.md', '.txt']);
+  if (!(docs === 0 && files > 0) && !(memos === 0 && memoFiles > 0)) return null;
+  return `Record your Stage 1 counts: ${files} file(s) in manual-codes and ${memoFiles} in memos, ` +
+    `but ${docs} documents and ${memos} memos recorded. Progress uses recorded counts, because ` +
+    'manual-codes also holds raw transcripts. Record them with update-progress.js ' +
+    '(--documents-coded, --memos-written).';
+}
+
 function calculateAllProgress(config, projectPath) {
   const stage1Details = config.sandwich_status?.stage1_details || {};
   // Recorded counts only: manual-codes/ also holds raw transcripts.
@@ -83,7 +107,8 @@ function calculateAllProgress(config, projectPath) {
       progress: stage1Progress,
       complete: config.sandwich_status?.stage1_complete || false,
       documents: docs,
-      memos: memos
+      memos: memos,
+      record_counts_hint: recordCountsHint(config, projectPath, docs, memos)
     },
     stage2: {
       progress: s2Progress,
@@ -145,6 +170,9 @@ Overall Progress: ${generateProgressBar(progress.overall, 20)} ${progress.overal
 `;
 
   output += '\nNext Steps:\n';
+  if (progress.stage1.record_counts_hint) {
+    output += `- ${progress.stage1.record_counts_hint}\n`;
+  }
   if (!progress.stage1.complete) {
     if (progress.stage1.documents < 10) {
       output += `- Code ${10 - progress.stage1.documents} more documents manually\n`;
@@ -188,7 +216,7 @@ function generateMarkdownDashboard(config, progress, projectPath) {
 | Documents Coded | ${progress.stage1.documents} | 10 | ${Math.min(progress.stage1.documents * 10, 100)}% |
 | Memos Written | ${progress.stage1.memos} | 3 | ${Math.min(Math.round(progress.stage1.memos / 3 * 100), 100)}% |
 | **Overall** | | | **${progress.stage1.progress}%** |
-
+${progress.stage1.record_counts_hint ? `\n> ${progress.stage1.record_counts_hint}\n` : ''}
 ---
 
 ## Stage 2: Human-AI Partnership
