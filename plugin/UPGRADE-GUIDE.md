@@ -13,7 +13,7 @@ claude plugin marketplace update interpretive-orchestration
 claude plugin update interpretive-orchestration@interpretive-orchestration
 ```
 
-Then restart Claude Code and run `/qual-check-setup`. It should report version 0.3.0.
+Then restart Claude Code and run `/qual-check-setup`. It should report version 0.3.0 or later.
 
 If the plugin is not installed yet, follow [INSTALL.md](INSTALL.md).
 

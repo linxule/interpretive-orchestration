@@ -330,7 +330,7 @@ Every major concept exists in TWO formats:
 **The principle:** "Design prevents problems; guidelines only request compliance."
 
 **Implementation:**
-- **PreStage2 hook:** BLOCKS Stage 2 access (can't bypass)
+- **PreStage2 hook:** Asks the researcher to confirm before Stage 2 access (can bypass with a reason)
 - **Conversation-log:** Makes AI work transparent (not optional)
 - **Config-driven adaptation:** Ensures philosophical coherence (automatic)
 - **Epistemic growth tracking:** Baked into system (not self-reported)

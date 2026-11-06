@@ -8,8 +8,6 @@
 
 **Status:** Complete implementation, pending beta testing.
 
-**Relationship to METHODS-PAPER-OUTLINE.md:** This document can stand alone as a focused methods paper on the rules system, or integrate as Section 4.X / Appendix D of the broader plugin paper.
-
 ---
 
 ## Table of Contents
@@ -299,9 +297,9 @@ The skill includes templates for three core isolation types:
 
 | Template | When Generated | Purpose |
 |----------|----------------|---------|
-| `case-isolation.template.md` | `study_type` includes "comparative" | Keep cases separate during open coding |
-| `wave-isolation.template.md` | `is_longitudinal` = true | Keep waves separate until cross-wave analysis |
-| `stream-separation.template.md` | `streams.enabled` = true | Keep theory and empirical streams separate until synthesis |
+| `case-isolation.template.md` | `cases` is non-empty and `isolation_config.case_isolation.enabled` is not false | Keep cases separate during open coding |
+| `wave-isolation.template.md` | `waves` is non-empty and `isolation_config.wave_isolation.enabled` is not false | Keep waves separate until cross-wave analysis |
+| `stream-separation.template.md` | `research_design` exists and `isolation_config.stream_separation.enabled` is not false | Keep theory and empirical streams separate until synthesis |
 
 Each template includes:
 - What it enforces (clear behavioral guidance)
@@ -393,7 +391,7 @@ if (currentPhase === 'phase3_pattern_characterization') {
 }
 ```
 
-The researcher doesn't manage rule states manually. They progress through their analytical phases using existing commands (`/qual-phase-check`), and rules adapt automatically.
+The researcher doesn't manage rule states manually. They progress through their analytical phases using existing commands (`/qual-advance-stage`), and rules adapt automatically.
 
 ### 4.5 Theoretical Significance
 
@@ -503,7 +501,7 @@ Applying a preset configures:
 4. **Coding vocabulary**: Preferred verbs and terms for the tradition
 
 ```bash
-node apply-preset.js --project-path /path/to/project --preset gioia_corley
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/apply-preset.js" --project-path /path/to/project --preset gioia_corley
 ```
 
 ### 5.6 Theoretical Significance
@@ -722,9 +720,9 @@ Hooks connect the waves:
 | Hook | Wave Connection |
 |------|-----------------|
 | `PostPhaseTransition` | Wave 2 → Triggers rule regeneration on phase change |
-| `PostFiveDocuments` | Wave 3 → Triggers interpretive pause, saturation check |
+| `PostFiveDocuments` | Wave 3 → Prompts reflection every five documents and records the pause in the conversation log |
 | `EpistemicCoherence` | Wave 3 → Ensures choices align with tradition |
-| `SessionEnd` | Wave 4 → Prompts reflexivity, updates attribution |
+| `SessionEnd` | Wave 4 → Summarizes recent log activity, offers reflexive questions, and logs the session end |
 
 The researcher doesn't manage these connections. They work through their analysis naturally, and the system maintains integrity.
 
@@ -803,21 +801,6 @@ The rules system adds new components to the plugin architecture:
 - `workspace_branches`: Branch history and status
 - `researcher_team`: Team members and attribution
 
-### 9.3 Links to METHODS-PAPER-OUTLINE.md
-
-This document can integrate with the broader methods paper in several ways:
-
-**Option A: Section 4.X—"Methodological Rules Infrastructure"**
-Insert after section on Stage enforcement but before section on trustworthiness. Emphasize how rules operationalize research design.
-
-**Option B: Appendix D—"Design Decision Log: Methodological Rules"**
-Include as detailed appendix for readers interested in implementation. Summarize theoretical contributions in main text.
-
-**Option C: Standalone Paper**
-Expand theoretical contributions into journal article format. Focus on friction model and strain detection as novel contributions. Use implementation as illustration.
-
----
-
 ## 10. Future Directions
 
 ### 10.1 Immediate (Beta Testing Phase)
@@ -886,7 +869,7 @@ The rules don't replace methodological judgment. They make methodological judgme
 - Created: 2025-12-13
 - Status: Complete, pending beta testing
 - Authors: Xule Lin (SKEMA Business School), Claude Opus 4.5 (Anthropic)
-- Related: METHODS-PAPER-OUTLINE.md, DESIGN-PHILOSOPHY.md, ARCHITECTURE.md
+- Related: DESIGN-PHILOSOPHY.md, ARCHITECTURE.md
 
 ---
 

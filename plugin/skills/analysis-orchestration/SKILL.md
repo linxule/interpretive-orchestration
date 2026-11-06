@@ -31,24 +31,24 @@ Use this skill when:
 
 | Model | Best For | Cost | Quality |
 |-------|----------|------|---------|
-| Claude Opus 4.5 | Complex interpretive coding, nuanced themes | $$$ | Highest |
-| Claude Sonnet 4 | Balanced quality and cost for systematic coding | $$ | High |
+| Claude Opus | Complex interpretive coding, nuanced themes | $$$ | Highest |
+| Claude Sonnet | Balanced quality and cost for systematic coding | $$ | High |
 | Claude Haiku | Initial passes, high volume, simple categorization | $ | Good |
 
 ### Recommendation by Task
 
 **Deep Interpretive Coding (@dialogical-coder)**
-- Use: Opus 4.5 or Sonnet 4
+- Use: Opus or Sonnet
 - Why: Requires nuanced understanding, theoretical sensitivity
 - Pattern: Process 5-10 documents per session with reflection
 
 **Initial Categorization**
-- Use: Sonnet 4 or Haiku
+- Use: Sonnet or Haiku
 - Why: Applying established codes is less interpretively demanding
 - Pattern: Batch process with human review
 
 **Pattern Characterization**
-- Use: Opus 4.5
+- Use: Opus
 - Why: Requires integration across documents, theoretical abstraction
 
 ## Cost Estimation
@@ -109,8 +109,8 @@ Is this initial exploratory coding?
 ├── Yes → Consider Haiku for volume, validate with Sonnet
 └── No, this is interpretive coding
     ├── Budget constrained?
-    │   ├── Yes → Sonnet 4 (good balance)
-    │   └── No → Opus 4.5 (best quality)
+    │   ├── Yes → Sonnet (good balance)
+    │   └── No → Opus (best quality)
     └── Need to process >50 documents?
         ├── Yes → Two-pass: Haiku then Sonnet on subset
         └── No → Single-pass with Sonnet or Opus

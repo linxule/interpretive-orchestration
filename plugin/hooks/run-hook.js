@@ -57,17 +57,17 @@ const ON_COPILOT = Boolean(process.env.COPILOT_PLUGIN_ROOT);
 
 // Kimi Code's PreToolUse hooks can only allow or deny ("ask" counts as allow),
 // and no other hook output reaches the model or the researcher. So the Stage 1
-// check denies once and lets the confirmed retry through.
+// check denies the call, and lets one retry through after the researcher replies.
 const ON_KIMI = Boolean(process.env.KIMI_PLUGIN_ROOT);
 
 const KIMI_HOLD_NOTE =
   'Interpretive Orchestration held this call back: the Stage 1 check did not pass. ' +
   'Tell the researcher what the check found (below) and ask whether they want to proceed ' +
-  'anyway, and why. If they confirm, make the same call again; the check lets the next call ' +
-  'for this agent or skill through once, within 30 minutes.';
+  'anyway, and why. If they confirm, make the same call again. The check lets one call for this ' +
+  'agent or skill through after the researcher has replied, within 30 minutes of their reply.';
 
-// After a refusal the pass is never used, so it lapses rather than waiting
-// for an unrelated call later in the session.
+// When the researcher declines, the pass is never used, so it lapses rather
+// than waiting for an unrelated call later in the session.
 const KIMI_CONFIRM_WINDOW_MS = 30 * 60 * 1000;
 
 // Kimi ignores the hooks in a skill's frontmatter. The plugin's Stop hook stands
@@ -85,7 +85,8 @@ const SKILL_MENTION = /\$(?:interpretive-orchestration:)?([a-z0-9-]+)/g;
 const CONFIRM_NOTE =
   'Interpretive Orchestration: the Stage 1 check did not pass for this command. ' +
   'Before doing anything else, tell the researcher what the check found (below) and ask ' +
-  'whether they want to proceed anyway, and why. Continue only if they confirm.';
+  'whether they want to proceed anyway, and why. The command itself is not that confirmation: ' +
+  'ask, then wait for their answer. Continue only if they confirm.';
 
 function readPayload() {
   if (process.stdin.isTTY) return null;
@@ -160,6 +161,18 @@ function takeMarker(marker, maxAgeMs = Infinity) {
 function putMarker(marker) {
   fs.mkdirSync(PENDING_DIR, { recursive: true });
   fs.writeFileSync(marker, '');
+}
+
+// Kimi only: the researcher's next prompt turns each call held back in this
+// session into a pass, so a retry made without asking them is held again.
+function armKimiPasses(payload) {
+  if (!fs.existsSync(PENDING_DIR)) return;
+  const prefix = `${path.basename(sessionMarker(payload))}.`;
+  for (const file of fs.readdirSync(PENDING_DIR)) {
+    if (!file.startsWith(prefix) || !file.endsWith('.held')) continue;
+    putMarker(path.join(PENDING_DIR, `${file.slice(0, -'.held'.length)}.confirmed`));
+    fs.unlinkSync(path.join(PENDING_DIR, file));
+  }
 }
 
 // Kimi only: true when a triggered call should exit without running the script.
@@ -269,6 +282,7 @@ function main() {
   }
 
   const payload = readPayload();
+  if (payload && ON_KIMI && payload.hook_event_name === 'UserPromptSubmit') armKimiPasses(payload);
   const kimiStance = Boolean(payload) && isKimiStance(script, payload);
   const stanceShown = kimiStance && sessionMarker(payload, script, 'shown');
   if (stanceShown && fs.existsSync(stanceShown)) process.exit(0);
@@ -305,7 +319,7 @@ function main() {
     }
   } else if (event === 'PreToolUse') {
     if (flagged && ON_KIMI) {
-      putMarker(sessionMarker(payload, targetOf(payload).name, script, 'confirmed'));
+      putMarker(sessionMarker(payload, targetOf(payload).name, script, 'held'));
       emit({
         hookSpecificOutput: {
           hookEventName: 'PreToolUse',

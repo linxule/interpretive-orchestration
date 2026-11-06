@@ -36,7 +36,7 @@ Before completing Stage 1, you need:
 | Documents coded | 10 | [checked at runtime] |
 | Analytical memos | 5 | [checked at runtime] |
 | Data structure | Created | [checked at runtime] |
-| Reflexivity entries | 3 | [checked at runtime] |
+| Reflexivity journal entries | 3 | [checked at runtime] |
 
 ---
 
@@ -66,11 +66,9 @@ A transition memo is created capturing:
   "sandwich_status": {
     "current_stage": "stage2_collaboration",
     "stage1_complete": true,
-    "stage1_completion_date": "[timestamp]",
     "stage1_details": {
       "documents_manually_coded": [count],
-      "memos_written": [count],
-      "initial_structure_created": true
+      "memos_written": [count]
     }
   }
 }
@@ -136,12 +134,12 @@ If validation fails or you want to continue Stage 1:
    Load `.interpretive-orchestration/config.json`
 
 2. **Check Stage 1 requirements** (all must pass):
-   - `coding_progress.documents_coded >= 10`
-   - `coding_progress.memos_written >= 5`
-   - `coding_progress.reflexivity_entries >= 3`
+   - `sandwich_status.stage1_details.documents_manually_coded >= 10`
+   - `sandwich_status.stage1_details.memos_written >= 5`
+   - At least 3 entries in `.interpretive-orchestration/reflexivity-journal.md`
    - `data_structure` exists with at least:
-     - 3+ concepts in `data_structure.concepts[]`, OR
-     - 1+ themes in `data_structure.themes[]`
+     - 3+ concepts in `data_structure.first_order_concepts[]`, OR
+     - 1+ themes in `data_structure.second_order_themes[]`
 
 3. **If requirements NOT met:**
    - Show current progress vs requirements
@@ -172,8 +170,7 @@ If validation fails or you want to continue Stage 1:
          "stage1_complete": true,
          "stage1_details": {
            "documents_manually_coded": [count],
-           "memos_written": [count],
-           "initial_structure_created": true
+           "memos_written": [count]
          }
        }
      }

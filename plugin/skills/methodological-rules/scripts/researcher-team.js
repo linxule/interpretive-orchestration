@@ -45,7 +45,7 @@ function loadConfig(projectPath) {
 
 function saveConfig(projectPath, config) {
   const configPath = path.join(projectPath, '.interpretive-orchestration', 'config.json');
-  fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+  require('../../_shared/scripts/atomic-write.js').atomicWrite(configPath, JSON.stringify(config, null, 2));
 }
 
 function generateId(name) {

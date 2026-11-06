@@ -42,9 +42,9 @@ Comprehensive methodological support: isolation rules, strain detection, saturat
 
 | Rule | When Generated | Purpose |
 |------|---------------|---------|
-| `case-isolation.md` | study_type includes "comparative" | Prevent cross-case contamination |
-| `wave-isolation.md` | study_type includes "longitudinal" | Preserve temporal integrity |
-| `stream-separation.md` | streams.enabled = true | Keep theory/data separate until synthesis |
+| `case-isolation.md` | `cases` is non-empty and `isolation_config.case_isolation.enabled` is not false | Prevent cross-case contamination |
+| `wave-isolation.md` | `waves` is non-empty and `isolation_config.wave_isolation.enabled` is not false | Preserve temporal integrity |
+| `stream-separation.md` | `research_design` exists and `isolation_config.stream_separation.enabled` is not false | Keep theory/data separate until synthesis |
 
 ---
 

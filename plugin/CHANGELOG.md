@@ -7,6 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.3.1] - 2026-11-06 - Fixes from a review of the scripts and docs
+
+This release fixes bugs that Codex and Kimi found in the skill scripts and docs, which the 0.3.0 review did not cover. Kimi then reviewed Codex's fixes and found the same bugs at other call sites. What the plugin does is unchanged.
+
+### Fixed
+
+- `/qual-init` works again. The config check rejected every whole number, so `generate-config.js` refused to write a new project's config.
+- Running `generate-config.js` on an existing project keeps everything you did not ask it to change. Before, it dropped saturation tracking, branches and team records, and reset your research question, preferences, parts of your stance and, when you changed the study type, your cases and waves. A config file it cannot read is now reported, not replaced with defaults.
+- `/qual-complete-stage1` checks the fields your project actually records. It looked for memo counts, reflexivity entries and concept lists under names no script writes, so it could refuse a finished Stage 1.
+- Turning a methodological rule off now also removes the rule file the plugin made for it.
+- Stage 1 readiness, `/qual-status` and the progress dashboard count only the documents and memos you have recorded. Raw transcripts saved in `manual-codes/` no longer count as coded. Phase 2 readiness now counts papers saved in `stream-a-theoretical/papers/`.
+- A literature or interview inventory that cannot be read is no longer replaced with an empty one.
+- Saturation with no coded documents is reported as "not enough data", not "approaching".
+- Config files are written safely: an interrupted write can no longer leave a cut-off `config.json`, and the file keeps its permissions.
+- Smaller fixes:
+  - a project path is never run as a shell command
+  - imported files get unique IDs
+  - the audit lists every coding entry and recognizes your decisions however they were logged
+  - completed Stage 3 work shows as done, and Stage 3 work not yet started no longer counts as done in `/qual-status`
+  - project setup and document listing report failures instead of success
+
+### Changed
+
+- Kimi Code: when the Stage 1 check holds a call, the call goes through only after you have replied. Before, an immediate retry went through, whether or not the AI had asked you.
+- The Stage 1 instructions now say that asking for the work is not consent to skip Stage 1. In one test, an AI read "please code this" as consent. With the new wording, it asked first.
+- Docs and skills now match the scripts: script paths, required arguments, rule triggers and hook and agent counts. They also say that the Stage 1 check asks you, rather than blocking.
+- Model advice no longer names model versions that date.
+
+### Removed
+
+- Build notes for the old Kimi port that were tracked by mistake.
+
+---
+
 ## [0.3.0] - 2026-11-06 - Current Claude Code and other platforms
 
 This release brings the plugin up to date with Claude Code 2.1 and makes it installable in other agent tools. The methodology, agent prompts and command prompts are unchanged, apart from the fixes listed here.

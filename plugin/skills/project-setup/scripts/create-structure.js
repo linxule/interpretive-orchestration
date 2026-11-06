@@ -291,6 +291,7 @@ The sandwich starts with human bread!
     results.researchDesign.wavesCreated = researchDesign.waves.length;
   }
 
+  results.success = results.errors.length === 0;
   return results;
 }
 

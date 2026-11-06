@@ -1,6 +1,6 @@
 {
   "name": "interpretive-orchestration",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Atelier of Co-Apprenticeship for interpretive qualitative research. Human and AI learn together as apprentices to the craft tradition (rigor, reflexivity, theoretical sensitivity).",
   "keywords": [
     "qualitative-research",
@@ -30,7 +30,7 @@
     "developerName": "Xule Lin and Kevin Corley",
     "websiteURL": "https://github.com/linxule/interpretive-orchestration"
   },
-  "skillInstructions": "In these skills, ${CLAUDE_PLUGIN_ROOT} means this plugin's plugin/ folder, two levels above the skill's own folder. Commands written as /qual-status are typed in Kimi Code as /skill:interpretive-orchestration:qual-status. Before you start qual-parallel-streams, qual-synthesize, qual-code-deductive or qual-characterize-patterns, check .interpretive-orchestration/config.json in the researcher's project. If sandwich_status.stage1_complete is not true and the researcher has not already confirmed in this conversation, tell them what Stage 1 still needs, explain why the manual foundation matters, and ask whether they want to proceed anyway, and why. Continue only if they confirm.",
+  "skillInstructions": "In these skills, ${CLAUDE_PLUGIN_ROOT} means this plugin's plugin/ folder, two levels above the skill's own folder. Commands written as /qual-status are typed in Kimi Code as /skill:interpretive-orchestration:qual-status. Before you start qual-parallel-streams, qual-synthesize, qual-code-deductive or qual-characterize-patterns, check .interpretive-orchestration/config.json in the researcher's project. If sandwich_status.stage1_complete is not true and the researcher has not already confirmed in this conversation, tell them what Stage 1 still needs, explain why the manual foundation matters, and ask whether they want to proceed anyway, and why. Asking for the work is not that confirmation: ask, then wait for their answer. Continue only if they confirm.",
   "hooks": [
     {
       "event": "UserPromptSubmit",

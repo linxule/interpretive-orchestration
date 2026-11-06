@@ -82,7 +82,8 @@ function loadOrCreateInventory(projectPath) {
     try {
       return JSON.parse(fs.readFileSync(inventoryPath, 'utf8'));
     } catch (error) {
-      // Corrupted file, create new
+      console.error(JSON.stringify({ success: false, error: `Failed to parse literature inventory: ${error.message}` }));
+      process.exit(1);
     }
   }
 

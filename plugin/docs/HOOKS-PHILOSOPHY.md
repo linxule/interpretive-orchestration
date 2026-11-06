@@ -15,6 +15,7 @@ This document preserves the philosophical rationale for each hook in the Interpr
 | EpistemicCoherence | PostToolUse (SubagentStop for background agents) | No | Validates philosophical consistency |
 | PostSynthesis | Stop, declared by `/qual-synthesize` | No | Generates audit trail |
 | PostPhaseTransition | PostToolUse, SubagentStop, and Stop declared by the stage commands | No | Updates methodological rules |
+| SessionStart | SessionStart | No | Gives the AI the partnership stance and Stage 1 status |
 | SessionEnd | SessionEnd | No | Reflexivity prompt (not shown; the session end is logged) |
 
 ---
@@ -119,6 +120,7 @@ The methodology scripts in `hooks/` (`check-stage1-complete.js` and the rest) pr
 | UserPromptExpansion (a typed `/qual-*` command) | any | `check-stage1-complete.js` |
 | PostToolUse | `Agent\|Task` | `interpretive-pause.js`, `check-coherence.js`, `post-phase-transition.js` |
 | SubagentStop | any | the same three scripts, for background agents |
+| SessionStart | any | `session-stance.js` |
 | SessionEnd | any | `session-reflect.js` |
 
 For each call, the adapter:

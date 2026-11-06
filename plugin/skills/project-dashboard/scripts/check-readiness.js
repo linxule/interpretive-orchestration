@@ -61,6 +61,14 @@ function countFiles(dirPath, extensions = []) {
   }
 }
 
+function countVisibleFiles(dirPath) {
+  try {
+    return fs.readdirSync(dirPath, { withFileTypes: true }).filter(entry => !entry.name.startsWith('.') && entry.isFile()).length;
+  } catch (error) {
+    return 0;
+  }
+}
+
 function checkStage2Readiness(config, projectPath) {
   const requirements_met = [];
   const requirements_missing = [];
@@ -71,10 +79,12 @@ function checkStage2Readiness(config, projectPath) {
   let memosWritten = stage1Details.memos_written || 0;
 
   if (docsManuallyCodeded === 0) {
-    docsManuallyCodeded = countFiles(path.join(projectPath, 'stage1-foundation', 'manual-codes'), ['.md', '.json', '.txt']);
+    const files = countVisibleFiles(path.join(projectPath, 'stage1-foundation', 'manual-codes'));
+    if (files) recommendations.push(`${files} file(s) in manual-codes; record the coded count with _shared/scripts/update-progress.js --project-path <project> --documents-coded <count>`);
   }
   if (memosWritten === 0) {
-    memosWritten = countFiles(path.join(projectPath, 'stage1-foundation', 'memos'), ['.md']);
+    const files = countVisibleFiles(path.join(projectPath, 'stage1-foundation', 'memos'));
+    if (files) recommendations.push(`${files} file(s) in memos; record the written count with _shared/scripts/update-progress.js --project-path <project> --memos-written <count>`);
   }
 
   if (docsManuallyCodeded >= 10) {
@@ -205,7 +215,13 @@ function checkPhase2Readiness(config, projectPath) {
   }
 
   const theoreticalDir = path.join(projectPath, 'stage2-collaboration', 'stream-a-theoretical');
-  const theoreticalFiles = countFiles(theoreticalDir, ['.md']);
+  const countMarkdownRecursively = dir => {
+    if (!fs.existsSync(dir)) return 0;
+    try {
+      return fs.readdirSync(dir, { withFileTypes: true }).filter(entry => !entry.name.startsWith('.')).reduce((total, entry) => total + (entry.isDirectory() ? countMarkdownRecursively(path.join(dir, entry.name)) : entry.isFile() && entry.name.endsWith('.md') ? 1 : 0), 0);
+    } catch (error) { return 0; }
+  };
+  const theoreticalFiles = countMarkdownRecursively(theoreticalDir);
   if (theoreticalFiles >= 3) {
     requirements_met.push(`${theoreticalFiles} theoretical documents analyzed`);
   } else {

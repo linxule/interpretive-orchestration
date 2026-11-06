@@ -69,7 +69,8 @@ function generateResearchDesign(args) {
     try {
       return JSON.parse(args['research-design']);
     } catch (e) {
-      console.error(`Warning: Invalid JSON in --research-design, using defaults`);
+      console.error(JSON.stringify({ success: false, error: `Invalid JSON in --research-design: ${e.message}` }));
+      process.exit(1);
     }
   }
 
@@ -213,7 +214,7 @@ function atomicWrite(filePath, content) {
 
   try {
     fs.writeFileSync(tempPath, content);
-
+    if (fs.existsSync(filePath)) fs.chmodSync(tempPath, fs.statSync(filePath).mode & 0o777);
     fs.renameSync(tempPath, filePath);
 
     return { success: true };
@@ -234,10 +235,11 @@ function deepMerge(target, source) {
   // Deep merge source into target, preserving target values when source is default/empty
   const result = { ...target };
   for (const key of Object.keys(source)) {
-    if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
-      result[key] = deepMerge(target[key] || {}, source[key]);
-    } else if (target[key] === undefined) {
+    if (target[key] === undefined) {
       result[key] = source[key];
+    } else if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key]) &&
+               target[key] && typeof target[key] === 'object' && !Array.isArray(target[key])) {
+      result[key] = deepMerge(target[key], source[key]);
     }
   }
   return result;
@@ -250,7 +252,11 @@ function loadExistingConfig(configPath) {
   try {
     return JSON.parse(fs.readFileSync(configPath, 'utf8'));
   } catch (error) {
-    return null;
+    console.error(JSON.stringify({
+      success: false,
+      error: `Existing config.json cannot be read (${error.message}). Fix or move it before running setup again; it was not changed.`
+    }));
+    process.exit(1);
   }
 }
 
@@ -292,30 +298,32 @@ let finalConfig;
 let configAction;
 
 if (existingConfig) {
-  // PRESERVE progress fields - these should NEVER be overwritten
-  const preservedFields = {
-    sandwich_status: existingConfig.sandwich_status,
-    coding_progress: existingConfig.coding_progress,
-    epistemic_growth: existingConfig.epistemic_growth,
-    data_structure: existingConfig.data_structure,
-    mcp_integrations: existingConfig.mcp_integrations
-  };
-
-  finalConfig = { ...newConfig };
-
-  Object.assign(finalConfig, preservedFields);
+  // Preserve all existing values, filling only missing fields with defaults.
+  finalConfig = deepMerge(existingConfig, newConfig);
 
   // Handle research_design - preserve if exists unless explicitly updating
   if (existingConfig.research_design) {
-    if (args['research-design'] || args['study-type']) {
+    const existingDesign = existingConfig.research_design;
+    const existingIsolation = existingDesign.isolation_config || {};
+    if (args['research-design']) {
+      // Only the keys given in the JSON replace the existing design's.
+      const given = newConfig.research_design;
       finalConfig.research_design = {
-        ...existingConfig.research_design,
-        ...newConfig.research_design,
+        ...existingDesign,
+        ...given,
         // Preserve rule_overrides (audit trail)
-        rule_overrides: existingConfig.research_design.rule_overrides || [],
+        rule_overrides: existingDesign.rule_overrides || [],
+        isolation_config: { ...existingIsolation, ...given.isolation_config }
+      };
+    } else if (args['study-type']) {
+      const studyType = args['study-type'];
+      finalConfig.research_design = {
+        ...existingDesign,
+        study_type: studyType,
         isolation_config: {
-          ...existingConfig.research_design.isolation_config,
-          ...newConfig.research_design.isolation_config
+          ...existingIsolation,
+          case_isolation: { ...existingIsolation.case_isolation, enabled: studyType.includes('comparative') },
+          wave_isolation: { ...existingIsolation.wave_isolation, enabled: studyType.includes('longitudinal') }
         }
       };
     } else {
@@ -323,26 +331,22 @@ if (existingConfig) {
     }
   }
 
-  // Merge project_info (allow updates but keep created_date)
-  finalConfig.project_info = {
-    ...existingConfig.project_info,
-    ...newConfig.project_info,
-    created_date: existingConfig.project_info.created_date  // Never change creation date
-  };
-
-  if (args.ontology || args.epistemology || args.tradition || args['ai-relationship']) {
-    finalConfig.philosophical_stance = {
-      ...existingConfig.philosophical_stance,
-      ...newConfig.philosophical_stance
-    };
-  } else {
-    finalConfig.philosophical_stance = existingConfig.philosophical_stance;
+  // Only explicitly supplied arguments replace existing values.
+  const projectArgs = { name: 'name', 'research-question': 'research_question', domain: 'domain', researcher: 'researcher_name' };
+  for (const [arg, field] of Object.entries(projectArgs)) {
+    if (args[arg] !== undefined) finalConfig.project_info[field] = args[arg];
   }
-
-  finalConfig.interaction_preferences = {
-    ...existingConfig.interaction_preferences,
-    ...newConfig.interaction_preferences
-  };
+  const stanceArgs = { ontology: 'ontology', epistemology: 'epistemology', tradition: 'tradition', 'ai-relationship': 'ai_relationship' };
+  for (const [arg, field] of Object.entries(stanceArgs)) {
+    if (args[arg] !== undefined) finalConfig.philosophical_stance[field] = args[arg];
+  }
+  if (args.ontology !== undefined || args.epistemology !== undefined) {
+    const stance = finalConfig.philosophical_stance;
+    const vocab = getVocabulary(stance.ontology, stance.epistemology);
+    stance.vocabulary_mode = vocab.mode;
+    stance.coding_verbs = vocab.verbs;
+    stance.avoid_verbs = vocab.avoid;
+  }
 
   configAction = 'merged';
 } else {

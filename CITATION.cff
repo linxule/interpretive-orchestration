@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "If you use this plugin in your research, please cite the article it implements (preferred citation below)."
 title: "Interpretive Orchestration: Epistemic Partnership System"
 type: software
-version: 0.3.0
+version: 0.3.1
 date-released: 2026-11-06
 license: MIT
 repository-code: "https://github.com/linxule/interpretive-orchestration"

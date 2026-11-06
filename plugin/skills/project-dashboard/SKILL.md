@@ -155,7 +155,7 @@ This skill reads from:
 - `stage1-foundation/` directory contents
 - `stage2-collaboration/` directory contents
 
-Use `${CLAUDE_PLUGIN_ROOT}/skills/_shared/scripts/query-status.js` for the underlying data.
+Use `${CLAUDE_PLUGIN_ROOT}/skills/_shared/scripts/query-status.js --project-path <project folder>` for the underlying data.
 
 ## Integration Points
 

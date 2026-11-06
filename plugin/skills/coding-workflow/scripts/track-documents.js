@@ -252,7 +252,9 @@ function trackDocuments(projectPath, args) {
     }
 
     if (discoveredDocs.length > 0) {
-      updateConfig(projectPath, config);
+      if (!updateConfig(projectPath, config)) {
+        return { success: false, error: 'Failed to save tracking data' };
+      }
     }
 
     const byStatus = {

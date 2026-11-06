@@ -12,7 +12,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
+const { execFileSync } = require('child_process');
 
 // Set by run-hook.js at the end of a turn, where only a rule change is news.
 const QUIET = process.env.INTERPRETIVE_ORCHESTRATION_QUIET === '1';
@@ -74,7 +74,7 @@ function handlePhaseTransition() {
   }
 
   try {
-    const output = execSync(`node "${updateScript}" --project-path "${projectRoot}"`, {
+    const output = execFileSync(process.execPath, [updateScript, '--project-path', projectRoot], {
       encoding: 'utf8',
       timeout: 10000
     });

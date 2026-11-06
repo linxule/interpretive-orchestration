@@ -44,7 +44,7 @@ function loadConfig(projectPath) {
 
 function saveConfig(projectPath, config) {
   const configPath = path.join(projectPath, '.interpretive-orchestration', 'config.json');
-  fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+  require('../../_shared/scripts/atomic-write.js').atomicWrite(configPath, JSON.stringify(config, null, 2));
 }
 
 function initSaturationTracking(config) {
@@ -299,7 +299,12 @@ function assessSaturation(config) {
   }
 
   let level, recommendation;
-  if (saturationScore >= 90) {
+  if (tracking.code_generation.codes_by_document.length === 0) {
+    saturationScore = 0;
+    for (const signal of Object.keys(evidence)) evidence[signal] = 'NO DATA: No coded documents recorded';
+    level = 'low';
+    recommendation = 'Not enough data yet to assess saturation; no coded documents have been recorded.';
+  } else if (saturationScore >= 90) {
     level = 'saturated';
     recommendation = 'Strong saturation signals. Consider: Are there negative cases you haven\'t explored? If variation is understood, ready for theoretical integration.';
   } else if (saturationScore >= 70) {

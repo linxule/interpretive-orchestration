@@ -169,11 +169,12 @@ Each command is a skill at `skills/qual-<name>/SKILL.md`.
 | `@dialogical-coder` | Stage 2 | Reflexive coding | 4-stage visible reasoning (THE CROWN JEWEL) |
 | `@scholarly-companion` | Stage 3 | Theoretical dialogue | Socratic questioning, not writing |
 
-### Hooks (6)
+### Hooks (7)
 | Hook | Trigger | Purpose | Philosophy |
 |------|---------|---------|------------|
 | PreStage2 | Before Stage 2 tools | Enforce Solo Practice completion (asks the researcher to confirm) | Atelier door locks |
 | PostFiveDocuments | Every 5 coded | Interpretive pause | From methodology! |
+| SessionStart | Session start | Partnership stance and Stage 1 status | Shared foundations |
 | SessionEnd | Session close | Reflexivity prompt (logged; Claude Code does not show it) | Constructivist practice |
 | EpistemicCoherence | After coding | Philosophy check | Language consistency |
 | PostSynthesis | After synthesis | Audit trail generation | Confirmability |
@@ -242,7 +243,7 @@ interpretive-orchestration/
 │
 ├── 🎭 Active Components
 │   ├── agents/ (4) - Dialogue partners for each stage
-│   └── hooks/ (6 scripts + run-hook.js adapter + hooks.json) - Enforcement & prompting
+│   └── hooks/ (7 scripts + run-hook.js adapter + hooks.json) - Enforcement & prompting
 │
 ├── 🧩 Skills (12 skills + 17 qual-* commands)
 │   ├── qual-*/ - The /qual-* commands, one SKILL.md each
@@ -501,8 +502,8 @@ node "${CLAUDE_PLUGIN_ROOT}/skills/_shared/scripts/read-config.js" --project-pat
 # Update progress
 node "${CLAUDE_PLUGIN_ROOT}/skills/_shared/scripts/update-progress.js" \
   --project-path /path \
-  --stage1-documents 12 \
-  --memos 5
+  --documents-coded 12 \
+  --memos-written 5
 ```
 
 Features:
@@ -536,10 +537,12 @@ Hooks now return structured JSON for better error handling:
   "reason": "Stage 1 manual coding not complete",
   "next_commands": ["/qual-memo", "/qual-status"],
   "next_skills": ["project-setup"],
-  "can_bypass": false,
+  "can_bypass": true,
   "details": { "documents_coded": 5, "documents_required": 10 }
 }
 ```
+
+For an incomplete Stage 1 check, the adapter turns this result into an `ask` decision so the researcher can confirm whether to proceed.
 
 ---
 
@@ -708,7 +711,7 @@ Epistemic Ambidexterity
 ### For Researchers (5-Second Scan)
 **What:** Atelier of co-apprenticeship for qualitative research
 **Why:** Transform thinking, not just code faster
-**How:** 3 stages, 3 agents, Partnership Agency
+**How:** 3 stages, 4 agents, Partnership Agency
 
 ### For Scholars (Deep Understanding)
 **Framework:** Cognitio Emergens Partnership Agency instantiation
@@ -716,7 +719,7 @@ Epistemic Ambidexterity
 **Contribution:** Building as scholarship, philosopher-builder synthesis
 
 ### For Developers (Technical)
-**Architecture:** 12 skills, 17 commands (as skills), 4 agents, 6 hooks, 1 bundled + 5 optional MCPs
+**Architecture:** 12 skills, 17 commands (as skills), 4 agents, 7 hooks, 1 bundled + 5 optional MCPs
 **Design:** Skills-first architecture, commands as triggers, graceful degradation for optional MCPs
 **Quality:** Atomic state writes, schema validation, structured hook remediation
 

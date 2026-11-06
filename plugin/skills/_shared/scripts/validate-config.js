@@ -49,7 +49,7 @@ function validateAgainstSchema(config, schema, path = '') {
     const expectedTypes = Array.isArray(schema.type) ? schema.type : [schema.type];
 
     if (config === null && expectedTypes.includes('null')) {
-    } else if (!expectedTypes.includes(actualType)) {
+    } else if (!expectedTypes.some(type => type === 'integer' ? Number.isInteger(config) : type === 'number' ? typeof config === 'number' && Number.isFinite(config) : type === actualType)) {
       errors.push({
         path: path || 'root',
         message: `Expected type ${expectedTypes.join(' or ')}, got ${actualType}`,
