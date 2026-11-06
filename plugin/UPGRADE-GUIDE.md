@@ -20,7 +20,7 @@ If the plugin is not installed yet, follow [INSTALL.md](INSTALL.md).
 ### What changed
 
 - Commands are now skills. Each `/qual-*` command lives at `skills/qual-<name>/SKILL.md`. You type the same names as before, such as `/qual-init` and `/qual-status`.
-- The hooks now fire. In earlier versions they did not run in current Claude Code. When Stage 1 is not complete, Claude Code now asks you to confirm before @dialogical-coder or a Stage 2 command runs. You can stop, or go ahead knowingly.
+- The hooks now fire. In earlier versions they did not run in current Claude Code. When Stage 1 is not complete, Claude Code now asks you to confirm before the AI runs @dialogical-coder or a Stage 2 command. If you type the command yourself, the AI is told to ask you first. You can stop, or go ahead knowingly.
 - The interpretive pause, coherence prompts and rule updates now reach you after @dialogical-coder finishes, including when it runs in the background.
 - Sequential Thinking is no longer bundled. Providers increasingly block tools of this kind. `/qual-think-through` and the deep-reasoning skill now ask the model to think deeply and step by step before responding, which gives the same result.
 - Lotus Wisdom is the only bundled MCP server. It runs as `npx -y lotus-wisdom-mcp@latest`, so it updates itself. [DEPENDENCIES.md](DEPENDENCIES.md#lotus-wisdom) describes a hosted alternative.

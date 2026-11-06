@@ -31,7 +31,7 @@ This document preserves the philosophical rationale for each hook in the Interpr
 
 **Triggered by:** `@dialogical-coder`, `/qual-parallel-streams`, `/qual-synthesize`, `/qual-code-deductive`, `/qual-characterize-patterns`
 
-**What the researcher sees:** if Stage 1 is not complete, Claude Code shows what the check found and asks whether to go ahead. The researcher can stop, or proceed knowingly.
+**What the researcher sees:** if Stage 1 is not complete and the AI calls a Stage 2 agent or skill, Claude Code shows what the check found and asks whether to go ahead. The researcher can stop, or proceed knowingly. For a command the researcher types, Claude Code has no way to pause it, so the check tells the AI to ask instead. That holds only if the model follows the instruction.
 
 ---
 
