@@ -67,7 +67,7 @@ project-name/
 
 **Usage:**
 ```bash
-node skills/project-setup/scripts/create-structure.js --project-path /path/to/project --project-name "My Research"
+node "${CLAUDE_PLUGIN_ROOT}/skills/project-setup/scripts/create-structure.js" --project-path /path/to/project --project-name "My Research"
 ```
 
 ### generate-config.js
@@ -75,7 +75,7 @@ Generates config.json from dialogue responses.
 
 **Usage:**
 ```bash
-node skills/project-setup/scripts/generate-config.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/project-setup/scripts/generate-config.js" \
   --project-path /path/to/project \
   --name "My Research" \
   --research-question "How do..." \
@@ -90,7 +90,7 @@ Validates project setup completeness.
 
 **Usage:**
 ```bash
-node skills/project-setup/scripts/validate-setup.js --project-path /path/to/project
+node "${CLAUDE_PLUGIN_ROOT}/skills/project-setup/scripts/validate-setup.js" --project-path /path/to/project
 ```
 
 **Returns:** JSON with validation status and any missing components.

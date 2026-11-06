@@ -71,7 +71,7 @@ Use this skill when:
 Estimates API costs based on document characteristics.
 
 ```bash
-node skills/analysis-orchestration/scripts/estimate-costs.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/analysis-orchestration/scripts/estimate-costs.js" \
   --documents 25 \
   --avg-pages 5 \
   --model sonnet \

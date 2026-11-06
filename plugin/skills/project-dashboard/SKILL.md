@@ -28,7 +28,7 @@ Use this skill when:
 Calculate progress percentages for each stage.
 
 ```bash
-node skills/project-dashboard/scripts/calculate-progress.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/project-dashboard/scripts/calculate-progress.js" \
   --project-path /path/to/project
 ```
 
@@ -46,7 +46,7 @@ node skills/project-dashboard/scripts/calculate-progress.js \
 Generate a formatted dashboard view.
 
 ```bash
-node skills/project-dashboard/scripts/generate-dashboard.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/project-dashboard/scripts/generate-dashboard.js" \
   --project-path /path/to/project \
   --format ascii|json|markdown
 ```
@@ -55,7 +55,7 @@ node skills/project-dashboard/scripts/generate-dashboard.js \
 Check readiness for stage transitions.
 
 ```bash
-node skills/project-dashboard/scripts/check-readiness.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/project-dashboard/scripts/check-readiness.js" \
   --project-path /path/to/project \
   --target-stage stage2
 ```
@@ -153,7 +153,7 @@ This skill reads from:
 - `stage1-foundation/` directory contents
 - `stage2-collaboration/` directory contents
 
-Use `_shared/scripts/query-status.js` for the underlying data.
+Use `${CLAUDE_PLUGIN_ROOT}/skills/_shared/scripts/query-status.js` for the underlying data.
 
 ## Integration Points
 

@@ -23,7 +23,7 @@ Use this skill when:
 2. Initial data structure exists
 3. Project is properly initialized
 
-Use `skills/_shared/scripts/read-config.js` to check readiness.
+Use `${CLAUDE_PLUGIN_ROOT}/skills/_shared/scripts/read-config.js` to check readiness.
 
 ## Workflow Stages
 
@@ -57,7 +57,7 @@ Use `skills/_shared/scripts/read-config.js` to check readiness.
 Process a batch of documents through coding workflow.
 
 ```bash
-node skills/coding-workflow/scripts/process-batch.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/coding-workflow/scripts/process-batch.js" \
   --project-path /path/to/project \
   --documents "D001,D002,D003" \
   --agent dialogical-coder \
@@ -68,7 +68,7 @@ node skills/coding-workflow/scripts/process-batch.js \
 Track which documents have been coded and their status.
 
 ```bash
-node skills/coding-workflow/scripts/track-documents.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/coding-workflow/scripts/track-documents.js" \
   --project-path /path/to/project \
   --list  # List all documents and status
   --mark-coded D004  # Mark document as coded
@@ -78,7 +78,7 @@ node skills/coding-workflow/scripts/track-documents.js \
 Generate audit trail documentation.
 
 ```bash
-node skills/coding-workflow/scripts/generate-audit.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/coding-workflow/scripts/generate-audit.js" \
   --project-path /path/to/project \
   --output audit-trail.md
 ```

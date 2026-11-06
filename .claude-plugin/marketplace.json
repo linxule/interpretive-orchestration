@@ -1,5 +1,7 @@
 {
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "interpretive-orchestration",
+  "description": "Interpretive Orchestration: a human-AI partnership system for interpretive qualitative research, by Xule Lin and Kevin Corley.",
   "owner": {
     "name": "Xule Lin and Kevin Corley (Imperial College London)"
   },
@@ -7,12 +9,9 @@
     {
       "name": "interpretive-orchestration",
       "source": "./plugin",
-      "description": "Full version for Claude Code CLI. Features Socratic onboarding, 4-stage reflexive coding, MCP tools (Sequential Thinking, Lotus Wisdom), hooks, and specialized agents."
-    },
-    {
-      "name": "interpretive-orchestration-cowork",
-      "source": "./plugin-cowork",
-      "description": "Cowork-compatible version. Commands and skills for qualitative research without MCP servers (works in Claude Desktop's sandboxed environment)."
+      "description": "Socratic onboarding, 4-stage reflexive coding, methodology hooks, specialized agents and MCP tools (Sequential Thinking, Lotus Wisdom) for the sandwich methodology.",
+      "version": "0.3.0",
+      "category": "research"
     }
   ]
 }

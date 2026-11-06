@@ -1,12 +1,24 @@
 {
+  "description": "Interpretive Orchestration methodology hooks: the Stage 1 check, interpretive pauses, coherence prompts, rule updates and session reflection. Hooks that follow a command (audit trail, phase transition) live in that skill's frontmatter.",
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "@dialogical-coder|/qual-parallel-streams|/qual-synthesize|/qual-code-deductive|/qual-characterize-patterns",
+        "matcher": "Agent|Task|Skill",
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/check-stage1-complete.js\"",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.js\" check-stage1-complete.js",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "UserPromptExpansion": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.js\" check-stage1-complete.js",
             "timeout": 5
           }
         ]
@@ -14,36 +26,42 @@
     ],
     "PostToolUse": [
       {
-        "matcher": "@dialogical-coder",
+        "matcher": "Agent|Task",
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/interpretive-pause.js\"",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.js\" interpretive-pause.js",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/check-coherence.js\"",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.js\" check-coherence.js",
             "timeout": 5
-          }
-        ]
-      },
-      {
-        "matcher": "/qual-synthesize",
-        "hooks": [
+          },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/generate-audit-trail.js\"",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.js\" post-phase-transition.js",
             "timeout": 10
           }
         ]
-      },
+      }
+    ],
+    "SubagentStop": [
       {
-        "matcher": "/qual-advance-stage|/qual-complete-stage1|/qual-parallel-streams|/qual-synthesize|/qual-characterize-patterns|@dialogical-coder",
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/post-phase-transition.js\"",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.js\" interpretive-pause.js",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.js\" check-coherence.js",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.js\" post-phase-transition.js",
             "timeout": 10
           }
         ]
@@ -54,7 +72,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/session-reflect.js\"",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.js\" session-reflect.js",
             "timeout": 15
           }
         ]

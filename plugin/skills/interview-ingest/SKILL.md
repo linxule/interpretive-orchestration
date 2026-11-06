@@ -90,7 +90,7 @@ mineru_parse({
 Batch process interview recordings.
 
 ```bash
-node skills/interview-ingest/scripts/process-audio.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/interview-ingest/scripts/process-audio.js" \
   --project-path /path/to/project \
   --input-dir /path/to/recordings \
   --output-dir stage1-foundation/manual-codes

@@ -21,6 +21,9 @@
 const fs = require('fs');
 const path = require('path');
 
+// Plugin skills folder, so suggested commands work from the researcher's project.
+const SKILLS_DIR = path.resolve(__dirname, '..', '..');
+
 function parseArgs() {
   const args = process.argv.slice(2);
   const parsed = {};
@@ -230,9 +233,9 @@ function processBatch(projectPath, args) {
       '5. Write reflective memo after the session'
     ],
     commands: {
-      mark_complete: `node skills/coding-workflow/scripts/track-documents.js --project-path "${projectPath}" --mark-coded <DOC_ID>`,
-      check_progress: `node skills/coding-workflow/scripts/track-documents.js --project-path "${projectPath}" --list`,
-      end_session: `node skills/_shared/scripts/update-progress.js --project-path "${projectPath}" --increment-documents`
+      mark_complete: `node "${path.join(SKILLS_DIR, 'coding-workflow', 'scripts', 'track-documents.js')}" --project-path "${projectPath}" --mark-coded <DOC_ID>`,
+      check_progress: `node "${path.join(SKILLS_DIR, 'coding-workflow', 'scripts', 'track-documents.js')}" --project-path "${projectPath}" --list`,
+      end_session: `node "${path.join(SKILLS_DIR, '_shared', 'scripts', 'update-progress.js')}" --project-path "${projectPath}" --increment-documents`
     }
   };
 }

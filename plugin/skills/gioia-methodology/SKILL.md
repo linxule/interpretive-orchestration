@@ -52,7 +52,7 @@ Validates a Gioia data structure JSON file against the schema.
 
 **Usage:**
 ```bash
-node skills/gioia-methodology/scripts/validate-structure.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/gioia-methodology/scripts/validate-structure.js" \
   --structure-path /path/to/data-structure.json
 ```
 
@@ -69,7 +69,7 @@ Analyzes hierarchy quality and methodological consistency.
 
 **Usage:**
 ```bash
-node skills/gioia-methodology/scripts/check-hierarchy.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/gioia-methodology/scripts/check-hierarchy.js" \
   --structure-path /path/to/data-structure.json
 ```
 
@@ -86,7 +86,7 @@ Exports data structure to publication-ready formats.
 
 **Usage:**
 ```bash
-node skills/gioia-methodology/scripts/export-structure.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/gioia-methodology/scripts/export-structure.js" \
   --structure-path /path/to/data-structure.json \
   --format markdown|table|latex
 ```

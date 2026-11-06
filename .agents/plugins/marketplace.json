@@ -1,0 +1,20 @@
+{
+  "name": "interpretive-orchestration",
+  "interface": {
+    "displayName": "Interpretive Orchestration"
+  },
+  "plugins": [
+    {
+      "name": "interpretive-orchestration",
+      "source": {
+        "source": "local",
+        "path": "./plugin"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Research"
+    }
+  ]
+}

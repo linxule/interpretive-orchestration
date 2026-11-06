@@ -86,7 +86,7 @@ Or attempt the tool call - if it fails, fall back to next tier.
 Orchestrates the literature gathering process.
 
 ```bash
-node skills/literature-sweep/scripts/search-and-fetch.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/literature-sweep/scripts/search-and-fetch.js" \
   --project-path /path/to/project \
   --query "sensemaking organizational change middle managers" \
   --max-results 15

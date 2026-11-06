@@ -84,7 +84,7 @@ Rules use graduated friction, not binary allow/block:
 ### generate-rules.js
 
 ```bash
-node skills/methodological-rules/scripts/generate-rules.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/generate-rules.js" \
   --project-path /path/to/project
 ```
 
@@ -97,7 +97,7 @@ node skills/methodological-rules/scripts/generate-rules.js \
 ### check-phase.js
 
 ```bash
-node skills/methodological-rules/scripts/check-phase.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/check-phase.js" \
   --project-path /path/to/project
 ```
 
@@ -108,7 +108,7 @@ node skills/methodological-rules/scripts/check-phase.js \
 ### update-rules.js
 
 ```bash
-node skills/methodological-rules/scripts/update-rules.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/update-rules.js" \
   --project-path /path/to/project
 ```
 
@@ -122,17 +122,17 @@ node skills/methodological-rules/scripts/update-rules.js \
 
 ```bash
 # Check strain status
-node skills/methodological-rules/scripts/strain-check.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/strain-check.js" \
   --project-path /path/to/project
 
 # Record an override
-node skills/methodological-rules/scripts/strain-check.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/strain-check.js" \
   --project-path /path/to/project \
   --record-override --rule-id case-isolation \
   --justification "Building cross-cutting theme"
 
 # Record resolution
-node skills/methodological-rules/scripts/strain-check.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/strain-check.js" \
   --project-path /path/to/project \
   --record-resolution --rule-id case-isolation \
   --resolution phase_transition
@@ -148,10 +148,10 @@ node skills/methodological-rules/scripts/strain-check.js \
 
 ```bash
 # List available presets
-node skills/methodological-rules/scripts/apply-preset.js --list-presets
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/apply-preset.js" --list-presets
 
 # Apply a preset
-node skills/methodological-rules/scripts/apply-preset.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/apply-preset.js" \
   --project-path /path/to/project --preset gioia_corley
 ```
 
@@ -164,21 +164,21 @@ node skills/methodological-rules/scripts/apply-preset.js \
 
 ```bash
 # Check saturation status
-node skills/methodological-rules/scripts/saturation-tracker.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/saturation-tracker.js" \
   --project-path /path/to/project --status
 
 # Record document coding
-node skills/methodological-rules/scripts/saturation-tracker.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/saturation-tracker.js" \
   --project-path /path/to/project \
   --record-document --doc-id INT_001 --new-codes 5
 
 # Record code refinement
-node skills/methodological-rules/scripts/saturation-tracker.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/saturation-tracker.js" \
   --project-path /path/to/project \
   --record-refinement --code-id coping --change-type split
 
 # Full assessment
-node skills/methodological-rules/scripts/saturation-tracker.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/saturation-tracker.js" \
   --project-path /path/to/project --assess
 ```
 
@@ -191,16 +191,16 @@ node skills/methodological-rules/scripts/saturation-tracker.js \
 
 ```bash
 # Fork a branch
-node skills/methodological-rules/scripts/workspace-branch.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/workspace-branch.js" \
   --project-path /path/to/project \
   --fork --name "alternative-structure" --framing exploratory
 
 # Switch branches
-node skills/methodological-rules/scripts/workspace-branch.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/workspace-branch.js" \
   --project-path /path/to/project --switch --branch-id alt-123
 
 # Merge (requires memo)
-node skills/methodological-rules/scripts/workspace-branch.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/workspace-branch.js" \
   --project-path /path/to/project \
   --merge --branch-id alt-123 --memo "Synthesis explanation..."
 ```
@@ -215,15 +215,15 @@ node skills/methodological-rules/scripts/workspace-branch.js \
 
 ```bash
 # Full dashboard
-node skills/methodological-rules/scripts/viz-dashboard.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/viz-dashboard.js" \
   --project-path /path/to/project --view all
 
 # Specific views
-node skills/methodological-rules/scripts/viz-dashboard.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/viz-dashboard.js" \
   --project-path /path/to/project --view saturation
 
 # Mermaid export
-node skills/methodological-rules/scripts/viz-dashboard.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/viz-dashboard.js" \
   --project-path /path/to/project --mermaid lineage
 ```
 
@@ -236,17 +236,17 @@ node skills/methodological-rules/scripts/viz-dashboard.js \
 
 ```bash
 # Add team member
-node skills/methodological-rules/scripts/researcher-team.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/researcher-team.js" \
   --project-path /path/to/project \
   --add-member --name "Jane Doe" --role coder
 
 # Start ICR session
-node skills/methodological-rules/scripts/researcher-team.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/researcher-team.js" \
   --project-path /path/to/project \
   --start-icr-session --participants "jane,john" --documents "INT_001"
 
 # Log attribution
-node skills/methodological-rules/scripts/researcher-team.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/researcher-team.js" \
   --project-path /path/to/project \
   --log-attribution --action created_code --target adaptive_coping
 ```
