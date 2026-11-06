@@ -144,7 +144,7 @@ Claude Code runs every part of the plugin. The other platforms run the same comm
 | Audit trail and phase transition after Stage 2 commands | Yes | No | No | Only when the AI starts the command, not when you type it |
 | Session reflection | Written to the conversation log | Written to the conversation log | Written to the conversation log | Written to the conversation log when you exit |
 
-The [next-version list](NEXT_VERSION_LINK) tracks the gaps.
+The [next-version list](https://github.com/linxule/interpretive-orchestration/issues/4) tracks the gaps.
 
 ## Commands
 
