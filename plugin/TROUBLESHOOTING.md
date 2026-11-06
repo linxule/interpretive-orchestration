@@ -90,7 +90,7 @@ Common issues and solutions for the Interpretive Orchestration plugin.
 
 ### "Stage 1 not complete" prompt when using @dialogical-coder or a Stage 2 command
 
-**Cause:** This is intentional! The plugin enforces the "sandwich methodology" - Stage 1 manual coding comes before AI-assisted coding. When Stage 1 is not complete, Claude Code shows what the check found and asks you to confirm before @dialogical-coder, `/qual-parallel-streams`, `/qual-synthesize`, `/qual-code-deductive` or `/qual-characterize-patterns` runs.
+**Cause:** This is intentional! The plugin enforces the "sandwich methodology" - Stage 1 manual coding comes before AI-assisted coding. When Stage 1 is not complete, Claude Code shows what the check found and asks you to confirm before the AI runs @dialogical-coder, `/qual-parallel-streams`, `/qual-synthesize`, `/qual-code-deductive` or `/qual-characterize-patterns`. If you type one of these commands yourself, the AI is told to ask you first.
 
 **Solutions:**
 1. Complete manual coding of 10-15 documents

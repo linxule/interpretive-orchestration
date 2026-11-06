@@ -30,7 +30,7 @@ You and the AI both learn from the craft tradition of interpretive inquiry: rigo
 | 2. Collaboration | Parallel theoretical and empirical streams, synthesis and pattern characterization | Codes with you through 4-stage visible reasoning, using `@dialogical-coder` |
 | 3. Dialogue with tradition | You examine your work through the questions your research tradition asks | Asks those questions, using `@scholarly-companion` |
 
-The plugin checks that Stage 1 is complete before Stage 2 work starts. In Claude Code, if you start a Stage 2 command or agent too early, it shows your Stage 1 progress and asks whether you want to go ahead. You can proceed if you have a reason, for example if you did Stage 1 on paper.
+The plugin checks that Stage 1 is complete before Stage 2 work starts. In Claude Code, if the AI starts a Stage 2 command or agent too early, Claude Code shows your Stage 1 progress and asks whether you want to go ahead. If you type a Stage 2 command yourself, the AI is told to show your progress and ask you instead. You can proceed if you have a reason, for example if you did Stage 1 on paper.
 
 ## Why the structure matters
 
@@ -139,10 +139,12 @@ Claude Code runs every part of the plugin. The other platforms run the same comm
 | Commands, skills and Lotus Wisdom | Yes | Yes | Yes | Yes |
 | Agents, such as `@dialogical-coder` | Yes | No, Codex plugins cannot include agents | Yes | Yes |
 | Partnership principles and Stage 1 progress given to the AI at the start of each session | Yes | Yes, once you trust the hooks | Yes | Yes, with your first message, which you also see |
-| Stage 1 check before Stage 2 work | Asks you | Asks you when you name a Stage 2 command, once you trust the hooks | Asks you | The AI stops and asks you |
+| Stage 1 check before Stage 2 work | Claude Code asks you when the AI starts the work. For a command you type, the AI is told to ask you | The AI is told to ask you when you name a Stage 2 command, once you trust the hooks | Same as Claude Code | The AI's first try is blocked and it is told to ask you. A repeat try goes through |
 | Interpretive pause and coherence check after `@dialogical-coder` | Shown to you | No | The AI passes them on | Written to the conversation log only |
 | Audit trail and phase transition after Stage 2 commands | Yes | No | No | Only when the AI starts the command, not when you type it |
 | Session reflection | Written to the conversation log | Written to the conversation log | Written to the conversation log | Written to the conversation log when you exit |
+
+Where the AI is told to ask you, nothing forces it to. Every model we tested asked, but that depends on the model. The start-of-session reminder works the same way.
 
 The [next-version list](https://github.com/linxule/interpretive-orchestration/issues/4) tracks the gaps.
 
@@ -228,7 +230,8 @@ For example: `@research-configurator Help me set up my analysis`
 Hooks keep the methodology in place at the moments that matter. In Claude Code:
 
 - at the start of each session in a research project, the AI gets the partnership principles and your Stage 1 progress
-- before Stage 2 work, the Stage 1 check shows your progress and asks whether to go ahead
+- before the AI starts Stage 2 work, the Stage 1 check shows your progress and asks whether to go ahead
+- when you type a Stage 2 command yourself, the check tells the AI to show your progress and ask you
 - after every 5 coded documents, an interpretive pause suggests reflection and a memo
 - after `@dialogical-coder` finishes, a coherence check compares the language used with your declared stance
 - once `/qual-synthesize` starts, the plugin keeps an audit trail in `outputs/audit-trail.md`, updated at the end of each AI reply

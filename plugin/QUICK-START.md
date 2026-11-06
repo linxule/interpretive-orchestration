@@ -42,7 +42,7 @@
 /qual-synthesize             # Merge: Integrate streams
 ```
 
-If Stage 1 is not complete, Claude Code asks you to confirm before these commands or @dialogical-coder run.
+If Stage 1 is not complete, Claude Code asks you to confirm before the AI runs these commands or @dialogical-coder. If you type one of these commands yourself, the AI is told to ask you first.
 
 ### Analysis & Reflection
 ```bash
