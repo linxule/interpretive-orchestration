@@ -135,10 +135,12 @@ What the researcher and Claude see:
 - after-agent notices (the interpretive pause, coherence prompts, rule updates) go to the researcher and are added to Claude's context
 - a background agent returns as soon as it launches, so its after-agent hooks wait for `SubagentStop` and run once
 
-Two hooks follow a command rather than an agent. They are Stop hooks declared in the frontmatter of the skill they follow, with `once: true`:
+Two hooks follow a command rather than an agent. They are Stop hooks declared in the frontmatter of the skill they follow:
 
 - `/qual-synthesize` runs `generate-audit-trail.js`, then `post-phase-transition.js`
 - `/qual-advance-stage`, `/qual-complete-stage1`, `/qual-parallel-streams` and `/qual-characterize-patterns` run `post-phase-transition.js`
+
+A command's work can span several replies, for example while it waits for the researcher's answers. So these hooks run at the end of every reply once the command has started, and report only news. The phase transition speaks only when rules change. The audit trail tells the researcher the first time, then rewrites `outputs/audit-trail.md` quietly, so it covers the whole synthesis.
 
 The adapter never blocks the researcher because of its own error: if something goes wrong, it exits and lets work continue. Run without a payload (for example, from a terminal), a script behaves exactly as it did before 0.3.0.
 

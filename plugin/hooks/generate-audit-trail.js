@@ -13,6 +13,10 @@
 const fs = require('fs');
 const path = require('path');
 
+// Set by run-hook.js after the first run in a session: refresh the file
+// silently, without another notice or log entry.
+const QUIET = process.env.INTERPRETIVE_ORCHESTRATION_QUIET === '1';
+
 function findProjectRoot(startPath) {
   let currentPath = startPath;
   while (currentPath !== path.parse(currentPath).root) {
@@ -192,9 +196,11 @@ function main() {
     process.exit(0);
   }
 
-  console.log('');
-  console.log('📊 Generating Audit Trail...');
-  console.log('');
+  if (!QUIET) {
+    console.log('');
+    console.log('📊 Generating Audit Trail...');
+    console.log('');
+  }
 
   const result = generateAuditTrail(projectRoot);
 
@@ -211,6 +217,7 @@ function main() {
   }
 
   fs.writeFileSync(outputPath, result.auditTrail);
+  if (QUIET) process.exit(0);
 
   outputRemediation(
     'AUDIT_TRAIL_GENERATED',

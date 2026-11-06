@@ -17,11 +17,13 @@ This release brings the plugin up to date with Claude Code 2.1 and makes it inst
 - Hooks now fire. They matched tools and events that no longer exist, used exit codes Claude Code ignores and wrote output nowhere. A new adapter, `hooks/run-hook.js`, connects the unchanged hook scripts to the current hook protocol:
   - the Stage 1 check runs before `@dialogical-coder` and the 4 Stage 2 commands; when Stage 1 is incomplete, Claude Code shows the researcher their progress and asks whether to go ahead
   - the interpretive pause, coherence check and phase transition run after `@dialogical-coder`, and after background agents finish
-  - the audit trail and phase transition run when the commands they follow finish, through hooks in those skills' frontmatter
+  - the audit trail and phase transition run at the end of each AI reply once the commands they follow have started, through hooks in those skills' frontmatter. The audit trail is rewritten each time, so it covers the whole synthesis; the phase transition speaks only when rules change
 - Agents can start again. `@dialogical-coder` and `@scholarly-companion` listed only MCP tools in `tools:`, which left them unable to read files; they now inherit the session's tools.
 - Script paths in skills use `${CLAUDE_PLUGIN_ROOT}`, so they work from the researcher's project folder.
 - The 17 skills that run scripts start with a one-line note on finding the plugin folder when a platform leaves `${CLAUDE_PLUGIN_ROOT}` unfilled, and `/qual-status` passes `--project-path` to its scripts.
 - Docs and skills no longer mention commands that never existed, such as `/qual-get-perspectives`.
+- The coherence check now reads the last research entry in the conversation log, not an entry the plugin's own hooks wrote just before it.
+- The session-end log entry no longer claims the reflection prompt was shown: agent tools do not show session-end output.
 - Lotus Wisdom now runs as `lotus-wisdom-mcp@latest`, so it updates itself.
 - Author affiliation: Xule Lin (SKEMA Business School).
 

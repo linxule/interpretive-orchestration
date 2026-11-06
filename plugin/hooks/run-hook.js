@@ -64,11 +64,19 @@ const KIMI_HOLD_NOTE =
   'Interpretive Orchestration held this call back: the Stage 1 check did not pass. ' +
   'Tell the researcher what the check found (below) and ask whether they want to proceed ' +
   'anyway, and why. If they confirm, make the same call again; the check lets the next call ' +
-  'for this agent or skill through once.';
+  'for this agent or skill through once, within 30 minutes.';
+
+// After a refusal the pass is never used, so it lapses rather than waiting
+// for an unrelated call later in the session.
+const KIMI_CONFIRM_WINDOW_MS = 30 * 60 * 1000;
 
 // Kimi ignores the hooks in a skill's frontmatter. The plugin's Stop hook stands
-// in for them, and runs only after one of the hook's skills was loaded.
+// in for them, and runs after one of the hook's skills was loaded.
 const SKILL_STOP_SCRIPTS = new Set(['generate-audit-trail.js', 'post-phase-transition.js']);
+
+const COPILOT_NOTICE =
+  'Interpretive Orchestration methodology notice. The researcher has not seen it yet, ' +
+  'so pass it on to them in your reply:';
 
 // Codex has no Skill tool: a skill is named in the prompt as $name or
 // $interpretive-orchestration:name.
@@ -136,20 +144,17 @@ function targetOf(payload) {
   return { kind: 'other', name: '' };
 }
 
-function kimiMarker(payload, ...parts) {
+function sessionMarker(payload, ...parts) {
   const session = String(payload.session_id || 'session').replace(/[^\w-]/g, '');
   return path.join(PENDING_DIR, [session, ...parts.map(part => String(part).replace(/[^\w.-]/g, ''))].join('.'));
 }
 
-// Consumes a one-use marker and says whether it was there. With keep, the
-// marker stays and records that something already happened once.
-function takeMarker(marker, keep = false) {
-  if (!fs.existsSync(marker)) {
-    if (keep) putMarker(marker);
-    return false;
-  }
-  if (!keep) fs.unlinkSync(marker);
-  return true;
+// Consumes a one-use marker and says whether it was there and fresh.
+function takeMarker(marker, maxAgeMs = Infinity) {
+  if (!fs.existsSync(marker)) return false;
+  const fresh = Date.now() - fs.statSync(marker).mtimeMs < maxAgeMs;
+  fs.unlinkSync(marker);
+  return fresh;
 }
 
 function putMarker(marker) {
@@ -162,16 +167,30 @@ function kimiSkip(script, payload) {
   const event = payload.hook_event_name;
   const target = targetOf(payload);
   if (event === 'PreToolUse') {
-    return takeMarker(kimiMarker(payload, target.name, script, 'confirmed'));
+    return takeMarker(sessionMarker(payload, target.name, script, 'confirmed'), KIMI_CONFIRM_WINDOW_MS);
   }
   // The Skill tool returns once the instructions load, before the skill's work is done.
   if (event === 'PostToolUse' && target.kind === 'skill' && SKILL_STOP_SCRIPTS.has(script)) {
-    putMarker(kimiMarker(payload, script, 'stop'));
+    putMarker(sessionMarker(payload, script, 'stop'));
     return true;
   }
   if (event === 'Stop') {
-    return !(SKILL_STOP_SCRIPTS.has(script) && takeMarker(kimiMarker(payload, script, 'stop')));
+    return !(SKILL_STOP_SCRIPTS.has(script) && fs.existsSync(sessionMarker(payload, script, 'stop')));
   }
+  return false;
+}
+
+// A skill's Stop hooks run at the end of every turn once the skill has
+// started, because its work can span several turns. So at Stop they report
+// only news: rules that changed, a problem, or the audit trail's first run.
+// The audit trail is rewritten each time, so it covers the whole synthesis.
+function quietAtStop(script, payload) {
+  if (payload.hook_event_name !== 'Stop') return false;
+  if (script === 'post-phase-transition.js') return true;
+  if (script !== 'generate-audit-trail.js' || !payload.session_id) return false;
+  const marker = sessionMarker(payload, script, 'ran');
+  if (fs.existsSync(marker)) return true;
+  putMarker(marker);
   return false;
 }
 
@@ -199,6 +218,8 @@ function pendingMarker(agentId, script) {
 
 // Returns true when this call should wait for, or was waiting for, SubagentStop.
 function deferForBackgroundAgent(script, payload) {
+  // The Kimi manifest registers no SubagentStop, so a deferred hook would never run.
+  if (ON_KIMI) return false;
   const event = payload.hook_event_name;
   if (event === 'PostToolUse') {
     const agentId = backgroundAgentId(payload);
@@ -249,15 +270,18 @@ function main() {
 
   const payload = readPayload();
   const kimiStance = Boolean(payload) && isKimiStance(script, payload);
-  if (kimiStance && takeMarker(kimiMarker(payload, script, 'shown'), true)) process.exit(0);
+  const stanceShown = kimiStance && sessionMarker(payload, script, 'shown');
+  if (stanceShown && fs.existsSync(stanceShown)) process.exit(0);
   if (payload && !kimiStance && !isTriggered(script, payload)) process.exit(0);
   if (payload && ON_KIMI && kimiSkip(script, payload)) process.exit(0);
   if (payload && deferForBackgroundAgent(script, payload)) process.exit(0);
 
+  const quiet = Boolean(payload) && quietAtStop(script, payload);
   const result = spawnSync(process.execPath, [path.join(__dirname, script)], {
     cwd: projectDir(payload),
     input: '',
-    encoding: 'utf8'
+    encoding: 'utf8',
+    env: { ...process.env, INTERPRETIVE_ORCHESTRATION_QUIET: quiet ? '1' : '' }
   });
 
   if (!payload) {
@@ -273,10 +297,15 @@ function main() {
   const event = payload.hook_event_name;
 
   if (kimiStance) {
-    if (text) emit({ message: text });
+    // Outside a project the stance prints nothing, so it can still come
+    // later in the session, once /qual-init has made one.
+    if (text) {
+      putMarker(stanceShown);
+      emit({ message: text });
+    }
   } else if (event === 'PreToolUse') {
     if (flagged && ON_KIMI) {
-      putMarker(kimiMarker(payload, targetOf(payload).name, script, 'confirmed'));
+      putMarker(sessionMarker(payload, targetOf(payload).name, script, 'confirmed'));
       emit({
         hookSpecificOutput: {
           hookEventName: 'PreToolUse',
@@ -314,9 +343,7 @@ function main() {
   } else if (event === 'PostToolUse') {
     if (text || details) {
       if (ON_COPILOT) {
-        emit({
-          additionalContext: `Interpretive Orchestration methodology notice. The researcher has not seen it yet, so pass it on to them in your reply:\n\n${forClaude}`
-        });
+        emit({ additionalContext: `${COPILOT_NOTICE}\n\n${forClaude}` });
       } else {
         emit({
           systemMessage: text || details,
@@ -336,7 +363,11 @@ function main() {
   } else if (event === 'Stop' || event === 'SubagentStop') {
     // Claude has finished this turn, or the background agent has finished,
     // so the notice goes to the researcher.
-    if (text || details) emit({ systemMessage: text || details });
+    if (text || details) {
+      emit(ON_COPILOT
+        ? { additionalContext: `${COPILOT_NOTICE}\n\n${forClaude}` }
+        : { systemMessage: text || details });
+    }
   }
 
   process.exit(0);

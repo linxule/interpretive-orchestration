@@ -35,7 +35,7 @@ repo-root/
 Since 0.3.0 every `/qual-*` command is a skill at `skills/qual-*/SKILL.md`. Claude Code invokes a skill by its bare name (`/qual-init`), while commands in nested folders would be namespaced (`/interpretive-orchestration:project:init`). Each SKILL.md needs `name` (matching the folder) and `description` in its frontmatter.
 
 - refer to plugin scripts as `node "${CLAUDE_PLUGIN_ROOT}/skills/..."`, never `node skills/...`: commands run from the researcher's project, not the plugin folder
-- a skill's own Stop hooks go in its frontmatter (`hooks:` with `once: true`), as in `qual-synthesize`
+- a skill's own Stop hooks go in its frontmatter (`hooks:`), as in `qual-synthesize`. They run at the end of every turn once the skill has started, because its work can span several turns, so the adapter runs them quietly there: they report only news (see below)
 
 ### Hooks
 
@@ -46,6 +46,7 @@ Since 0.3.0 every `/qual-*` command is a skill at `skills/qual-*/SKILL.md`. Clau
 - runs the script from the researcher's project folder
 - turns its output into Claude Code's hook JSON: a failed Stage 1 check becomes an `ask` (the researcher confirms or stops), other notices go to the researcher (`systemMessage`) and to Claude (`additionalContext`)
 - defers after-agent hooks for background agents to `SubagentStop`
+- at `Stop`, sets `INTERPRETIVE_ORCHESTRATION_QUIET=1` for the phase transition (it then speaks only when rules change) and for every audit-trail run after the first in a session (it then rewrites `outputs/audit-trail.md` without a notice or log entry)
 
 If you add a hook script, add it to `TRIGGERS` and `hooks.json`; the schema tests check both. `SessionEnd` output is not shown in Claude Code, so `session-reflect.js` only logs.
 
@@ -875,7 +876,7 @@ How `run-hook.js` handles the differences:
 
 - Copilot (`COPILOT_PLUGIN_ROOT` set): reads `tool_input.agent_type` and the lowercase `skill` tool, handles typed commands through `userPromptTransformed` (Claude Code warns that this event is unknown and ignores it), and puts `additionalContext` at the top level, telling the model to pass notices on
 - Codex: no Skill tool or `UserPromptExpansion`, so the Stage 1 check runs on `UserPromptSubmit` and reads `$skill` mentions in the prompt
-- Kimi (`KIMI_PLUGIN_ROOT` set): the Stage 1 check denies once with a note asking the model to check with the researcher, then lets the confirmed retry through (one-use marker per session and target); the audit trail and phase transition run at `Stop` after their skill was loaded, because Kimi ignores skill frontmatter hooks
+- Kimi (`KIMI_PLUGIN_ROOT` set): the Stage 1 check denies once with a note asking the model to check with the researcher, then lets the confirmed retry through (one-use marker per session and target, which lapses after 30 minutes); the audit trail and phase transition run at every `Stop` after the AI loaded their skill through the Skill tool, because Kimi ignores skill frontmatter hooks. A typed `/skill:` command fires no hook, so then they do not run. Kimi gets no background-agent deferral, because the manifest registers no `SubagentStop`
 
 The 17 skills that run scripts start with a one-line note telling the model how to resolve `${CLAUDE_PLUGIN_ROOT}` when a platform leaves it unfilled. Keep it when you add a skill that runs a script.
 

@@ -132,7 +132,9 @@ function main() {
       .filter(line => line.trim())
       .map(line => JSON.parse(line));
 
-    recentActivity = logs[logs.length - 1] || {};
+    // Skip the plugin's own hook entries: the interpretive pause can log just
+    // before this check runs, and this check logs its own notes.
+    recentActivity = logs.reverse().find(entry => !String(entry.from || '').endsWith('_hook')) || {};
   }
 
   const issues = checkLanguageCoherence(stance, recentActivity);

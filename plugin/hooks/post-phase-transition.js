@@ -14,6 +14,13 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
+// Set by run-hook.js at the end of a turn, where only a rule change is news.
+const QUIET = process.env.INTERPRETIVE_ORCHESTRATION_QUIET === '1';
+
+function info(message) {
+  if (!QUIET) console.log(message);
+}
+
 function findProjectRoot(startPath) {
   let currentPath = startPath;
   while (currentPath !== path.parse(currentPath).root) {
@@ -35,7 +42,7 @@ function handlePhaseTransition() {
 
   if (!projectRoot) {
     // No project - nothing to do
-    console.log('ℹ️  No Interpretive Orchestration project found. Skipping rule update.');
+    info('ℹ️  No Interpretive Orchestration project found. Skipping rule update.');
     process.exit(0);
   }
 
@@ -43,18 +50,18 @@ function handlePhaseTransition() {
   const rulesDir = path.join(projectRoot, '.claude', 'rules');
 
   if (!fs.existsSync(configPath)) {
-    console.log('ℹ️  No config found. Skipping rule update.');
+    info('ℹ️  No config found. Skipping rule update.');
     process.exit(0);
   }
 
   if (!fs.existsSync(rulesDir)) {
-    console.log('ℹ️  No rules directory. Consider running /qual-design to configure research design.');
+    info('ℹ️  No rules directory. Consider running /qual-design to configure research design.');
     process.exit(0);
   }
 
   const ruleFiles = fs.readdirSync(rulesDir).filter(f => f.endsWith('.md'));
   if (ruleFiles.length === 0) {
-    console.log('ℹ️  No rules to update.');
+    info('ℹ️  No rules to update.');
     process.exit(0);
   }
 
@@ -92,7 +99,7 @@ function handlePhaseTransition() {
       console.log('   📓 Change logged to reflexivity journal.');
       console.log('');
     } else {
-      console.log(`ℹ️  Phase: ${result.current_phase}. No rule updates needed.`);
+      info(`ℹ️  Phase: ${result.current_phase}. No rule updates needed.`);
     }
 
     process.exit(0);

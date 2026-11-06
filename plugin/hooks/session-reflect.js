@@ -138,7 +138,7 @@ function main() {
     timestamp: new Date().toISOString(),
     from: 'session_end_hook',
     to: 'human_researcher',
-    message: 'Session ending. Reflexivity prompt presented. Researcher encouraged to document insights and examine assumptions.',
+    message: 'Session ending. Reflexivity prompt recorded here; agent tools do not show session-end output, so the researcher may not have seen it.',
     stage: 'session_end',
     activity_type: 'reflexive_prompt',
     metadata: {

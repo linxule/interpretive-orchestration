@@ -141,7 +141,7 @@ Claude Code runs every part of the plugin. The other platforms run the same comm
 | Partnership principles and Stage 1 progress given to the AI at the start of each session | Yes | Yes, once you trust the hooks | Yes | Yes, with your first message, which you also see |
 | Stage 1 check before Stage 2 work | Asks you | Asks you when you name a Stage 2 command, once you trust the hooks | Asks you | The AI stops and asks you |
 | Interpretive pause and coherence check after `@dialogical-coder` | Shown to you | No | The AI passes them on | Written to the conversation log only |
-| Audit trail and phase transition after Stage 2 commands | Yes | No | No | Yes, at the end of the AI's turn |
+| Audit trail and phase transition after Stage 2 commands | Yes | No | No | Only when the AI starts the command, not when you type it |
 | Session reflection | Written to the conversation log | Written to the conversation log | Written to the conversation log | Written to the conversation log when you exit |
 
 The [next-version list](NEXT_VERSION_LINK) tracks the gaps.
@@ -231,7 +231,7 @@ Hooks keep the methodology in place at the moments that matter. In Claude Code:
 - before Stage 2 work, the Stage 1 check shows your progress and asks whether to go ahead
 - after every 5 coded documents, an interpretive pause suggests reflection and a memo
 - after `@dialogical-coder` finishes, a coherence check compares the language used with your declared stance
-- after `/qual-synthesize`, the plugin writes an audit trail to `outputs/audit-trail.md`
+- once `/qual-synthesize` starts, the plugin keeps an audit trail in `outputs/audit-trail.md`, updated at the end of each AI reply
 - after a stage or phase changes, the methodological rules update
 - at the end of a session, the plugin records a reflection prompt in the conversation log
 

@@ -8,6 +8,7 @@
  */
 
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const { execSync } = require('child_process');
 
@@ -289,9 +290,34 @@ function testHookAdapterBehaviour() {
   });
 
   test('adapter: session start is silent outside a project', () => {
-    const os = require('os');
     const { raw } = runAdapter('session-stance.js', { hook_event_name: 'SessionStart', source: 'startup', cwd: os.tmpdir() });
     assert(raw === '', 'Should stay silent');
+  });
+
+  test('adapter: skill Stop hooks report only news after the first run', () => {
+    const stop = { hook_event_name: 'Stop', cwd: complete, session_id: `claude-test-${process.pid}`, stop_hook_active: false };
+    const first = runAdapter('generate-audit-trail.js', stop);
+    assert(first.json && first.json.systemMessage.includes('Audit trail generated'), 'First run tells the researcher');
+    fs.rmSync(path.join(complete, 'outputs'), { recursive: true, force: true });
+    assert(runAdapter('generate-audit-trail.js', stop).raw === '', 'Later runs stay quiet');
+    assert(fs.existsSync(path.join(complete, 'outputs', 'audit-trail.md')), 'Later runs still rewrite the audit trail');
+    fs.rmSync(path.join(complete, 'outputs'), { recursive: true, force: true });
+    assert(runAdapter('post-phase-transition.js', stop).raw === '', 'No rule change, nothing to say');
+  });
+
+  test('adapter: coherence check reads the research entry, not a hook entry logged after it', () => {
+    const project = makeProject({ sandwich_status: { stage1_complete: true }, philosophical_stance: { vocabulary_mode: 'constructivist' } });
+    const log = [
+      { from: 'dialogical_coder', message: 'We discover the codes that emerge from the data.' },
+      { from: 'interpretive_pause_hook', message: 'Interpretive pause triggered at 5 documents.' }
+    ];
+    fs.writeFileSync(path.join(project, '.interpretive-orchestration', 'conversation-log.jsonl'),
+      log.map(entry => JSON.stringify(entry)).join('\n') + '\n');
+    const { json } = runAdapter('check-coherence.js', {
+      hook_event_name: 'PostToolUse', tool_name: 'Agent', cwd: project,
+      tool_input: { subagent_type: 'interpretive-orchestration:dialogical-coder' }, tool_response: {}
+    });
+    assert(json && /discover/i.test(json.hookSpecificOutput.additionalContext), 'Should flag the research entry');
   });
 
   // Payload shape captured from codex-cli 0.165.0.
@@ -319,7 +345,20 @@ function testHookAdapterBehaviour() {
     assert(first.json.hookSpecificOutput.permissionDecisionReason.includes('ask whether they want to proceed'), 'Should ask the researcher');
     assert(runAdapter('check-stage1-complete.js', call, kimi).raw === '', 'Confirmed retry should pass');
     assert(runAdapter('check-stage1-complete.js', call, kimi).json, 'A later call is checked again');
-    runAdapter('check-stage1-complete.js', call, kimi);
+  });
+
+  test('adapter (Kimi): the retry pass lapses after 30 minutes', () => {
+    const call = {
+      hook_event_name: 'PreToolUse', tool_name: 'Agent', cwd: incomplete, session_id: `${kimiSession}-lapse`,
+      tool_input: { subagent_type: 'dialogical-coder' }
+    };
+    assert(runAdapter('check-stage1-complete.js', call, kimi).json, 'First call should be denied');
+    const marker = path.join(os.tmpdir(), 'interpretive-orchestration-hooks',
+      `${kimiSession}-lapse.dialogical-coder.check-stage1-complete.js.confirmed`);
+    assert(fs.existsSync(marker), 'Denial should leave a retry pass');
+    const old = new Date(Date.now() - 31 * 60 * 1000);
+    fs.utimesSync(marker, old, old);
+    assert(runAdapter('check-stage1-complete.js', call, kimi).json, 'A lapsed pass should not let the call through');
   });
 
   test('adapter (Kimi): stance comes with the first prompt of a session, once', () => {
@@ -333,18 +372,36 @@ function testHookAdapterBehaviour() {
     assert(runAdapter('session-stance.js', prompt).raw === '', 'Other platforms use SessionStart instead');
   });
 
-  test('adapter (Kimi): audit trail waits for the end of the turn after /qual-synthesize loads', () => {
+  test('adapter (Kimi): stance still comes once a project exists later in the session', () => {
+    const empty = fs.mkdtempSync(path.join(os.tmpdir(), 'io-hook-test-empty-'));
+    const prompt = cwd => ({
+      hook_event_name: 'UserPromptSubmit', cwd, session_id: `${kimiSession}-later`,
+      prompt: [{ type: 'text', text: 'hello' }]
+    });
+    assert(runAdapter('session-stance.js', prompt(empty), kimi).raw === '', 'No project, no stance');
+    const later = runAdapter('session-stance.js', prompt(incomplete), kimi);
+    assert(later.json && later.json.message.includes('Stage 1 is NOT complete'), 'Stance should follow /qual-init');
+  });
+
+  test('adapter (Kimi): audit trail runs at the end of each turn after the AI loads qual-synthesize', () => {
+    const logPath = path.join(complete, '.interpretive-orchestration', 'conversation-log.jsonl');
+    const logLines = () => (fs.existsSync(logPath) ? fs.readFileSync(logPath, 'utf8').trim().split('\n').length : 0);
+    const stop = { hook_event_name: 'Stop', cwd: complete, session_id: kimiSession, stop_hook_active: false };
+    runAdapter('generate-audit-trail.js', stop, kimi);
+    assert(!fs.existsSync(path.join(complete, 'outputs', 'audit-trail.md')), 'Stop does nothing before the skill loads');
     const skillLoaded = {
       hook_event_name: 'PostToolUse', tool_name: 'Skill', cwd: complete, session_id: kimiSession,
       tool_input: { skill: 'interpretive-orchestration:qual-synthesize' }, tool_output: 'loaded'
     };
     assert(runAdapter('generate-audit-trail.js', skillLoaded, kimi).raw === '', 'Nothing runs when the skill loads');
-    const stop = { hook_event_name: 'Stop', cwd: complete, session_id: kimiSession, stop_hook_active: false };
     runAdapter('generate-audit-trail.js', stop, kimi);
     assert(fs.existsSync(path.join(complete, 'outputs', 'audit-trail.md')), 'Audit trail should be written at Stop');
+    const entries = logLines();
     fs.rmSync(path.join(complete, 'outputs'), { recursive: true, force: true });
     runAdapter('generate-audit-trail.js', stop, kimi);
-    assert(!fs.existsSync(path.join(complete, 'outputs', 'audit-trail.md')), 'A later Stop does not run it again');
+    assert(fs.existsSync(path.join(complete, 'outputs', 'audit-trail.md')), 'A later Stop rewrites it');
+    assert(logLines() === entries, 'A later Stop adds no log entry');
+    fs.rmSync(path.join(complete, 'outputs'), { recursive: true, force: true });
   });
 
   // Payload shapes captured from Copilot CLI 1.0.106.
@@ -395,7 +452,10 @@ function testHookAdapterBehaviour() {
     }, copilot);
     assert(launch.raw === '', 'Launch should stay silent');
     const stop = { hook_event_name: 'SubagentStop', cwd: complete, agent_id: 'copilot-bg-1', agent_type: 'interpretive-orchestration:dialogical-coder' };
-    assert(runAdapter('interpretive-pause.js', stop, copilot).json, 'Pause should fire when the agent finishes');
+    const { json } = runAdapter('interpretive-pause.js', stop, copilot);
+    assert(json && json.additionalContext.includes('INTERPRETIVE PAUSE'), 'Pause should fire when the agent finishes');
+    assert(json.additionalContext.includes('has not seen it'), 'Model should pass it on');
+    assert(!json.systemMessage, 'Copilot never shows systemMessage');
   });
 
   for (const dir of [incomplete, complete]) fs.rmSync(dir, { recursive: true, force: true });
