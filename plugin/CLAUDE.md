@@ -48,7 +48,7 @@ Since 0.3.0 every `/qual-*` command is a skill at `skills/qual-*/SKILL.md`. Clau
 - defers after-agent hooks for background agents to `SubagentStop`
 - at `Stop`, sets `INTERPRETIVE_ORCHESTRATION_QUIET=1` for the phase transition (it then speaks only when rules change) and for every audit-trail run after the first in a session (it then rewrites `outputs/audit-trail.md` without a notice or log entry)
 
-If you add a hook script, add it to `TRIGGERS` and `hooks.json`; the schema tests check both. `SessionEnd` output is not shown in Claude Code, so `session-reflect.js` only logs, and `/qual-reflect` picks up the logged prompts.
+If you add a hook script, add it to `TRIGGERS` and `hooks.json`; the schema tests check both. If it is also a skill's frontmatter Stop hook, give it a `stopHook` in `TRIGGERS` (`'quiet'` or `'quiet-after-first-run'`) and the stand-ins described under [Other platforms](#other-platforms); the schema tests check those too. `SessionEnd` output is not shown in Claude Code, so `session-reflect.js` only logs, and `/qual-reflect` picks up the logged prompts.
 
 ### MCP Compatibility Notes
 

@@ -9,6 +9,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const T = require('../../_shared/scripts/stage1-thresholds.js');
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -107,8 +108,8 @@ function validateSetup(projectPath) {
       manual_code_files: codeFiles.length
     };
 
-    if (codeFiles.length < 10) {
-      results.warnings.push(`Only ${codeFiles.length} files in manual-codes/ - recommend 10-15 for Stage 1`);
+    if (codeFiles.length < T.DOCUMENTS_REQUIRED) {
+      results.warnings.push(`Only ${codeFiles.length} files in manual-codes/ - recommend ${T.DOCUMENTS_REQUIRED}-${T.DOCUMENTS_RECOMMENDED} for Stage 1`);
     }
   }
 

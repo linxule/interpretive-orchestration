@@ -73,10 +73,7 @@ function calculateAllProgress(config, projectPath) {
   const docs = readiness.documents;
   const memos = readiness.memos;
 
-  const stage1Progress = Math.round(
-    Math.min(docs / T.DOCUMENTS_REQUIRED, 1) * T.DOCUMENTS_WEIGHT +
-    Math.min(memos / T.MEMOS_RECOMMENDED, 1) * T.MEMOS_WEIGHT
-  );
+  const stage1Progress = readiness.progress;
 
   const stage2Progress = config.sandwich_status?.stage2_progress || {};
   const phaseStatus = {

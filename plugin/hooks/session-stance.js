@@ -15,6 +15,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const T = require('../skills/_shared/scripts/stage1-thresholds.js');
 
 function findProjectRoot(startPath) {
   let currentPath = startPath;
@@ -34,13 +35,12 @@ function readPrinciples() {
 }
 
 function stage1Status(config) {
-  const status = config.sandwich_status || {};
-  const details = status.stage1_details || {};
-  if (status.stage1_complete) {
+  if (config.sandwich_status && config.sandwich_status.stage1_complete) {
     return 'Stage 1 is complete. AI-assisted coding is open to this researcher.';
   }
-  return `Stage 1 is NOT complete: ${details.documents_manually_coded || 0} documents coded by hand ` +
-    `and ${details.memos_written || 0} memos written so far. Before any AI-assisted coding, ` +
+  const { documents, memos } = T.stage1Readiness(config);
+  return `Stage 1 is NOT complete: ${documents} documents coded by hand ` +
+    `and ${memos} memos written so far. Before any AI-assisted coding, ` +
     'whether or not the researcher used a /qual-* command, explain why the manual foundation ' +
     'matters (principle 1 below) and ask whether they want to proceed anyway, and why. ' +
     'Asking for the work is not that confirmation: ask, then wait for their answer. ' +

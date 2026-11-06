@@ -17,6 +17,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { getCurrentPhase, shouldRelax } = require('./phase.js');
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -59,55 +60,6 @@ function renderTemplate(template, data) {
   });
 
   return result;
-}
-
-function getCurrentPhase(sandwichStatus) {
-  if (!sandwichStatus) return 'stage1_foundation';
-
-  const stage = sandwichStatus.current_stage;
-
-  if (stage === 'stage1_foundation') {
-    return 'stage1_foundation';
-  }
-
-  if (stage === 'stage2_collaboration') {
-    const progress = sandwichStatus.stage2_progress || {};
-    if (progress.phase3_pattern_characterization === 'in_progress' ||
-        progress.phase3_pattern_characterization === 'complete') {
-      return 'phase3_pattern_characterization';
-    }
-    if (progress.phase2_synthesis === 'in_progress' ||
-        progress.phase2_synthesis === 'complete') {
-      return 'phase2_synthesis';
-    }
-    return 'phase1_parallel_streams';
-  }
-
-  if (stage === 'stage3_synthesis') {
-    return 'stage3_synthesis';
-  }
-
-  return stage;
-}
-
-function shouldRelax(relaxesAt, currentPhase) {
-  const phaseOrder = [
-    'stage1_foundation',
-    'phase1_parallel_streams',
-    'phase2_synthesis',
-    'phase3_pattern_characterization',
-    'cross_wave_analysis',
-    'stage3_synthesis'
-  ];
-
-  const currentIndex = phaseOrder.indexOf(currentPhase);
-  const relaxIndex = phaseOrder.indexOf(relaxesAt);
-
-  // If either not found, don't relax
-  if (currentIndex === -1 || relaxIndex === -1) return false;
-
-  // Relax if current phase is at or past the relaxation point
-  return currentIndex >= relaxIndex;
 }
 
 function generateCaseIsolationRule(config, templatesDir, currentPhase) {
@@ -326,75 +278,45 @@ function removeDisabledRule(name, intent) {
     results.errors.push(`Failed to remove ${name}.md: ${e.message}`);
   }
 }
+
+// The intent is each template's original footer, so a rule file made from an
+// older template is still recognized as generated.
+const RULES = [
+  { name: 'case-isolation', key: 'case_isolation', generate: generateCaseIsolationRule,
+    intent: 'Preserve phenomenological distinctness of each case', skipped: 'no cases or disabled' },
+  { name: 'wave-isolation', key: 'wave_isolation', generate: generateWaveIsolationRule,
+    intent: 'Preserve temporal integrity and track genuine conceptual evolution', skipped: 'no waves or disabled' },
+  { name: 'stream-separation', key: 'stream_separation', generate: generateStreamSeparationRule,
+    intent: 'Preserve productive tension between theory and data', skipped: 'disabled' }
+];
+
 const isolation = config.research_design.isolation_config || {};
-if (isolation.case_isolation?.enabled === false) removeDisabledRule('case-isolation', 'Preserve phenomenological distinctness of each case');
-if (isolation.wave_isolation?.enabled === false) removeDisabledRule('wave-isolation', 'Preserve temporal integrity and track genuine conceptual evolution');
-if (isolation.stream_separation?.enabled === false) removeDisabledRule('stream-separation', 'Preserve productive tension between theory and data');
-
-const caseRule = generateCaseIsolationRule(config, templatesDir, currentPhase);
-if (caseRule) {
-  if (caseRule.error) {
-    results.errors.push(caseRule.error);
-  } else {
-    const rulePath = path.join(rulesDir, caseRule.filename);
-    try {
-      fs.writeFileSync(rulePath, caseRule.content + '\n' + GENERATED_MARKER + '\n');
-      results.rules_generated.push({
-        name: 'case-isolation',
-        path: rulePath,
-        status: caseRule.status,
-        friction: caseRule.friction
-      });
-    } catch (e) {
-      results.errors.push(`Failed to write ${caseRule.filename}: ${e.message}`);
-    }
-  }
-} else {
-  results.rules_skipped.push('case-isolation (no cases or disabled)');
+for (const rule of RULES) {
+  if (isolation[rule.key]?.enabled === false) removeDisabledRule(rule.name, rule.intent);
 }
 
-const waveRule = generateWaveIsolationRule(config, templatesDir, currentPhase);
-if (waveRule) {
-  if (waveRule.error) {
-    results.errors.push(waveRule.error);
-  } else {
-    const rulePath = path.join(rulesDir, waveRule.filename);
-    try {
-      fs.writeFileSync(rulePath, waveRule.content + '\n' + GENERATED_MARKER + '\n');
-      results.rules_generated.push({
-        name: 'wave-isolation',
-        path: rulePath,
-        status: waveRule.status,
-        friction: waveRule.friction
-      });
-    } catch (e) {
-      results.errors.push(`Failed to write ${waveRule.filename}: ${e.message}`);
-    }
+for (const rule of RULES) {
+  const generated = rule.generate(config, templatesDir, currentPhase);
+  if (!generated) {
+    results.rules_skipped.push(`${rule.name} (${rule.skipped})`);
+    continue;
   }
-} else {
-  results.rules_skipped.push('wave-isolation (no waves or disabled)');
-}
-
-const streamRule = generateStreamSeparationRule(config, templatesDir, currentPhase);
-if (streamRule) {
-  if (streamRule.error) {
-    results.errors.push(streamRule.error);
-  } else {
-    const rulePath = path.join(rulesDir, streamRule.filename);
-    try {
-      fs.writeFileSync(rulePath, streamRule.content + '\n' + GENERATED_MARKER + '\n');
-      results.rules_generated.push({
-        name: 'stream-separation',
-        path: rulePath,
-        status: streamRule.status,
-        friction: streamRule.friction
-      });
-    } catch (e) {
-      results.errors.push(`Failed to write ${streamRule.filename}: ${e.message}`);
-    }
+  if (generated.error) {
+    results.errors.push(generated.error);
+    continue;
   }
-} else {
-  results.rules_skipped.push('stream-separation (disabled)');
+  const rulePath = path.join(rulesDir, generated.filename);
+  try {
+    fs.writeFileSync(rulePath, generated.content + '\n' + GENERATED_MARKER + '\n');
+    results.rules_generated.push({
+      name: rule.name,
+      path: rulePath,
+      status: generated.status,
+      friction: generated.friction
+    });
+  } catch (e) {
+    results.errors.push(`Failed to write ${generated.filename}: ${e.message}`);
+  }
 }
 
 if (results.rules_generated.length > 0) {

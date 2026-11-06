@@ -14,6 +14,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const T = require('../../_shared/scripts/stage1-thresholds.js');
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -233,7 +234,7 @@ Build theoretical sensitivity through manual engagement with data.
 - **memos/**: Analytical memos capturing emergent insights
 
 ## Requirements Before Stage 2
-- [ ] Manually code 10-15 documents
+- [ ] Manually code ${T.DOCUMENTS_REQUIRED}-${T.DOCUMENTS_RECOMMENDED} documents
 - [ ] Write analytical memos for key insights
 - [ ] Develop initial conceptual framework
 - [ ] Reflect on your interpretive approach

@@ -284,7 +284,7 @@ function testAgentToolLists() {
 // Test: hooks.json only points at hook scripts the adapter knows
 function testHooksConfig() {
   const hooksDir = path.join(PROJECT_ROOT, 'hooks');
-  const adapter = fs.readFileSync(path.join(hooksDir, 'run-hook.js'), 'utf8');
+  const { TRIGGERS, SKILL_STOP_SCRIPTS } = require(path.join(hooksDir, 'run-hook.js'));
   for (const file of ['hooks.json', 'codex-hooks.json']) {
     test(`${file}: every command runs a known script through run-hook.js`, () => {
       const config = JSON.parse(fs.readFileSync(path.join(hooksDir, file), 'utf8'));
@@ -293,7 +293,7 @@ function testHooksConfig() {
         const match = command.match(/run-hook\.js"? ([\w-]+\.js)( after-skill)?$/);
         assert(match, `Hook does not use run-hook.js: ${command}`);
         assert(fs.existsSync(path.join(hooksDir, match[1])), `Missing hook script: ${match[1]}`);
-        assert(adapter.includes(`'${match[1]}'`), `run-hook.js has no triggers for ${match[1]}`);
+        assert(TRIGGERS[match[1]], `run-hook.js has no triggers for ${match[1]}`);
       }
     });
   }
@@ -304,7 +304,7 @@ function testHooksConfig() {
     for (const hook of manifest.hooks) {
       const match = hook.command.match(/^node plugin\/hooks\/run-hook\.js ([\w-]+\.js)$/);
       assert(match, `Kimi hook should run plugin/hooks/run-hook.js from the repo root: ${hook.command}`);
-      assert(adapter.includes(`'${match[1]}'`), `run-hook.js has no triggers for ${match[1]}`);
+      assert(TRIGGERS[match[1]], `run-hook.js has no triggers for ${match[1]}`);
       assert(!hook.matcher || hook.matcher.startsWith('^'), `Kimi matchers are unanchored regexes; anchor ${hook.matcher}`);
     }
   });
@@ -317,13 +317,12 @@ function testHooksConfig() {
     const scripts = new Set();
     // The stand-ins start for the skills TRIGGERS lists, so each skill whose
     // frontmatter has a Stop hook must be listed there for that script.
-    const triggers = Function(`return ${adapter.match(/const TRIGGERS = (\{[\s\S]*?\n\});/)[1]}`)();
     const unlisted = [];
     for (const dir of fs.readdirSync(skillsDir)) {
       const fm = fs.existsSync(path.join(skillsDir, dir, 'SKILL.md')) && frontmatter(path.join(skillsDir, dir, 'SKILL.md'));
       for (const match of String(fm || '').matchAll(/run-hook\.js"? ([\w-]+\.js)/g)) {
         scripts.add(match[1]);
-        if (!triggers[match[1]].skills.includes(dir)) unlisted.push(`${dir} (${match[1]})`);
+        if (!TRIGGERS[match[1]].skills.includes(dir)) unlisted.push(`${dir} (${match[1]})`);
       }
     }
     assert(scripts.size > 0, 'Expected frontmatter Stop hooks');
@@ -354,8 +353,8 @@ function testHooksConfig() {
       if (!kimiHas('PostToolUse', script, 'Skill')) missing.push(`kimi.plugin.json PostToolUse Skill: ${script}`);
     }
     assert(missing.length === 0, `Missing stand-ins: ${missing.join('; ')}`);
-    assert(adapter.includes(`new Set([${[...scripts].sort().map(s => `'${s}'`).join(', ')}])`),
-      'SKILL_STOP_SCRIPTS in run-hook.js should list exactly the frontmatter Stop hook scripts');
+    assert([...SKILL_STOP_SCRIPTS].sort().join() === [...scripts].sort().join(),
+      'stopHook in run-hook.js TRIGGERS should mark exactly the frontmatter Stop hook scripts');
   });
 
   test('Codex manifest points at the Codex hooks file', () => {

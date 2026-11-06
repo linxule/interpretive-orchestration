@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.3.5] - 2026-11-06 - Simpler code, same behavior
+
+This is a cleanup of the code the 0.3.x releases added, made before the next round of features. Outputs are unchanged: the old and new plugin gave the same results in 193 side-by-side scenarios on Claude Code, Codex, Copilot CLI and Kimi Code, with the one exception below.
+
+### Changed
+
+- If a project's config stores the Stage 1 counts as text (`"5"` rather than `5`), the session-start and Stage 1 hooks now show 0, as `/qual-status`, the dashboard and the readiness check already did. The config schema allows only numbers there.
+- Each piece of shared logic now lives in one place: the Stage 1 progress formula and thresholds (`stage1-thresholds.js`), the analytical phase (`phase.js`) and the conversation log (`conversation-log.js`). Scripts that kept their own copies, or typed "10" and "10-15" by hand, now use these.
+- In the hook adapter, how a skill's Stop hook behaves on other platforms is now a `stopHook` field in its trigger table, and the schema tests read that table directly.
+- Rule updates check the phase without starting a separate process, so the end of each turn starts one fewer `node` process once a phase skill has run.
+
+---
+
 ## [0.3.4] - 2026-11-06 - Audit trail and rule updates on Codex and Copilot CLI
 
 Closes the Codex and Copilot CLI item on the [next-version list](https://github.com/linxule/interpretive-orchestration/issues/4). Tested live on Codex 0.165.0, Copilot CLI 1.0.106 and Claude Code 2.1.319. Codex and Kimi reviewed the changes.

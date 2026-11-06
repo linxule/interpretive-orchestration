@@ -209,28 +209,6 @@ function generateConfig(args) {
   return config;
 }
 
-function atomicWrite(filePath, content) {
-  const tempPath = filePath + '.tmp.' + process.pid;
-
-  try {
-    fs.writeFileSync(tempPath, content);
-    if (fs.existsSync(filePath)) fs.chmodSync(tempPath, fs.statSync(filePath).mode & 0o777);
-    fs.renameSync(tempPath, filePath);
-
-    return { success: true };
-  } catch (error) {
-    try {
-      if (fs.existsSync(tempPath)) {
-        fs.unlinkSync(tempPath);
-      }
-    } catch (cleanupError) {
-      // Ignore cleanup errors
-    }
-
-    return { success: false, error: error.message };
-  }
-}
-
 function deepMerge(target, source) {
   // Deep merge source into target, preserving target values when source is default/empty
   const result = { ...target };
@@ -356,6 +334,7 @@ if (existingConfig) {
 
 // Validate config against schema before writing
 const { validateConfig } = require('../../_shared/scripts/validate-config.js');
+const { atomicWrite } = require('../../_shared/scripts/atomic-write.js');
 const validation = validateConfig(finalConfig);
 
 if (!validation.valid && !validation.warning) {
@@ -371,9 +350,14 @@ if (!validation.valid && !validation.warning) {
 
 const content = JSON.stringify(finalConfig, null, 2);
 
-const result = atomicWrite(configPath, content);
+let writeError = null;
+try {
+  atomicWrite(configPath, content);
+} catch (error) {
+  writeError = error;
+}
 
-if (result.success) {
+if (!writeError) {
   console.log(JSON.stringify({
     success: true,
     action: configAction,
@@ -389,7 +373,7 @@ if (result.success) {
 } else {
   console.error(JSON.stringify({
     success: false,
-    error: result.error
+    error: writeError.message
   }));
   process.exit(1);
 }

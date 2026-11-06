@@ -79,10 +79,7 @@ function queryStatus(projectPath) {
   const memosCount = readiness.memos;
 
   const stage1Ready = readiness.ready;
-  const stage1Progress = Math.round(
-    Math.min(documentsCount / T.DOCUMENTS_REQUIRED, 1) * T.DOCUMENTS_WEIGHT +
-    Math.min(memosCount / T.MEMOS_RECOMMENDED, 1) * T.MEMOS_WEIGHT
-  );
+  const stage1Progress = readiness.progress;
 
   const stage2 = config.sandwich_status?.stage2_progress || {};
   const phase1Done = stage2.phase1_parallel_streams === 'complete';

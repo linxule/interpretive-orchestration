@@ -51,21 +51,13 @@ function readConfig(projectPath) {
   }
 }
 
-function calculateStage1Progress(config, projectPath) {
-  // Progress aims for the required documents and the recommended memos
-  // (stage1-thresholds.js); readiness needs the required counts and a tradition.
+function calculateStage1Progress(config) {
   // Recorded counts only: manual-codes/ also holds raw transcripts.
   const readiness = T.stage1Readiness(config);
-  const documents = readiness.documents;
-  const memosWritten = readiness.memos;
-
-  const docScore = Math.min(documents / T.DOCUMENTS_REQUIRED, 1) * T.DOCUMENTS_WEIGHT;
-  const memoScore = Math.min(memosWritten / T.MEMOS_RECOMMENDED, 1) * T.MEMOS_WEIGHT;
-
   return {
-    progress: Math.round(docScore + memoScore),
-    documents,
-    memos: memosWritten,
+    progress: readiness.progress,
+    documents: readiness.documents,
+    memos: readiness.memos,
     ready: readiness.ready,
     complete: config.sandwich_status?.stage1_complete || false
   };
@@ -155,7 +147,7 @@ function calculateProgress(projectPath) {
     };
   }
 
-  const stage1 = calculateStage1Progress(config, projectPath);
+  const stage1 = calculateStage1Progress(config);
   const stage2 = calculateStage2Progress(config);
   const stage3 = calculateStage3Progress(config);
 

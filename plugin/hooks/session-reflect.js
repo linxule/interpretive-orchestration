@@ -12,6 +12,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { readEntries, appendLine } = require('../skills/_shared/scripts/conversation-log.js');
 
 // Logged with the session end, so /qual-reflect can open with them later.
 const REFLEXIVE_QUESTIONS = [
@@ -48,28 +49,9 @@ function outputRemediation(code, severity, reason, nextCommands, nextSkills, can
   console.error(JSON.stringify(remediation));
 }
 
-function getSessionStats(projectRoot) {
-  const logPath = path.join(projectRoot, '.interpretive-orchestration', 'conversation-log.jsonl');
-
-  if (!fs.existsSync(logPath)) {
-    return { activities: 0, tools_used: [], codes_created: 0 };
-  }
-
-  // Skip lines that are not JSON: one bad line must not stop the logging.
-  const logs = fs.readFileSync(logPath, 'utf8')
-    .split('\n')
-    .filter(line => line.trim())
-    .flatMap(line => {
-      try {
-        const entry = JSON.parse(line);
-        return entry && typeof entry === 'object' ? [entry] : [];
-      } catch (error) {
-        return [];
-      }
-    });
-
+function getSessionStats(logPath) {
   // Use the last 20 entries as a simplified session window
-  const recentLogs = logs.slice(-20);
+  const recentLogs = readEntries(logPath).slice(-20);
 
   const toolsUsed = [...new Set(recentLogs
     .filter(log => log.activity_type === 'deep_reasoning' || log.activity_type === 'paradox_navigation')
@@ -90,7 +72,8 @@ function main() {
     process.exit(0);
   }
 
-  const stats = getSessionStats(projectRoot);
+  const logPath = path.join(projectRoot, '.interpretive-orchestration', 'conversation-log.jsonl');
+  const stats = getSessionStats(logPath);
 
   outputRemediation(
     'SESSION_REFLECTION',
@@ -142,7 +125,6 @@ function main() {
   console.log('   Regular reflection makes that visible and productive.');
   console.log('');
 
-  const logPath = path.join(projectRoot, '.interpretive-orchestration', 'conversation-log.jsonl');
   const logEntry = {
     timestamp: new Date().toISOString(),
     from: 'session_end_hook',
@@ -158,12 +140,8 @@ function main() {
     philosophy_check: 'Constructivist reflexivity: researcher awareness of interpretive role'
   };
 
-  if (fs.existsSync(path.dirname(logPath))) {
-    // Start a new line first if the log does not end with one.
-    const text = fs.existsSync(logPath) ? fs.readFileSync(logPath, 'utf8') : '';
-    const separator = text && !text.endsWith('\n') ? '\n' : '';
-    fs.appendFileSync(logPath, separator + JSON.stringify(logEntry) + '\n');
-  }
+  // findProjectRoot found .interpretive-orchestration, so the log's folder exists.
+  appendLine(logPath, JSON.stringify(logEntry));
 
   console.log('   See you next session! 🌟');
   console.log('');

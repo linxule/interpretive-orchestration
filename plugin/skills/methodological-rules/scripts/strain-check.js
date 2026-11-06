@@ -15,6 +15,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { getCurrentPhase } = require('./phase.js');
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -40,24 +41,6 @@ function loadConfig(projectPath) {
 function saveConfig(projectPath, config) {
   const configPath = path.join(projectPath, '.interpretive-orchestration', 'config.json');
   require('../../_shared/scripts/atomic-write.js').atomicWrite(configPath, JSON.stringify(config, null, 2));
-}
-
-function getCurrentPhase(sandwichStatus) {
-  if (!sandwichStatus) return 'stage1_foundation';
-  const stage = sandwichStatus.current_stage;
-  if (stage === 'stage2_collaboration') {
-    const progress = sandwichStatus.stage2_progress || {};
-    if (progress.phase3_pattern_characterization === 'in_progress' ||
-        progress.phase3_pattern_characterization === 'complete') {
-      return 'phase3_pattern_characterization';
-    }
-    if (progress.phase2_synthesis === 'in_progress' ||
-        progress.phase2_synthesis === 'complete') {
-      return 'phase2_synthesis';
-    }
-    return 'phase1_parallel_streams';
-  }
-  return stage;
 }
 
 function logToJournal(projectPath, message) {
