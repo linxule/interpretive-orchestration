@@ -266,6 +266,94 @@ async function run() {
       assert(!JSON.stringify(json(runFile('_shared/scripts/query-status.js', p)).recommendations).includes('update-progress.js'),
         '/qual-status hint should go once counts are recorded');
     });
+    test('S1: every Stage 1 view uses one rule: 10 documents, 1 memo and a tradition are ready; 5 memos fill the bar', () => {
+      const p = project();
+      const record = (docs, memos) => assert(runFile('_shared/scripts/update-progress.js', p,
+        ['--documents-coded', String(docs), '--memos-written', String(memos)]).status === 0);
+      const views = () => {
+        const q = json(runFile('_shared/scripts/query-status.js', p));
+        const r = json(runFile('project-dashboard/scripts/check-readiness.js', p, ['--target-stage', 'stage2']));
+        const c = json(runFile('project-dashboard/scripts/calculate-progress.js', p));
+        const d = json({ stdout: runFile('project-dashboard/scripts/generate-dashboard.js', p, ['--format', 'json']).stdout });
+        const hook = spawnSync(process.execPath, [path.join(__dirname, '..', 'hooks', 'check-stage1-complete.js')], { cwd: p, encoding: 'utf8' });
+        const ready = [v => v.q.sandwich.stage1.ready_for_stage2, v => v.r.ready, v => v.c.details.stage1.ready, v => v.d.progress.stage1.ready];
+        const out = { q, r, c, d, hook: hook.stdout, hookDetails: hook.stderr };
+        out.ready = ready.map(get => get(out));
+        return out;
+      };
+      const allNot = (v, why) => assert(v.ready.every(value => value === false), `${why}: ${JSON.stringify(v.ready)}`);
+      record(10, 0);
+      let v = views();
+      allNot(v, 'no memo must not be ready');
+      assert(v.hookDetails.includes('Write at least one analytical memo'), v.hookDetails);
+      record(9, 1);
+      allNot(views(), '9 documents must not be ready');
+      record(10, 1);
+      v = views();
+      assert(v.ready.every(value => value === true), `10 documents and 1 memo must be ready: ${JSON.stringify(v.ready)}`);
+      assert(v.q.sandwich.stage1.progress_percent === 76 && v.c.stage1_progress === 76 && v.d.progress.stage1.progress === 76,
+        `bar must aim for 5 memos: ${v.q.sandwich.stage1.progress_percent} ${v.c.stage1_progress} ${v.d.progress.stage1.progress}`);
+      assert(v.q.sandwich.stage1.memos_recommended === 5 && JSON.stringify(v.q.recommendations).includes('4 more analytical memos'));
+      assert(v.r.recommendations.some(text => text.includes('4 more memos')), JSON.stringify(v.r.recommendations));
+      assert(v.hook.includes('Analytical memos: 1 (at least 1, 5 recommended) [✓]'), v.hook);
+      const ascii = runFile('project-dashboard/scripts/generate-dashboard.js', p, ['--format', 'ascii']).stdout;
+      assert(ascii.includes('Counts met; /qual-complete-stage1 checks the rest') && ascii.includes('also checks your reflexivity journal'), ascii);
+      const c = getConfig(p); delete c.philosophical_stance.tradition; setConfig(p, c);
+      allNot(views(), 'no tradition must not be ready');
+      c.philosophical_stance.tradition = 'gioia_corley';
+      c.sandwich_status.stage1_details.documents_manually_coded = 'unknown'; setConfig(p, c);
+      allNot(views(), 'a count that is not a number must not be ready');
+      record(10, 5);
+      v = views();
+      assert(v.q.sandwich.stage1.progress_percent === 100 && v.c.stage1_progress === 100 && v.d.progress.stage1.progress === 100);
+      assert(!JSON.stringify(v.q.recommendations).includes('more analytical memos'));
+    });
+    test('R1: generated rules load everywhere and name their folders in the text', () => {
+      const p = project(); const c = getConfig(p);
+      c.research_design.study_type = 'multiple_case_comparative';
+      c.research_design.cases = [{ id: 'a', name: 'Alpha', folder_path: 'data/cases/alpha' }, { id: 'b', name: 'Beta' }];
+      c.research_design.waves = [{ id: 'w1', name: 'Wave 1' }];
+      c.research_design.isolation_config.case_isolation.enabled = true;
+      c.research_design.isolation_config.wave_isolation.enabled = true;
+      setConfig(p, c);
+      const r = runFile('methodological-rules/scripts/generate-rules.js', p);
+      assert(r.status === 0, r.stderr + r.stdout);
+      const rule = name => fs.readFileSync(path.join(p, '.claude', 'rules', name), 'utf8');
+      for (const name of ['case-isolation.md', 'wave-isolation.md', 'stream-separation.md']) {
+        assert(!/^paths:/m.test(rule(name)), `${name} still has a paths line`);
+      }
+      assert(rule('case-isolation.md').includes('**Case folders:** data/cases/alpha\n'), rule('case-isolation.md').slice(0, 400));
+      assert(rule('wave-isolation.md').includes('**Wave folders:** not set\n'), rule('wave-isolation.md').slice(0, 400));
+      const theory = c.research_design.streams.theoretical.folder_path; const data = c.research_design.streams.empirical.folder_path;
+      assert(rule('stream-separation.md').includes(`Theoretical (${theory}) | Empirical (${data})`), rule('stream-separation.md').slice(0, 400));
+    });
+    test('RS1: /qual-reflect counts sessions since the last reflection, with their questions', () => {
+      const p = project();
+      const sessions = () => json(runFile('_shared/scripts/reflection-sessions.js', p));
+      const endSession = () => spawnSync(process.execPath, [path.join(__dirname, '..', 'hooks', 'session-reflect.js')], { cwd: p, encoding: 'utf8' });
+      assert(sessions().sessions_since_reflection === 0);
+      endSession(); endSession();
+      const log = path.join(p, '.interpretive-orchestration', 'conversation-log.jsonl');
+      fs.appendFileSync(log, 'not json\nnull\n');
+      write(p, '.interpretive-orchestration/reflexivity-journal.md', '### Methodological Rules Update\n**Date:** 2999-01-01\n');
+      let s = sessions();
+      assert(s.sessions_since_reflection === 2 && s.last_reflection === null, JSON.stringify(s));
+      assert(s.questions.length === 5 && s.questions.some(q => q.includes('working with AI')), JSON.stringify(s.questions));
+      fs.appendFileSync(log, '{"partial": true}');
+      assert(runFile('_shared/scripts/reflection-sessions.js', p, ['--record']).status === 0);
+      s = sessions();
+      assert(s.sessions_since_reflection === 0 && s.last_reflection && s.questions.length === 0, JSON.stringify(s));
+      fs.appendFileSync(log, '{"partial": true}');
+      endSession();
+      assert(sessions().sessions_since_reflection === 1, 'a session end after an unterminated line must still count');
+    });
+    test('B1: forking a branch says it does not copy the analysis', () => {
+      const p = project();
+      const r = runFile('methodological-rules/scripts/workspace-branch.js', p, ['--fork', '--name', 'Alt', '--rationale', 'Try another structure']);
+      assert(r.status === 0, r.stderr);
+      const message = json(r).message;
+      assert(message.includes('does not keep its own copy') && !/safe/i.test(message), message);
+    });
     test('K6: a malformed data inventory is reported, never replaced', () => {
       const p = project(); const inv = write(p, 'stage1-foundation/data-inventory.json', '{"documents": [');
       const input = path.join(p, 'input'); fs.mkdirSync(input); fs.writeFileSync(path.join(input, 'a.mp3'), 'x');

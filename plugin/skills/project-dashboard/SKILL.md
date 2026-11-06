@@ -108,8 +108,9 @@ Formatted for documentation or export.
 
 ### Stage 1 (0-100%)
 - Documents manually coded: 70% weight (target: 10)
-- Memos written: 30% weight (target: 3)
-- Formula: `(docs/10 * 70) + (min(memos,3)/3 * 30)`
+- Memos written: 30% weight (target: the 5 recommended; 1 is required)
+- Formula: `(min(docs,10)/10 * 70) + (min(memos,5)/5 * 30)`
+- Readiness needs 10 documents, 1 memo and a declared tradition, so Stage 1 can be ready before the bar reaches 100%. The rule lives in `_shared/scripts/stage1-thresholds.js`. `/qual-complete-stage1` also checks the reflexivity journal and data structure
 
 ### Stage 2 (0-100%)
 - Phase 1 Parallel Streams: 33%

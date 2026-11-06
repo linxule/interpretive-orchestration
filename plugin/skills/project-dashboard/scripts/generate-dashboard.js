@@ -9,6 +9,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const T = require('../../_shared/scripts/stage1-thresholds.js');
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -67,12 +68,15 @@ function recordCountsHint(config, projectPath, docs, memos) {
 }
 
 function calculateAllProgress(config, projectPath) {
-  const stage1Details = config.sandwich_status?.stage1_details || {};
   // Recorded counts only: manual-codes/ also holds raw transcripts.
-  const docs = stage1Details.documents_manually_coded || 0;
-  const memos = stage1Details.memos_written || 0;
+  const readiness = T.stage1Readiness(config);
+  const docs = readiness.documents;
+  const memos = readiness.memos;
 
-  const stage1Progress = Math.round(Math.min(docs / 10, 1) * 70 + Math.min(memos / 3, 1) * 30);
+  const stage1Progress = Math.round(
+    Math.min(docs / T.DOCUMENTS_REQUIRED, 1) * T.DOCUMENTS_WEIGHT +
+    Math.min(memos / T.MEMOS_RECOMMENDED, 1) * T.MEMOS_WEIGHT
+  );
 
   const stage2Progress = config.sandwich_status?.stage2_progress || {};
   const phaseStatus = {
@@ -108,6 +112,8 @@ function calculateAllProgress(config, projectPath) {
       complete: config.sandwich_status?.stage1_complete || false,
       documents: docs,
       memos: memos,
+      ready: readiness.ready,
+      tradition_missing: readiness.missing.includes('tradition'),
       record_counts_hint: recordCountsHint(config, projectPath, docs, memos)
     },
     stage2: {
@@ -153,7 +159,7 @@ Tradition: ${tradition}
      Stage 1: Human Foundation
      ${generateProgressBar(progress.stage1.progress)} ${progress.stage1.progress}%
      ${progress.stage1.documents} documents coded | ${progress.stage1.memos} memos written
-     Status: ${progress.stage1.complete ? 'Ready for Stage 2!' : 'In progress'}
+     Status: ${progress.stage1.complete ? 'Ready for Stage 2!' : progress.stage1.ready ? 'Counts met; /qual-complete-stage1 checks the rest' : 'In progress'}
 
      Stage 2: Human-AI Partnership
      ${generateProgressBar(progress.stage2.progress)} ${progress.stage2.progress}%
@@ -174,11 +180,19 @@ Overall Progress: ${generateProgressBar(progress.overall, 20)} ${progress.overal
     output += `- ${progress.stage1.record_counts_hint}\n`;
   }
   if (!progress.stage1.complete) {
-    if (progress.stage1.documents < 10) {
-      output += `- Code ${10 - progress.stage1.documents} more documents manually\n`;
+    if (progress.stage1.documents < T.DOCUMENTS_REQUIRED) {
+      output += `- Code ${T.DOCUMENTS_REQUIRED - progress.stage1.documents} more documents manually\n`;
     }
-    if (progress.stage1.memos < 3) {
-      output += `- Write ${3 - progress.stage1.memos} more analytical memos\n`;
+    if (progress.stage1.memos < T.MEMOS_REQUIRED) {
+      output += `- Write at least one analytical memo (${T.MEMOS_RECOMMENDED} recommended)\n`;
+    } else if (progress.stage1.memos < T.MEMOS_RECOMMENDED) {
+      output += `- Consider writing ${T.MEMOS_RECOMMENDED - progress.stage1.memos} more analytical memos (${T.MEMOS_RECOMMENDED} recommended)\n`;
+    }
+    if (progress.stage1.tradition_missing) {
+      output += '- Declare your research tradition (project-setup, --tradition)\n';
+    }
+    if (progress.stage1.ready) {
+      output += '- Run /qual-complete-stage1 when your foundation feels solid. It also checks your reflexivity journal and data structure\n';
     }
   } else if (progress.stage2.progress < 100) {
     if (progress.stage2.phases.phase1 !== 'complete') {
@@ -213,8 +227,8 @@ function generateMarkdownDashboard(config, progress, projectPath) {
 
 | Metric | Current | Target | Progress |
 |--------|---------|--------|----------|
-| Documents Coded | ${progress.stage1.documents} | 10 | ${Math.min(progress.stage1.documents * 10, 100)}% |
-| Memos Written | ${progress.stage1.memos} | 3 | ${Math.min(Math.round(progress.stage1.memos / 3 * 100), 100)}% |
+| Documents Coded | ${progress.stage1.documents} | ${T.DOCUMENTS_REQUIRED} | ${Math.min(Math.round(progress.stage1.documents / T.DOCUMENTS_REQUIRED * 100), 100)}% |
+| Memos Written | ${progress.stage1.memos} | ${T.MEMOS_REQUIRED} required, ${T.MEMOS_RECOMMENDED} recommended | ${Math.min(Math.round(progress.stage1.memos / T.MEMOS_RECOMMENDED * 100), 100)}% |
 | **Overall** | | | **${progress.stage1.progress}%** |
 ${progress.stage1.record_counts_hint ? `\n> ${progress.stage1.record_counts_hint}\n` : ''}
 ---

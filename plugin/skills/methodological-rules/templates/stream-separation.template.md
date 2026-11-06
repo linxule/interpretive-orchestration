@@ -1,7 +1,4 @@
 # Stream Separation Rule
----
-paths: {{stream_paths}}
----
 
 ## Methodological Rule: Stream Separation
 

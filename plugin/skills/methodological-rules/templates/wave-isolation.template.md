@@ -1,12 +1,10 @@
 # Wave Isolation Rule
----
-paths: {{wave_paths}}
----
 
 ## Methodological Rule: Wave Isolation
 
 **Study Type:** {{study_type}}
 **Waves:** {{wave_names}} ({{wave_count}} total)
+**Wave folders:** {{wave_paths}}
 **Current Phase:** {{current_phase}}
 **Rule Status:** {{rule_status}}
 **Friction Level:** {{friction_level}}

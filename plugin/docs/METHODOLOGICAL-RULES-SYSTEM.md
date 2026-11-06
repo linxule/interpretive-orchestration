@@ -312,13 +312,11 @@ When the system generates a case isolation rule for a three-case comparative stu
 
 ```markdown
 # .claude/rules/case-isolation.md
----
-paths: data/cases/**
----
 ## Methodological Rule: Case Isolation
 
 **Study:** 3-case comparative study
 **Cases:** TechCorp Alpha, HealthCo Beta, FinServ Gamma
+**Case folders:** data/cases/techcorp, data/cases/healthco, data/cases/finserv
 **Status:** ACTIVE
 **Friction:** CHALLENGE
 
@@ -349,7 +347,7 @@ Check: config.json → sandwich_status.stage2_progress.phase3_pattern_characteri
 *Generated: 2025-12-13 | Friction: CHALLENGE | Relaxes: phase3_pattern_characterization*
 ```
 
-The rule exists as a markdown file in `.claude/rules/`, where Claude Code automatically discovers it. The `paths` frontmatter triggers the rule when working in case folders. The body provides clear guidance, explains why, and specifies when it no longer applies.
+The rule exists as a markdown file in `.claude/rules/`, where Claude Code automatically discovers it. It has no `paths` frontmatter, so it loads in every session: an AI comparing cases may not have opened a file in a case folder. The rule names the case folders in its text. The body provides clear guidance, explains why, and specifies when it no longer applies.
 
 ### 4.3 Phase-Aware Rules
 
@@ -565,8 +563,9 @@ node workspace-branch.js --project-path /path --fork \
   --framing "exploratory" \
   --rationale "Testing whether coping and resilience should be separate dimensions"
 
-# Work in the branch (current workspace switches)
+# Work on the branch: new decisions are recorded against it
 # ... coding, memos, experiments ...
+# (the branch does not keep its own copy of codes or files)
 
 # Merge back with required synthesis memo
 node workspace-branch.js --project-path /path --merge \
@@ -581,6 +580,7 @@ Key design choices:
 1. **Merge requires a memo**: You cannot merge a branch without explaining what you learned. This enforces synthesis thinking.
 2. **Abandoned branches are preserved**: Dead ends are methodological data. The audit trail shows what was explored, not just what was kept.
 3. **Methodological framing is tracked**: Was this exploratory, confirmatory, or negative case analysis? The framing matters for interpretation.
+4. **Branches record decisions, not copies**: A branch holds its name, framing, rationale and decisions. It does not keep its own copy of codes, memos, saturation records or files, so changes made on a branch also apply to the main line. Keep exploratory work in separate files to compare or undo it.
 
 ### 6.4 Visualization Dashboard
 
@@ -657,7 +657,7 @@ node researcher-team.js --project-path /path \
 
 Wave 4 acknowledges what qualitative methodology has always known:
 
-**Non-linearity is the workflow, not a bug.** Branching supports exploration without fear of losing the main thread. Merge memos document what was learned. Abandoned branches become methodological data.
+**Non-linearity is the workflow, not a bug.** Branching records each exploration and why it was tried. Merge memos document what was learned. Abandoned branches become methodological data.
 
 **Saturation is multi-dimensional.** It's not just "are codes repeating?"—it's code generation rates, coverage patterns, refinement stability, and conceptual redundancy. Multiple signals inform a complex assessment.
 
@@ -758,7 +758,7 @@ Strain detection transforms friction from obstacle to signal. The system learns 
 
 Most tools treat non-linearity as a problem to solve—force linear workflow, prevent backtracking, hide complexity. The Methodological Rules System treats it as the fundamental nature of qualitative work.
 
-Workspace branching makes exploration safe. Merge memos enforce synthesis thinking. Abandoned branches preserve the full intellectual journey. The system supports the messy middle rather than trying to tidy it up.
+Workspace branching records exploration: each branch keeps its framing and rationale, though not its own copy of codes or files. Merge memos enforce synthesis thinking. Abandoned branches preserve the full intellectual journey. The system supports the messy middle rather than trying to tidy it up.
 
 ### 8.5 Violation as Audit Asset
 

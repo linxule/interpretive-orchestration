@@ -48,7 +48,7 @@ Since 0.3.0 every `/qual-*` command is a skill at `skills/qual-*/SKILL.md`. Clau
 - defers after-agent hooks for background agents to `SubagentStop`
 - at `Stop`, sets `INTERPRETIVE_ORCHESTRATION_QUIET=1` for the phase transition (it then speaks only when rules change) and for every audit-trail run after the first in a session (it then rewrites `outputs/audit-trail.md` without a notice or log entry)
 
-If you add a hook script, add it to `TRIGGERS` and `hooks.json`; the schema tests check both. `SessionEnd` output is not shown in Claude Code, so `session-reflect.js` only logs.
+If you add a hook script, add it to `TRIGGERS` and `hooks.json`; the schema tests check both. `SessionEnd` output is not shown in Claude Code, so `session-reflect.js` only logs, and `/qual-reflect` picks up the logged prompts.
 
 ### MCP Compatibility Notes
 
@@ -200,7 +200,7 @@ These hooks may interrupt or modify workflow:
 1. **Stage 1 check** - Before @dialogical-coder or a Stage 2 command runs without Stage 1 complete, the researcher is asked to confirm. If they proceed, ask why and respect the answer
 2. **Interpretive pause** - After @dialogical-coder, every 5 documents
 3. **Coherence check** - After @dialogical-coder, checks language against the declared stance
-4. **Session reflection** - At session end, logs a reflexivity prompt
+4. **Session reflection** - At session end, logs a reflexivity prompt; `/qual-reflect` counts these and opens with their questions
 5. **Audit trail** - After /qual-synthesize
 6. **Phase transition** - Updates methodological rules when stages or phases change
 
@@ -552,7 +552,9 @@ Write memos on what accounts for variation in your core categories.
 
 ## Workspace Branching
 
-Support for non-linear, exploratory analysis. The "messy middle" of qualitative analysis isn't linear—branch to explore alternatives safely.
+Support for non-linear, exploratory analysis. The "messy middle" of qualitative analysis isn't linear: branch to record an alternative direction, why you explored it, and what you learned.
+
+A branch records metadata only: its name, framing, rationale, and the fork, switch, merge and abandon decisions. It does not keep its own copy of codes, memos, saturation records or files, so changes made on a branch also apply to the main line. Suggest keeping exploratory work in separate files when the researcher wants to compare or undo it.
 
 ### Why Branch?
 
@@ -596,7 +598,7 @@ node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/workspace-branch
 
 1. **Merge requires a memo**: You can't merge without explaining what you learned
 2. **Abandoned branches are preserved**: Dead ends are methodological data
-3. **Switch anytime**: Explore freely, the main branch is always there
+3. **Switch anytime**: Switching records which branch you are on. Later branch decisions (merge, abandon) refer to it; other scripts and the project's files are unaffected
 4. **Fork from any branch**: Create sub-explorations
 
 ---
@@ -878,7 +880,7 @@ How `run-hook.js` handles the differences:
 - Codex: no Skill tool or `UserPromptExpansion`, so the Stage 1 check runs on `UserPromptSubmit` and reads `$skill` mentions in the prompt
 - Kimi (`KIMI_PLUGIN_ROOT` set): the Stage 1 check denies the call with a note asking the model to check with the researcher, and records the hold; the researcher's next prompt (`UserPromptSubmit`) turns it into a one-use pass for that target, which lapses 30 minutes later, so a retry made without asking is held again; the audit trail and phase transition run at every `Stop` after the AI loaded their skill through the Skill tool, because Kimi ignores skill frontmatter hooks. A typed `/skill:` command fires no hook, so then they do not run. Kimi gets no background-agent deferral, because the manifest registers no `SubagentStop`
 
-The 17 skills that run scripts start with a one-line note telling the model how to resolve `${CLAUDE_PLUGIN_ROOT}` when a platform leaves it unfilled. Keep it when you add a skill that runs a script.
+The 18 skills that run scripts start with a one-line note telling the model how to resolve `${CLAUDE_PLUGIN_ROOT}` when a platform leaves it unfilled. Keep it when you add a skill that runs a script.
 
 When you change hooks, update `hooks.json`, `codex-hooks.json` and the `hooks` array in `kimi.plugin.json`; `tests/test-schemas.js` checks all three. When you change bundled MCP servers, update `.mcp.json` and `kimi.plugin.json`.
 

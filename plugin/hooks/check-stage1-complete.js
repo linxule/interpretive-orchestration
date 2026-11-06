@@ -12,6 +12,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const T = require('../skills/_shared/scripts/stage1-thresholds.js');
 
 function findProjectRoot(startPath) {
   let currentPath = startPath;
@@ -91,10 +92,15 @@ function checkStage1Complete() {
       true,  // Can bypass with explicit reason
       {
         documents_coded: documentsCoded,
-        documents_required: 10,
+        documents_required: T.DOCUMENTS_REQUIRED,
         memos_written: memosWritten,
-        memos_recommended: 5,
-        suggestion: `Code ${Math.max(0, 10 - documentsCoded)} more documents manually`
+        memos_required: T.MEMOS_REQUIRED,
+        memos_recommended: T.MEMOS_RECOMMENDED,
+        suggestion: documentsCoded < T.DOCUMENTS_REQUIRED
+          ? `Code ${T.DOCUMENTS_REQUIRED - documentsCoded} more documents manually`
+          : memosWritten < T.MEMOS_REQUIRED
+            ? 'Write at least one analytical memo'
+            : 'Run /qual-complete-stage1 to mark Stage 1 complete'
       }
     );
     console.log('');
@@ -117,9 +123,9 @@ function checkStage1Complete() {
 
     const structureCreated = stage1Details.initial_structure_created || false;
 
-    console.log(`   • Documents manually coded: ${documentsCoded}/10+ [${documentsCoded >= 10 ? '✓' : '○'}]`);
+    console.log(`   • Documents manually coded: ${documentsCoded}/${T.DOCUMENTS_REQUIRED}+ [${documentsCoded >= T.DOCUMENTS_REQUIRED ? '✓' : '○'}]`);
     console.log(`   • Initial data structure: [${structureCreated ? '✓' : '○'}]`);
-    console.log(`   • Analytical memos: ${memosWritten}/5+ [${memosWritten >= 5 ? '✓' : '○'}]`);
+    console.log(`   • Analytical memos: ${memosWritten} (at least ${T.MEMOS_REQUIRED}, ${T.MEMOS_RECOMMENDED} recommended) [${memosWritten >= T.MEMOS_REQUIRED ? '✓' : '○'}]`);
     console.log('');
     console.log('   📚 Need help with Stage 1?');
     console.log('   • Run: /qual-stage1-guide');

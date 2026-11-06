@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.3.3] - 2026-11-06 - One Stage 1 rule, and wording that matches behavior
+
+This release closes items from the [next-version list](https://github.com/linxule/interpretive-orchestration/issues/4) that did not need a redesign. Codex and Kimi reviewed the changes, and Codex reviewed the fixes.
+
+### Changed
+
+- Stage 1 uses one rule everywhere: 10 coded documents, at least 1 analytical memo and a declared research tradition. 5 memos are recommended. Before, the number of memos was 1, 3 or 5 depending on where you looked: `/qual-complete-stage1` and the Stage 1 guide asked for 5, `/qual-status` and the dashboard treated 3 as ready, and the readiness check passed with 1. Only the readiness check required a tradition. The rule now lives in `skills/_shared/scripts/stage1-thresholds.js`, and every script reads it from there.
+- Progress bars now aim for 5 memos, so Stage 1 can be ready before its bar reaches 100%. When your counts are met, `/qual-status` and the dashboard point you to `/qual-complete-stage1`, which also checks your reflexivity journal and data structure.
+- `/qual-reflect` now says how many sessions have ended since your last reflection, and opens with the questions logged at the end of those sessions. Agent tools never show output at the end of a session, so until now nobody saw these questions. A new script, `skills/_shared/scripts/reflection-sessions.js`, keeps the count.
+
+### Fixed
+
+- Forking a workspace branch no longer says you can explore "safely". A branch records its name, framing, rationale and decisions, but not its own copy of your codes, memos or files, so changes made on a branch also apply to the main line. The message and docs now say so.
+- Methodological rule files no longer start with a heading above a `paths:` block. Claude Code never read that block, so the rules have always loaded in every session. They still do, on purpose: an AI comparing cases may not have opened a file in a case folder. Each rule now names its folders in its text.
+- The session-end hook stopped logging for good after one line of the conversation log was not a JSON object. It now skips such lines, and starts a new line when the log does not end with one.
+- When only a memo is missing, the Stage 1 check now suggests writing one, not "Code 0 more documents".
+- A recorded Stage 1 count that is not a number now counts as 0.
+
+---
+
 ## [0.3.2] - 2026-11-06 - Say how to record Stage 1 counts
 
 ### Changed

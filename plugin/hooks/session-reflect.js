@@ -13,6 +13,15 @@
 const fs = require('fs');
 const path = require('path');
 
+// Logged with the session end, so /qual-reflect can open with them later.
+const REFLEXIVE_QUESTIONS = [
+  'What did you learn about YOUR data today?',
+  'What did you learn about YOUR interpretive process?',
+  'What assumptions did you examine (or should examine)?',
+  'How did working with AI shape your thinking?',
+  'What tensions or questions are you sitting with?'
+];
+
 function findProjectRoot(startPath) {
   let currentPath = startPath;
   while (currentPath !== path.parse(currentPath).root) {
@@ -46,10 +55,18 @@ function getSessionStats(projectRoot) {
     return { activities: 0, tools_used: [], codes_created: 0 };
   }
 
+  // Skip lines that are not JSON: one bad line must not stop the logging.
   const logs = fs.readFileSync(logPath, 'utf8')
     .split('\n')
     .filter(line => line.trim())
-    .map(line => JSON.parse(line));
+    .flatMap(line => {
+      try {
+        const entry = JSON.parse(line);
+        return entry && typeof entry === 'object' ? [entry] : [];
+      } catch (error) {
+        return [];
+      }
+    });
 
   // Use the last 20 entries as a simplified session window
   const recentLogs = logs.slice(-20);
@@ -86,11 +103,7 @@ function main() {
       session_activities: stats.activities,
       tools_used: stats.tools_used,
       codes_created: stats.codes_created,
-      reflexive_questions: [
-        'What did you learn about your data today?',
-        'What assumptions did you examine?',
-        'How did working with AI shape your thinking?'
-      ]
+      reflexive_questions: REFLEXIVE_QUESTIONS
     }
   );
 
@@ -115,11 +128,7 @@ function main() {
 
   console.log('   🤔 Reflexive questions for your journal:');
   console.log('');
-  console.log('   • What did you learn about YOUR data today?');
-  console.log('   • What did you learn about YOUR interpretive process?');
-  console.log('   • What assumptions did you examine (or should examine)?');
-  console.log('   • How did working with AI shape your thinking?');
-  console.log('   • What tensions or questions are you sitting with?');
+  for (const question of REFLEXIVE_QUESTIONS) console.log(`   • ${question}`);
   console.log('');
   console.log('   💡 Quick reflection:');
   console.log('   Run /qual-reflect for structured synthesis dialogue');
@@ -138,18 +147,22 @@ function main() {
     timestamp: new Date().toISOString(),
     from: 'session_end_hook',
     to: 'human_researcher',
-    message: 'Session ending. Reflexivity prompt recorded here; agent tools do not show session-end output, so the researcher may not have seen it.',
+    message: 'Session ending. Reflexivity prompt recorded here; agent tools do not show session-end output, so the researcher may not have seen it. /qual-reflect counts these entries (reflection-sessions.js) and opens with the questions.',
     stage: 'session_end',
     activity_type: 'reflexive_prompt',
     metadata: {
       session_activities: stats.activities,
-      tools_used: stats.tools_used
+      tools_used: stats.tools_used,
+      reflexive_questions: REFLEXIVE_QUESTIONS
     },
     philosophy_check: 'Constructivist reflexivity: researcher awareness of interpretive role'
   };
 
   if (fs.existsSync(path.dirname(logPath))) {
-    fs.appendFileSync(logPath, JSON.stringify(logEntry) + '\n');
+    // Start a new line first if the log does not end with one.
+    const text = fs.existsSync(logPath) ? fs.readFileSync(logPath, 'utf8') : '';
+    const separator = text && !text.endsWith('\n') ? '\n' : '';
+    fs.appendFileSync(logPath, separator + JSON.stringify(logEntry) + '\n');
   }
 
   console.log('   See you next session! 🌟');

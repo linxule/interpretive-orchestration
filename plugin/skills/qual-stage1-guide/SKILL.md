@@ -25,7 +25,7 @@ Without Stage 1:
 
 ### Minimum Requirements
 - **10-15 documents** coded manually
-- **5+ analytical memos** capturing insights
+- **At least 1 analytical memo** capturing insights; 5 are recommended
 - **Initial data structure** (concepts, themes)
 - **Reflexivity entries** about your interpretive process
 

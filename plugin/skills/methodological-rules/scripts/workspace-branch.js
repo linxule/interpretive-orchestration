@@ -159,7 +159,9 @@ function forkBranch(config, name, framing, rationale) {
     forked_from: previousBranch,
     forked_at_version: currentVersion,
     framing: framing || 'exploratory',
-    message: `Created and switched to branch "${name}". You can now explore this interpretive direction safely.`
+    message: `Created and switched to branch "${name}". The branch records this interpretive direction and why you ` +
+      'are exploring it. It does not keep its own copy of your codes, memos or files: changes you make now also ' +
+      'apply to the main line. Keep exploratory work in separate files if you want to compare or undo it later.'
   };
 }
 
@@ -413,7 +415,8 @@ Framing: ${result.framing}
 
 ${args.rationale ? `**Rationale:** ${args.rationale}` : ''}
 
-This branch provides a safe space to explore an alternative interpretive direction.
+This branch records an alternative interpretive direction and why it is being explored.
+It does not keep its own copy of codes, memos or files: changes made while on it also apply to the main line.
 When ready, merge with a synthesis memo or abandon with notes on what you learned.`);
   }
   console.log(JSON.stringify(result, null, 2));

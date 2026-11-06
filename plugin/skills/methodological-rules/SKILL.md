@@ -286,8 +286,8 @@ Templates use Mustache-style placeholders:
 
 **With Claude Code:**
 - Rules placed in `.claude/rules/` for auto-discovery
-- Uses official glob pattern frontmatter
-- Follows Claude Code rule best practices
+- Rules have no `paths` frontmatter, so they load in every session: an AI comparing cases or mixing streams may not have opened a file in the folders the rule names
+- Each rule names its folders in its text
 
 ---
 
@@ -295,13 +295,11 @@ Templates use Mustache-style placeholders:
 
 ```markdown
 # .claude/rules/case-isolation.md
----
-paths: data/cases/**
----
 ## Methodological Rule: Case Isolation
 
 **Study:** 3-case comparative study
 **Cases:** TechCorp Alpha, HealthCo Beta, FinServ Gamma
+**Case folders:** data/cases/techcorp, data/cases/healthco, data/cases/finserv
 **Status:** ACTIVE
 **Friction:** CHALLENGE
 

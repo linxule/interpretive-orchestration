@@ -15,6 +15,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const T = require('./stage1-thresholds.js');
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -72,13 +73,16 @@ function queryStatus(projectPath) {
   const actualCodes = countFiles(manualCodesDir);
   const actualMemos = countFiles(memosDir, ['.md', '.txt']);
 
-  const stage1 = config.sandwich_status?.stage1_details || {};
   // Readiness comes from recorded counts: manual-codes/ also holds raw transcripts.
-  const documentsCount = stage1.documents_manually_coded || 0;
-  const memosCount = stage1.memos_written || 0;
+  const readiness = T.stage1Readiness(config);
+  const documentsCount = readiness.documents;
+  const memosCount = readiness.memos;
 
-  const stage1Ready = documentsCount >= 10 && memosCount >= 3;
-  const stage1Progress = Math.min(100, Math.round((documentsCount / 10) * 70 + (Math.min(memosCount, 3) / 3) * 30));
+  const stage1Ready = readiness.ready;
+  const stage1Progress = Math.round(
+    Math.min(documentsCount / T.DOCUMENTS_REQUIRED, 1) * T.DOCUMENTS_WEIGHT +
+    Math.min(memosCount / T.MEMOS_RECOMMENDED, 1) * T.MEMOS_WEIGHT
+  );
 
   const stage2 = config.sandwich_status?.stage2_progress || {};
   const phase1Done = stage2.phase1_parallel_streams === 'complete';
@@ -97,19 +101,32 @@ function queryStatus(projectPath) {
 
   const recommendations = [];
 
-  if (!config.sandwich_status?.stage1_complete && !stage1Ready) {
-    if (documentsCount < 10) {
+  if (!config.sandwich_status?.stage1_complete) {
+    if (documentsCount < T.DOCUMENTS_REQUIRED) {
       recommendations.push({
         priority: 'high',
-        action: `Code ${10 - documentsCount} more documents manually`,
-        reason: 'Stage 1 requires manual coding of 10-15 documents for theoretical sensitivity'
+        action: `Code ${T.DOCUMENTS_REQUIRED - documentsCount} more documents manually`,
+        reason: `Stage 1 requires manual coding of ${T.DOCUMENTS_REQUIRED}-${T.DOCUMENTS_RECOMMENDED} documents for theoretical sensitivity`
       });
     }
-    if (memosCount < 3) {
+    if (memosCount < T.MEMOS_REQUIRED) {
       recommendations.push({
-        priority: 'medium',
-        action: `Write ${3 - memosCount} more analytical memos`,
+        priority: 'high',
+        action: 'Write at least one analytical memo',
+        reason: `Stage 1 requires at least ${T.MEMOS_REQUIRED} memo; ${T.MEMOS_RECOMMENDED} are recommended`
+      });
+    } else if (memosCount < T.MEMOS_RECOMMENDED) {
+      recommendations.push({
+        priority: 'low',
+        action: `Consider writing ${T.MEMOS_RECOMMENDED - memosCount} more analytical memos (${T.MEMOS_RECOMMENDED} recommended)`,
         reason: 'Memos capture emerging insights and build reflexive awareness'
+      });
+    }
+    if (readiness.missing.includes('tradition')) {
+      recommendations.push({
+        priority: 'high',
+        action: 'Declare your research tradition (project-setup, --tradition)',
+        reason: 'Stage 1 readiness needs a declared philosophical stance'
       });
     }
   }
@@ -127,8 +144,8 @@ function queryStatus(projectPath) {
   if (stage1Ready && !config.sandwich_status?.stage1_complete) {
     recommendations.push({
       priority: 'high',
-      action: 'Mark Stage 1 as complete to unlock Stage 2',
-      reason: 'You have sufficient foundation - ready for AI collaboration'
+      action: 'Run /qual-complete-stage1 to mark Stage 1 complete and unlock Stage 2',
+      reason: 'Your recorded counts and stance meet the Stage 1 rule. /qual-complete-stage1 also checks your reflexivity journal and data structure'
     });
   }
 
@@ -166,9 +183,10 @@ function queryStatus(projectPath) {
         status: config.sandwich_status?.stage1_complete ? 'complete' : (stage1Progress > 0 ? 'in_progress' : 'not_started'),
         progress_percent: stage1Progress,
         documents_coded: documentsCount,
-        documents_required: 10,
+        documents_required: T.DOCUMENTS_REQUIRED,
         memos_written: memosCount,
-        memos_recommended: 3,
+        memos_required: T.MEMOS_REQUIRED,
+        memos_recommended: T.MEMOS_RECOMMENDED,
         ready_for_stage2: stage1Ready
       },
 
@@ -199,13 +217,13 @@ function queryStatus(projectPath) {
 
     recommendations: recommendations,
 
-    visualization: generateAsciiDashboard(stage1Progress, stage2Progress, stage3Progress, config.sandwich_status?.stage1_complete)
+    visualization: generateAsciiDashboard(stage1Progress, stage2Progress, stage3Progress, config.sandwich_status?.stage1_complete, stage1Ready)
   };
 
   return status;
 }
 
-function generateAsciiDashboard(s1, s2, s3, s1Complete) {
+function generateAsciiDashboard(s1, s2, s3, s1Complete, s1Ready) {
   const bar = (pct, locked = false) => {
     if (locked) return '[LOCKED]    ';
     const filled = Math.round(pct / 10);
@@ -217,7 +235,7 @@ The Sandwich Methodology Progress
 =================================
 
 Stage 1 (Human Foundation)     ${bar(s1)}
-  ${s1Complete ? '[COMPLETE]' : s1 >= 100 ? '[READY]' : ''}
+  ${s1Complete ? '[COMPLETE]' : s1Ready ? '[READY]' : ''}
 
 Stage 2 (Human-AI Partnership) ${bar(s2, !s1Complete)}
   ${!s1Complete ? 'Complete Stage 1 to unlock' : ''}
