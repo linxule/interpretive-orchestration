@@ -114,7 +114,8 @@ function queryStatus(projectPath) {
     }
   }
 
-  if (!config.sandwich_status?.stage1_complete && (actualCodes > documentsCount || actualMemos > memosCount)) {
+  if (!config.sandwich_status?.stage1_complete &&
+      ((documentsCount === 0 && actualCodes > 0) || (memosCount === 0 && actualMemos > 0))) {
     recommendations.push({
       priority: 'medium',
       action: `Record your Stage 1 counts with update-progress.js (--documents-coded, --memos-written): ` +

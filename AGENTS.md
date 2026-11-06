@@ -94,7 +94,7 @@ Stage 3 (Synthesis):     Human synthesizes with AI dialogue
 
 | Component | Status |
 |-----------|--------|
-| **Plugin** | 0.3.1: 17 commands (as skills), 12 skills, 4 agents, 7 hooks |
+| **Plugin** | 0.3.2: 17 commands (as skills), 12 skills, 4 agents, 7 hooks |
 | **Claude Code** | Full support, including hooks |
 | **Codex, Copilot CLI, Kimi Code** | Installable; see `plugin/CLAUDE.md` → "Other platforms" for what works |
 | **Tests** | `node plugin/tests/run-tests.js` |

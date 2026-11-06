@@ -13,7 +13,7 @@ Please verify the following and report back to the researcher:
 
 ### 1. Plugin Status
 - Confirm the Interpretive Orchestration plugin is installed
-- Report the current version (should be 0.3.1)
+- Report the current version (should be 0.3.2)
 
 ### 2. Bundled MCP Servers (Should Auto-Start)
 Check if these servers are available and responding:
