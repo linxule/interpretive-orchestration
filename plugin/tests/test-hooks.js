@@ -10,7 +10,7 @@
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { execSync } = require('child_process');
+const { spawnSync } = require('child_process');
 
 const HOOKS_DIR = path.join(__dirname, '..', 'hooks');
 
@@ -178,7 +178,6 @@ function testInterpretivePauseStructure() {
 // Behavioral tests: feed run-hook.js the payloads Claude Code sends and check
 // what it returns. Payload shapes were captured from Claude Code 2.1.319.
 function makeProject(config) {
-  const os = require('os');
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'io-hook-test-'));
   fs.mkdirSync(path.join(dir, '.interpretive-orchestration'));
   fs.writeFileSync(path.join(dir, '.interpretive-orchestration', 'config.json'), JSON.stringify(config));
@@ -186,7 +185,6 @@ function makeProject(config) {
 }
 
 function runAdapter(script, payload, extraEnv = {}, args = []) {
-  const { spawnSync } = require('child_process');
   const env = { ...process.env, ...extraEnv };
   for (const name of ['COPILOT_PLUGIN_ROOT', 'KIMI_PLUGIN_ROOT']) {
     if (!extraEnv[name]) delete env[name];
@@ -274,7 +272,6 @@ function testHookAdapterBehaviour() {
   });
 
   test('adapter: without a payload the hook runs as before', () => {
-    const { spawnSync } = require('child_process');
     const result = spawnSync(process.execPath, [path.join(HOOKS_DIR, 'run-hook.js'), 'check-stage1-complete.js'], {
       cwd: incomplete, input: '', encoding: 'utf8'
     });

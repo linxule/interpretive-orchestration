@@ -7,7 +7,7 @@
  *   node update-rules.js --project-path /path/to/project
  *
  * This script:
- * 1. Checks current phase
+ * 1. Checks current phase (phase.js)
  * 2. Determines which rules need status updates
  * 3. Regenerates affected rules
  * 4. Logs changes to reflexivity journal
@@ -16,6 +16,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
+const { checkPhase } = require('./phase.js');
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -66,14 +67,11 @@ if (!args['project-path']) {
 const projectPath = path.resolve(args['project-path']);
 const rulesDir = path.join(projectPath, '.claude', 'rules');
 
-const checkPhaseScript = path.join(__dirname, 'check-phase.js');
 let phaseInfo;
 
 try {
-  const output = execFileSync(process.execPath, [checkPhaseScript, '--project-path', projectPath], {
-    encoding: 'utf8'
-  });
-  phaseInfo = JSON.parse(output);
+  const configPath = path.join(projectPath, '.interpretive-orchestration', 'config.json');
+  phaseInfo = checkPhase(JSON.parse(fs.readFileSync(configPath, 'utf8')));
 } catch (e) {
   console.error(JSON.stringify({
     success: false,
@@ -137,8 +135,11 @@ try {
 }
 
 // Report only rules the regeneration actually relaxed. Without a research
-// design, for example, nothing is regenerated and the file stays ACTIVE.
-const rulesRelaxed = rulesNeedingUpdate.filter(ruleName => ruleStatus(ruleName) === 'RELAXED');
+// design, for example, nothing is regenerated (rules_generated is 0) and the
+// file stays ACTIVE.
+const regenerated = Array.isArray(generateResult.rules_generated) ? generateResult.rules_generated : [];
+const rulesRelaxed = rulesNeedingUpdate.filter(ruleName =>
+  regenerated.some(rule => rule.name === ruleName && rule.status === 'RELAXED'));
 if (rulesRelaxed.length === 0) noUpdates();
 
 const transitionMessage = `**Phase Transition Detected**
@@ -159,7 +160,7 @@ console.log(JSON.stringify({
   success: true,
   current_phase: phaseInfo.current_phase,
   rules_updated: rulesRelaxed,
-  rules_regenerated: generateResult.rules_generated?.length || 0,
+  rules_regenerated: regenerated.length,
   message: `Phase transition: ${rulesRelaxed.length} rule(s) relaxed`
 }, null, 2));
 

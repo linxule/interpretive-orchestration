@@ -26,7 +26,9 @@ const os = require('os');
 const path = require('path');
 const { spawnSync } = require('child_process');
 
-// The agents and skills each hook was written for.
+// The agents and skills each hook was written for. stopHook marks a script
+// that is also a skill's own Stop hook, and says how it speaks at Stop (see
+// quietAtStop): 'quiet', or 'quiet-after-first-run'.
 const TRIGGERS = {
   'check-stage1-complete.js': {
     agents: ['dialogical-coder'],
@@ -34,10 +36,11 @@ const TRIGGERS = {
   },
   'interpretive-pause.js': { agents: ['dialogical-coder'], skills: [] },
   'check-coherence.js': { agents: ['dialogical-coder'], skills: [] },
-  'generate-audit-trail.js': { agents: [], skills: ['qual-synthesize'] },
+  'generate-audit-trail.js': { agents: [], skills: ['qual-synthesize'], stopHook: 'quiet-after-first-run' },
   'post-phase-transition.js': {
     agents: ['dialogical-coder'],
-    skills: ['qual-advance-stage', 'qual-complete-stage1', 'qual-parallel-streams', 'qual-synthesize', 'qual-characterize-patterns']
+    skills: ['qual-advance-stage', 'qual-complete-stage1', 'qual-parallel-streams', 'qual-synthesize', 'qual-characterize-patterns'],
+    stopHook: 'quiet'
   },
   'session-reflect.js': { agents: [], skills: [] },
   'session-stance.js': { agents: [], skills: [] }
@@ -74,7 +77,7 @@ const KIMI_CONFIRM_WINDOW_MS = 30 * 60 * 1000;
 // There the plugin's own Stop hook stands in for them, and runs after one of
 // the hook's skills was loaded. In hooks.json and codex-hooks.json these
 // stand-in hooks pass "after-skill"; Kimi is detected, so its manifest does not.
-const SKILL_STOP_SCRIPTS = new Set(['generate-audit-trail.js', 'post-phase-transition.js']);
+const SKILL_STOP_SCRIPTS = new Set(Object.keys(TRIGGERS).filter(script => TRIGGERS[script].stopHook));
 const AFTER_SKILL = process.argv[3] === 'after-skill';
 
 const COPILOT_NOTICE =
@@ -95,10 +98,21 @@ function readPayload() {
   if (process.stdin.isTTY) return null;
   try {
     const raw = fs.readFileSync(0, 'utf8');
-    return raw.trim() ? JSON.parse(raw) : null;
+    return raw.trim() ? normalize(JSON.parse(raw)) : null;
   } catch (error) {
     return null;
   }
+}
+
+// Copilot CLI's userPromptTransformed event, a typed slash command that
+// arrives already expanded, has no hook_event_name and names the session
+// sessionId. Give it the names the other events use.
+function normalize(payload) {
+  if (!payload.hook_event_name && typeof payload.transformedPrompt === 'string') {
+    payload.hook_event_name = 'userPromptTransformed';
+  }
+  if (!payload.session_id && payload.sessionId) payload.session_id = payload.sessionId;
+  return payload;
 }
 
 // "interpretive-orchestration:dialogical-coder" -> "dialogical-coder"
@@ -138,7 +152,7 @@ function targetOf(payload) {
     const names = [...promptText(payload).matchAll(SKILL_MENTION)].map(match => match[1]);
     return { kind: 'skill', name: names };
   }
-  if (isCopilotSlashCommand(payload)) {
+  if (event === 'userPromptTransformed') {
     const match = payload.transformedPrompt.match(/<skill-context name="([^"]+)">/);
     return { kind: 'skill', name: match ? baseName(match[1]) : '' };
   }
@@ -148,10 +162,15 @@ function targetOf(payload) {
   return { kind: 'other', name: '' };
 }
 
-// Copilot CLI's userPromptTransformed payload names the session sessionId.
+// Marker files are named from a session or agent ID and parts such as the
+// script name, kept to safe characters.
+function markerPath(id, ...parts) {
+  const name = [String(id).replace(/[^\w-]/g, ''), ...parts.map(part => String(part).replace(/[^\w.-]/g, ''))];
+  return path.join(PENDING_DIR, name.join('.'));
+}
+
 function sessionMarker(payload, ...parts) {
-  const session = String(payload.session_id || payload.sessionId || 'session').replace(/[^\w-]/g, '');
-  return path.join(PENDING_DIR, [session, ...parts.map(part => String(part).replace(/[^\w.-]/g, ''))].join('.'));
+  return markerPath(payload.session_id || 'session', ...parts);
 }
 
 // Consumes a one-use marker and says whether it was there and fresh.
@@ -179,14 +198,11 @@ function armKimiPasses(payload) {
   }
 }
 
-// Kimi only: true when a triggered call should exit without running the script.
-function kimiSkip(script, payload) {
-  const event = payload.hook_event_name;
-  if (event === 'PreToolUse') {
-    return takeMarker(sessionMarker(payload, targetOf(payload).name, script, 'confirmed'), KIMI_CONFIRM_WINDOW_MS);
-  }
-  // Kimi registers Stop only for the stand-ins, which skillStopSkip has let through.
-  return event === 'Stop' && !SKILL_STOP_SCRIPTS.has(script);
+// Kimi only: true when the researcher has replied since this call was held
+// back, so it goes through without the check.
+function kimiPass(script, payload, target) {
+  return payload.hook_event_name === 'PreToolUse' &&
+    takeMarker(sessionMarker(payload, target.name, script, 'confirmed'), KIMI_CONFIRM_WINDOW_MS);
 }
 
 // Stand-in for a skill's frontmatter Stop hook: true when the call should exit
@@ -200,18 +216,18 @@ function kimiSkip(script, payload) {
 //            in codex-hooks.json)
 // Claude Code runs the frontmatter hooks itself. It never leaves the marker,
 // since it is none of the above, so there the stand-ins in hooks.json do nothing.
-function skillStopSkip(script, payload) {
+function skillStopSkip(script, payload, target) {
   if (!SKILL_STOP_SCRIPTS.has(script) || !(ON_KIMI || AFTER_SKILL)) return false;
   const event = payload.hook_event_name;
   const marker = sessionMarker(payload, script, 'stop');
   if (event === 'Stop') return !fs.existsSync(marker);
   // On Kimi the phase transition also follows @dialogical-coder, as everywhere.
-  if (targetOf(payload).kind !== 'skill') return AFTER_SKILL;
+  if (target.kind !== 'skill') return AFTER_SKILL;
   // Copilot reports a skill that failed to load as a non-success result.
   const result = payload.tool_result && payload.tool_result.result_type;
   const failed = Boolean(result) && result !== 'success';
   const loaded = (event === 'PostToolUse' && (ON_KIMI || ON_COPILOT) && !failed) ||
-    (ON_COPILOT && isCopilotSlashCommand(payload)) ||
+    (ON_COPILOT && event === 'userPromptTransformed') ||
     (AFTER_SKILL && event === 'UserPromptSubmit');
   if (loaded) putMarker(marker);
   return true;
@@ -223,20 +239,10 @@ function skillStopSkip(script, payload) {
 // The audit trail is rewritten each time, so it covers the whole synthesis.
 // Only a run that wrote the audit trail counts as its first run (see main).
 function quietAtStop(script, payload) {
-  if (payload.hook_event_name !== 'Stop') return false;
-  if (script === 'post-phase-transition.js') return true;
-  return script === 'generate-audit-trail.js' && hasSession(payload) &&
-    fs.existsSync(sessionMarker(payload, script, 'ran'));
-}
-
-function hasSession(payload) {
-  return Boolean(payload.session_id || payload.sessionId);
-}
-
-// Copilot CLI's userPromptTransformed event: a typed slash command arrives
-// already expanded, with no hook_event_name.
-function isCopilotSlashCommand(payload) {
-  return !payload.hook_event_name && typeof payload.transformedPrompt === 'string';
+  const stopHook = TRIGGERS[script].stopHook;
+  if (payload.hook_event_name !== 'Stop' || !stopHook) return false;
+  return stopHook === 'quiet' ||
+    (Boolean(payload.session_id) && fs.existsSync(sessionMarker(payload, script, 'ran')));
 }
 
 function backgroundAgentId(payload) {
@@ -251,10 +257,6 @@ function backgroundAgentId(payload) {
   return match ? match[1] : null;
 }
 
-function pendingMarker(agentId, script) {
-  return path.join(PENDING_DIR, `${String(agentId).replace(/[^\w-]/g, '')}.${script}`);
-}
-
 // Returns true when this call should wait for, or was waiting for, SubagentStop.
 function deferForBackgroundAgent(script, payload) {
   // The Kimi manifest registers no SubagentStop, so a deferred hook would never run.
@@ -263,32 +265,27 @@ function deferForBackgroundAgent(script, payload) {
   if (event === 'PostToolUse') {
     const agentId = backgroundAgentId(payload);
     if (!agentId) return false;
-    fs.mkdirSync(PENDING_DIR, { recursive: true });
-    fs.writeFileSync(pendingMarker(agentId, script), '');
+    putMarker(markerPath(agentId, script));
     return true;
   }
-  if (event === 'SubagentStop') {
-    const marker = pendingMarker(payload.agent_id, script);
-    if (!fs.existsSync(marker)) return true;
-    fs.unlinkSync(marker);
-    return false;
-  }
-  return false;
+  // Only the SubagentStop of an agent this hook deferred runs it.
+  return event === 'SubagentStop' && !takeMarker(markerPath(payload.agent_id, script));
 }
 
-function isTriggered(script, payload) {
+function isTriggered(script, payload, target) {
   if (ALWAYS_EVENTS.has(payload.hook_event_name)) return true;
-  const triggers = TRIGGERS[script];
-  const target = targetOf(payload);
-  const names = [].concat(target.name);
-  if (target.kind === 'agent') return names.some(name => triggers.agents.includes(name));
-  if (target.kind === 'skill') return names.some(name => triggers.skills.includes(name));
-  return false;
+  const listed = { agent: TRIGGERS[script].agents, skill: TRIGGERS[script].skills }[target.kind] || [];
+  return [].concat(target.name).some(name => listed.includes(name));
 }
 
-function projectDir(payload) {
-  const candidates = [payload && payload.cwd, process.env.CLAUDE_PROJECT_DIR, process.cwd()];
-  return candidates.find(dir => dir && fs.existsSync(dir));
+// Runs the hook script from the researcher's project directory.
+function runScript(script, cwd, quiet) {
+  return spawnSync(process.execPath, [path.join(__dirname, script)], {
+    cwd: [cwd, process.env.CLAUDE_PROJECT_DIR, process.cwd()].find(dir => dir && fs.existsSync(dir)),
+    input: '',
+    encoding: 'utf8',
+    env: { ...process.env, INTERPRETIVE_ORCHESTRATION_QUIET: quiet ? '1' : '' }
+  });
 }
 
 // Trim blank lines at either end but keep the script's indentation.
@@ -308,38 +305,38 @@ function main() {
   }
 
   const payload = readPayload();
-  if (payload && ON_KIMI && payload.hook_event_name === 'UserPromptSubmit') armKimiPasses(payload);
-  const kimiStance = Boolean(payload) && isKimiStance(script, payload);
-  const stanceShown = kimiStance && sessionMarker(payload, script, 'shown');
-  if (stanceShown && fs.existsSync(stanceShown)) process.exit(0);
-  if (payload && !kimiStance && !isTriggered(script, payload)) process.exit(0);
-  if (payload && skillStopSkip(script, payload)) process.exit(0);
-  if (payload && ON_KIMI && kimiSkip(script, payload)) process.exit(0);
-  if (payload && deferForBackgroundAgent(script, payload)) process.exit(0);
-
-  const quiet = Boolean(payload) && quietAtStop(script, payload);
-  const result = spawnSync(process.execPath, [path.join(__dirname, script)], {
-    cwd: projectDir(payload),
-    input: '',
-    encoding: 'utf8',
-    env: { ...process.env, INTERPRETIVE_ORCHESTRATION_QUIET: quiet ? '1' : '' }
-  });
-
   if (!payload) {
+    // Run by hand: the script runs as before and its output passes straight through.
+    const result = runScript(script, null, false);
     process.stdout.write(result.stdout || '');
     process.stderr.write(result.stderr || '');
     process.exit(result.status === null ? 1 : result.status);
   }
 
+  const event = payload.hook_event_name;
+  const target = targetOf(payload);
+  if (ON_KIMI && event === 'UserPromptSubmit') armKimiPasses(payload);
+  const kimiStance = isKimiStance(script, payload);
+  const stanceShown = kimiStance && sessionMarker(payload, script, 'shown');
+  if (stanceShown && fs.existsSync(stanceShown)) process.exit(0);
+  if (!kimiStance && !isTriggered(script, payload, target)) process.exit(0);
+  if (skillStopSkip(script, payload, target)) process.exit(0);
+  if (ON_KIMI && kimiPass(script, payload, target)) process.exit(0);
+  if (deferForBackgroundAgent(script, payload)) process.exit(0);
+
+  const quiet = quietAtStop(script, payload);
+  const result = runScript(script, payload.cwd, quiet);
   const text = tidy(result.stdout);
   const details = tidy(result.stderr);
   const flagged = result.status !== 0;
+  const notice = text || details;
   const forClaude = details ? `${text}\n\nStructured details: ${details}` : text;
-  const event = payload.hook_event_name;
+  const copilotNotice = { additionalContext: `${COPILOT_NOTICE}\n\n${forClaude}` };
 
   // An audit trail that was written makes later runs in the session quiet. A
   // run outside a project prints nothing, and a failed one exits non-zero.
-  if (event === 'Stop' && script === 'generate-audit-trail.js' && !quiet && !flagged && text && hasSession(payload)) {
+  if (event === 'Stop' && TRIGGERS[script].stopHook === 'quiet-after-first-run' &&
+      !quiet && !flagged && text && payload.session_id) {
     putMarker(sessionMarker(payload, script, 'ran'));
   }
 
@@ -352,7 +349,7 @@ function main() {
     }
   } else if (event === 'PreToolUse') {
     if (flagged && ON_KIMI) {
-      putMarker(sessionMarker(payload, targetOf(payload).name, script, 'held'));
+      putMarker(sessionMarker(payload, target.name, script, 'held'));
       emit({
         hookSpecificOutput: {
           hookEventName: 'PreToolUse',
@@ -365,7 +362,7 @@ function main() {
         hookSpecificOutput: {
           hookEventName: 'PreToolUse',
           permissionDecision: 'ask',
-          permissionDecisionReason: text || details
+          permissionDecisionReason: notice
         }
       });
     } else if (text) {
@@ -374,7 +371,7 @@ function main() {
   } else if (event === 'UserPromptExpansion' || event === 'UserPromptSubmit') {
     if (flagged) {
       emit({
-        systemMessage: text || details,
+        systemMessage: notice,
         hookSpecificOutput: {
           hookEventName: event,
           additionalContext: `${CONFIRM_NOTE}\n\n${forClaude}`
@@ -383,23 +380,19 @@ function main() {
     } else if (text) {
       emit({ systemMessage: text });
     }
-  } else if (isCopilotSlashCommand(payload)) {
+  } else if (event === 'userPromptTransformed') {
     if (flagged) {
       emit({ modifiedTransformedPrompt: `${CONFIRM_NOTE}\n\n${forClaude}\n\n${payload.transformedPrompt}` });
     }
   } else if (event === 'PostToolUse') {
-    if (text || details) {
-      if (ON_COPILOT) {
-        emit({ additionalContext: `${COPILOT_NOTICE}\n\n${forClaude}` });
-      } else {
-        emit({
-          systemMessage: text || details,
-          hookSpecificOutput: {
-            hookEventName: 'PostToolUse',
-            additionalContext: `Interpretive Orchestration showed the researcher this methodology notice:\n\n${forClaude}`
-          }
-        });
-      }
+    if (notice) {
+      emit(ON_COPILOT ? copilotNotice : {
+        systemMessage: notice,
+        hookSpecificOutput: {
+          hookEventName: 'PostToolUse',
+          additionalContext: `Interpretive Orchestration showed the researcher this methodology notice:\n\n${forClaude}`
+        }
+      });
     }
   } else if (event === 'SessionStart') {
     if (text) {
@@ -410,20 +403,21 @@ function main() {
   } else if (event === 'Stop' || event === 'SubagentStop') {
     // Claude has finished this turn, or the background agent has finished,
     // so the notice goes to the researcher.
-    if (text || details) {
-      emit(ON_COPILOT
-        ? { additionalContext: `${COPILOT_NOTICE}\n\n${forClaude}` }
-        : { systemMessage: text || details });
-    }
+    if (notice) emit(ON_COPILOT ? copilotNotice : { systemMessage: notice });
   }
 
   process.exit(0);
 }
 
-try {
-  main();
-} catch (error) {
-  // A broken adapter must never block the researcher's work.
-  console.error(`run-hook: ${error.message}`);
-  process.exit(0);
+if (require.main === module) {
+  try {
+    main();
+  } catch (error) {
+    // A broken adapter must never block the researcher's work.
+    console.error(`run-hook: ${error.message}`);
+    process.exit(0);
+  }
 }
+
+// For the tests.
+module.exports = { TRIGGERS, SKILL_STOP_SCRIPTS };

@@ -1,7 +1,7 @@
 {
   "name": "interpretive-orchestration",
   "displayName": "Interpretive Orchestration: Epistemic Partnership System",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "Atelier of Co-Apprenticeship for interpretive qualitative research. Human and AI learn together as apprentices to the craft tradition (rigor, reflexivity, theoretical sensitivity). Three stages: Solo Practice → Side-by-Side Collaboration → Dialogue with Tradition. Instantiates Partnership Agency from Cognitio Emergens framework. Prevents calculator mindset, embeds meta-cognition, maintains human interpretive authority. Built with care on Gioia/Constructivist principles.",
   "author": {
     "name": "Xule Lin (SKEMA Business School) and Kevin Corley (Imperial College London)",

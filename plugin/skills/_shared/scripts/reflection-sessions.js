@@ -15,6 +15,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { readEntries, appendLine } = require('./conversation-log.js');
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -31,34 +32,6 @@ function parseArgs() {
     }
   }
   return parsed;
-}
-
-// Lines that are not JSON objects are skipped.
-function readEntries(logPath) {
-  if (!fs.existsSync(logPath)) return [];
-  return fs.readFileSync(logPath, 'utf8').split('\n').flatMap(line => {
-    if (!line.trim()) return [];
-    try {
-      const entry = JSON.parse(line);
-      return entry && typeof entry === 'object' ? [entry] : [];
-    } catch (error) {
-      return [];
-    }
-  });
-}
-
-// Starts a new line first if the log does not end with one.
-function appendLine(logPath, text) {
-  const size = fs.existsSync(logPath) ? fs.statSync(logPath).size : 0;
-  let separator = '';
-  if (size > 0) {
-    const fd = fs.openSync(logPath, 'r');
-    const last = Buffer.alloc(1);
-    fs.readSync(fd, last, 0, 1, size - 1);
-    fs.closeSync(fd);
-    if (last.toString() !== '\n') separator = '\n';
-  }
-  fs.appendFileSync(logPath, separator + text + '\n');
 }
 
 // Log order is time order: both sides only ever append.

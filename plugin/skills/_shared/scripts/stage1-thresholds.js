@@ -20,6 +20,8 @@ function count(value) {
 
 // Ready means the required counts are recorded and a tradition is declared.
 // `missing` lists what is not: 'documents', 'memos' or 'tradition'.
+// `progress` (0-100) aims for the required documents and the recommended
+// memos: coded documents count for 70%, memos for 30%.
 function stage1Readiness(config) {
   const details = (config && config.sandwich_status && config.sandwich_status.stage1_details) || {};
   const documents = count(details.documents_manually_coded);
@@ -29,7 +31,10 @@ function stage1Readiness(config) {
   if (documents < DOCUMENTS_REQUIRED) missing.push('documents');
   if (memos < MEMOS_REQUIRED) missing.push('memos');
   if (!tradition) missing.push('tradition');
-  return { ready: missing.length === 0, documents, memos, tradition, missing };
+  const progress = Math.round(
+    Math.min(documents / DOCUMENTS_REQUIRED, 1) * 70 + Math.min(memos / MEMOS_RECOMMENDED, 1) * 30
+  );
+  return { ready: missing.length === 0, documents, memos, tradition, missing, progress };
 }
 
 module.exports = Object.freeze({
@@ -37,8 +42,5 @@ module.exports = Object.freeze({
   DOCUMENTS_RECOMMENDED,
   MEMOS_REQUIRED,
   MEMOS_RECOMMENDED,
-  // Progress weights: coded documents count for 70%, memos for 30%.
-  DOCUMENTS_WEIGHT: 70,
-  MEMOS_WEIGHT: 30,
   stage1Readiness
 });

@@ -20,6 +20,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const T = require('../../_shared/scripts/stage1-thresholds.js');
 
 // Plugin skills folder, so suggested commands work from the researcher's project.
 const SKILLS_DIR = path.resolve(__dirname, '..', '..');
@@ -107,7 +108,7 @@ function processBatch(projectPath, args) {
     return {
       success: false,
       error: 'Stage 1 not complete',
-      suggestion: 'Complete manual coding of 10-15 documents before batch processing',
+      suggestion: `Complete manual coding of ${T.DOCUMENTS_REQUIRED}-${T.DOCUMENTS_RECOMMENDED} documents before batch processing`,
       current_count: config.sandwich_status?.stage1_details?.documents_manually_coded || 0
     };
   }

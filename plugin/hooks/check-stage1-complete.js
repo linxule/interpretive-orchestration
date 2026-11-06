@@ -80,8 +80,7 @@ function checkStage1Complete() {
 
   if (!config.sandwich_status || !config.sandwich_status.stage1_complete) {
     const stage1Details = config.sandwich_status?.stage1_details || {};
-    const documentsCoded = stage1Details.documents_manually_coded || 0;
-    const memosWritten = stage1Details.memos_written || 0;
+    const { documents: documentsCoded, memos: memosWritten } = T.stage1Readiness(config);
 
     outputRemediation(
       'STAGE1_INCOMPLETE',

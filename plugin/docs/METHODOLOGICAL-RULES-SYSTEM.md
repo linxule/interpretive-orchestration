@@ -787,7 +787,7 @@ The Methodological Rules System implements core principles from the plugin's des
 The rules system adds new components to the plugin architecture:
 
 **New skill:** `skills/methodological-rules/`
-- Scripts: `generate-rules.js`, `check-phase.js`, `update-rules.js`, `strain-check.js`, `apply-preset.js`, `saturation-tracker.js`, `workspace-branch.js`, `viz-dashboard.js`, `researcher-team.js`
+- Scripts: `generate-rules.js`, `check-phase.js`, `update-rules.js` (the phase logic they share is in `phase.js`), `strain-check.js`, `apply-preset.js`, `saturation-tracker.js`, `workspace-branch.js`, `viz-dashboard.js`, `researcher-team.js`
 - Templates: Case, wave, stream isolation
 - Data files: Proactive prompts, methodology presets
 

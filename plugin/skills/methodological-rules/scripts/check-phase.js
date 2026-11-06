@@ -14,6 +14,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { checkPhase } = require('./phase.js');
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -26,52 +27,6 @@ function parseArgs() {
     }
   }
   return parsed;
-}
-
-function getCurrentPhase(sandwichStatus) {
-  if (!sandwichStatus) return 'stage1_foundation';
-
-  const stage = sandwichStatus.current_stage;
-
-  if (stage === 'stage1_foundation') {
-    return 'stage1_foundation';
-  }
-
-  if (stage === 'stage2_collaboration') {
-    const progress = sandwichStatus.stage2_progress || {};
-    if (progress.phase3_pattern_characterization === 'in_progress' ||
-        progress.phase3_pattern_characterization === 'complete') {
-      return 'phase3_pattern_characterization';
-    }
-    if (progress.phase2_synthesis === 'in_progress' ||
-        progress.phase2_synthesis === 'complete') {
-      return 'phase2_synthesis';
-    }
-    return 'phase1_parallel_streams';
-  }
-
-  if (stage === 'stage3_synthesis') {
-    return 'stage3_synthesis';
-  }
-
-  return stage;
-}
-
-function shouldRelax(relaxesAt, currentPhase) {
-  const phaseOrder = [
-    'stage1_foundation',
-    'phase1_parallel_streams',
-    'phase2_synthesis',
-    'phase3_pattern_characterization',
-    'cross_wave_analysis',
-    'stage3_synthesis'
-  ];
-
-  const currentIndex = phaseOrder.indexOf(currentPhase);
-  const relaxIndex = phaseOrder.indexOf(relaxesAt);
-
-  if (currentIndex === -1 || relaxIndex === -1) return false;
-  return currentIndex >= relaxIndex;
 }
 
 const args = parseArgs();
@@ -106,49 +61,7 @@ try {
   process.exit(1);
 }
 
-const currentPhase = getCurrentPhase(config.sandwich_status);
-const design = config.research_design || {};
-const isolation = design.isolation_config || {};
-
-const result = {
-  success: true,
-  current_phase: currentPhase,
-  sandwich_status: config.sandwich_status,
-  rules_should_relax: [],
-  rules_still_active: [],
-  phase_details: {
-    stage: config.sandwich_status?.current_stage,
-    stage1_complete: config.sandwich_status?.stage1_complete,
-    stage2_progress: config.sandwich_status?.stage2_progress
-  }
-};
-
-if (isolation.case_isolation?.enabled !== false && design.cases?.length > 0) {
-  const relaxesAt = isolation.case_isolation?.relaxes_at || 'phase3_pattern_characterization';
-  if (shouldRelax(relaxesAt, currentPhase)) {
-    result.rules_should_relax.push({ name: 'case-isolation', relaxes_at: relaxesAt });
-  } else {
-    result.rules_still_active.push({ name: 'case-isolation', relaxes_at: relaxesAt });
-  }
-}
-
-if (isolation.wave_isolation?.enabled !== false && design.waves?.length > 0) {
-  const relaxesAt = isolation.wave_isolation?.relaxes_at || 'cross_wave_analysis';
-  if (shouldRelax(relaxesAt, currentPhase)) {
-    result.rules_should_relax.push({ name: 'wave-isolation', relaxes_at: relaxesAt });
-  } else {
-    result.rules_still_active.push({ name: 'wave-isolation', relaxes_at: relaxesAt });
-  }
-}
-
-if (isolation.stream_separation?.enabled !== false) {
-  const relaxesAt = isolation.stream_separation?.relaxes_at || 'phase2_synthesis';
-  if (shouldRelax(relaxesAt, currentPhase)) {
-    result.rules_should_relax.push({ name: 'stream-separation', relaxes_at: relaxesAt });
-  } else {
-    result.rules_still_active.push({ name: 'stream-separation', relaxes_at: relaxesAt });
-  }
-}
+const result = checkPhase(config);
 
 console.log(JSON.stringify(result, null, 2));
 process.exit(0);
