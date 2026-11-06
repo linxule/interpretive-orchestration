@@ -245,7 +245,7 @@ When analyzing data, check for applicable rules:
 
 ```bash
 # Check current phase and active rules
-node skills/methodological-rules/scripts/check-phase.js --project-path /path/to/project
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/check-phase.js" --project-path /path/to/project
 ```
 
 ### When Rules Apply
@@ -296,10 +296,10 @@ Rules are generated automatically during project setup if research design is con
 
 ```bash
 # Generate rules from research design
-node skills/methodological-rules/scripts/generate-rules.js --project-path /path/to/project
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/generate-rules.js" --project-path /path/to/project
 
 # Update rules after phase change
-node skills/methodological-rules/scripts/update-rules.js --project-path /path/to/project
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/update-rules.js" --project-path /path/to/project
 ```
 
 ---
@@ -319,10 +319,10 @@ When rules are repeatedly overridden, the system triggers a **methodological rev
 
 ```bash
 # Check strain status for all rules
-node skills/methodological-rules/scripts/strain-check.js --project-path /path/to/project
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/strain-check.js" --project-path /path/to/project
 
 # Check specific rule
-node skills/methodological-rules/scripts/strain-check.js --project-path /path/to/project --rule-id case-isolation
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/strain-check.js" --project-path /path/to/project --rule-id case-isolation
 ```
 
 ### Recording Overrides
@@ -330,7 +330,7 @@ node skills/methodological-rules/scripts/strain-check.js --project-path /path/to
 When a researcher proceeds despite a rule:
 
 ```bash
-node skills/methodological-rules/scripts/strain-check.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/strain-check.js" \
   --project-path /path/to/project \
   --record-override \
   --rule-id case-isolation \
@@ -364,7 +364,7 @@ What feels right?"
 ### Recording Resolution
 
 ```bash
-node skills/methodological-rules/scripts/strain-check.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/strain-check.js" \
   --project-path /path/to/project \
   --record-resolution \
   --rule-id case-isolation \
@@ -437,13 +437,13 @@ Presets configure defaults based on the researcher's methodological tradition. A
 ### Listing Presets
 
 ```bash
-node skills/methodological-rules/scripts/apply-preset.js --list-presets
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/apply-preset.js" --list-presets
 ```
 
 ### Applying a Preset
 
 ```bash
-node skills/methodological-rules/scripts/apply-preset.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/apply-preset.js" \
   --project-path /path/to/project \
   --preset gioia_corley
 ```
@@ -513,22 +513,22 @@ Theoretical saturation is NOT just repetition—it's understanding the full rang
 
 ```bash
 # Check current saturation status
-node skills/methodological-rules/scripts/saturation-tracker.js --project-path /path --status
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/saturation-tracker.js" --project-path /path --status
 
 # Record a coded document
-node skills/methodological-rules/scripts/saturation-tracker.js --project-path /path \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/saturation-tracker.js" --project-path /path \
   --record-document --doc-id "INT_001" --doc-name "Interview 1" --new-codes 5
 
 # Record a code refinement (split, merge, redefinition)
-node skills/methodological-rules/scripts/saturation-tracker.js --project-path /path \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/saturation-tracker.js" --project-path /path \
   --record-refinement --code-id "coping" --change-type "split" --rationale "Distinct mechanisms"
 
 # Update redundancy assessment
-node skills/methodological-rules/scripts/saturation-tracker.js --project-path /path \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/saturation-tracker.js" --project-path /path \
   --update-redundancy --score 0.72 --notes "Still seeing variations in resilience"
 
 # Full assessment
-node skills/methodological-rules/scripts/saturation-tracker.js --project-path /path --assess
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/saturation-tracker.js" --project-path /path --assess
 ```
 
 ### Researcher Experience
@@ -567,27 +567,27 @@ Support for non-linear, exploratory analysis. The "messy middle" of qualitative 
 
 ```bash
 # Check current branch status
-node skills/methodological-rules/scripts/workspace-branch.js --project-path /path --status
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/workspace-branch.js" --project-path /path --status
 
 # List all branches
-node skills/methodological-rules/scripts/workspace-branch.js --project-path /path --list
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/workspace-branch.js" --project-path /path --list
 
 # Fork a new exploratory branch
-node skills/methodological-rules/scripts/workspace-branch.js --project-path /path \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/workspace-branch.js" --project-path /path \
   --fork --name "alternative-structure" --framing "exploratory" \
   --rationale "Testing whether coping and resilience should be separate dimensions"
 
 # Switch between branches
-node skills/methodological-rules/scripts/workspace-branch.js --project-path /path \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/workspace-branch.js" --project-path /path \
   --switch --branch-id "alternative-structure-abc123"
 
 # Merge with synthesis memo (required!)
-node skills/methodological-rules/scripts/workspace-branch.js --project-path /path \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/workspace-branch.js" --project-path /path \
   --merge --branch-id "alternative-structure-abc123" \
   --memo "Explored separating coping/resilience. Found they are better as sub-themes of adaptive response because..."
 
 # Abandon a branch (still preserved for audit trail)
-node skills/methodological-rules/scripts/workspace-branch.js --project-path /path \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/workspace-branch.js" --project-path /path \
   --abandon --branch-id "alternative-structure-abc123" \
   --rationale "Lost coherence when separated"
 ```
@@ -609,16 +609,16 @@ CLI dashboards for monitoring methodological status.
 
 ```bash
 # Full dashboard (all views)
-node skills/methodological-rules/scripts/viz-dashboard.js --project-path /path --view all
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/viz-dashboard.js" --project-path /path --view all
 
 # Saturation only (with ASCII chart)
-node skills/methodological-rules/scripts/viz-dashboard.js --project-path /path --view saturation
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/viz-dashboard.js" --project-path /path --view saturation
 
 # Rules status (active rules, strain levels)
-node skills/methodological-rules/scripts/viz-dashboard.js --project-path /path --view rules
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/viz-dashboard.js" --project-path /path --view rules
 
 # Branch tree
-node skills/methodological-rules/scripts/viz-dashboard.js --project-path /path --view branches
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/viz-dashboard.js" --project-path /path --view branches
 ```
 
 ### Mermaid Export
@@ -627,10 +627,10 @@ Export for documentation:
 
 ```bash
 # Code lineage diagram
-node skills/methodological-rules/scripts/viz-dashboard.js --project-path /path --mermaid lineage
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/viz-dashboard.js" --project-path /path --mermaid lineage
 
 # Branch tree diagram
-node skills/methodological-rules/scripts/viz-dashboard.js --project-path /path --mermaid branches
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/viz-dashboard.js" --project-path /path --mermaid branches
 ```
 
 ### Example Dashboard Output
@@ -676,39 +676,39 @@ For team-based qualitative analysis with intercoder reliability.
 
 ```bash
 # Set primary researcher
-node skills/methodological-rules/scripts/researcher-team.js --project-path /path \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/researcher-team.js" --project-path /path \
   --set-primary --name "Dr. Jane Smith" --email "jane@university.edu"
 
 # Add team member
-node skills/methodological-rules/scripts/researcher-team.js --project-path /path \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/researcher-team.js" --project-path /path \
   --add-member --name "John Doe" --email "john@university.edu" --role "coder"
 
 # Set current researcher (for attribution)
-node skills/methodological-rules/scripts/researcher-team.js --project-path /path \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/researcher-team.js" --project-path /path \
   --set-current --researcher-id "john-doe"
 
 # Assign documents to researcher
-node skills/methodological-rules/scripts/researcher-team.js --project-path /path \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/researcher-team.js" --project-path /path \
   --assign --researcher-id "john-doe" --document "INT_001,INT_002,INT_003"
 
 # Check team status
-node skills/methodological-rules/scripts/researcher-team.js --project-path /path --status
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/researcher-team.js" --project-path /path --status
 ```
 
 ### Intercoder Reliability
 
 ```bash
 # Start ICR session (multiple coders, same documents)
-node skills/methodological-rules/scripts/researcher-team.js --project-path /path \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/researcher-team.js" --project-path /path \
   --start-icr-session --participants "jane-smith,john-doe" --documents "INT_005,INT_006"
 
 # Record ICR outcome (after comparison)
-node skills/methodological-rules/scripts/researcher-team.js --project-path /path \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/researcher-team.js" --project-path /path \
   --record-icr-outcome --session-id "icr-abc123" \
   --type "definition_refined" --details "Clarified boundary between coping and adapting"
 
 # Complete ICR session
-node skills/methodological-rules/scripts/researcher-team.js --project-path /path \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/researcher-team.js" --project-path /path \
   --complete-icr-session --session-id "icr-abc123" \
   --notes "Reached agreement on all major codes. Minor disagreement on 'resistance' noted."
 ```
@@ -718,7 +718,7 @@ node skills/methodological-rules/scripts/researcher-team.js --project-path /path
 All analytical decisions are attributed to the current researcher:
 
 ```bash
-node skills/methodological-rules/scripts/researcher-team.js --project-path /path \
+node "${CLAUDE_PLUGIN_ROOT}/skills/methodological-rules/scripts/researcher-team.js" --project-path /path \
   --log-attribution --action "created_code" --target "adaptive_coping" \
   --notes "Emerged from INT_003, distinct from passive coping"
 ```
@@ -802,7 +802,7 @@ The plugin uses auto-discoverable skills for complex workflows. Skills are loade
 
 Before any operation that depends on project state, read the config:
 ```bash
-node skills/_shared/scripts/read-config.js --project-path /path/to/project
+node "${CLAUDE_PLUGIN_ROOT}/skills/_shared/scripts/read-config.js" --project-path /path/to/project
 ```
 
 This returns the current project configuration including Stage 1 status.
@@ -876,7 +876,7 @@ How `run-hook.js` handles the differences:
 
 - Copilot (`COPILOT_PLUGIN_ROOT` set): reads `tool_input.agent_type` and the lowercase `skill` tool, handles typed commands through `userPromptTransformed` (Claude Code warns that this event is unknown and ignores it), and puts `additionalContext` at the top level, telling the model to pass notices on
 - Codex: no Skill tool or `UserPromptExpansion`, so the Stage 1 check runs on `UserPromptSubmit` and reads `$skill` mentions in the prompt
-- Kimi (`KIMI_PLUGIN_ROOT` set): the Stage 1 check denies once with a note asking the model to check with the researcher, then lets the confirmed retry through (one-use marker per session and target, which lapses after 30 minutes); the audit trail and phase transition run at every `Stop` after the AI loaded their skill through the Skill tool, because Kimi ignores skill frontmatter hooks. A typed `/skill:` command fires no hook, so then they do not run. Kimi gets no background-agent deferral, because the manifest registers no `SubagentStop`
+- Kimi (`KIMI_PLUGIN_ROOT` set): the Stage 1 check denies the call with a note asking the model to check with the researcher, and records the hold; the researcher's next prompt (`UserPromptSubmit`) turns it into a one-use pass for that target, which lapses 30 minutes later, so a retry made without asking is held again; the audit trail and phase transition run at every `Stop` after the AI loaded their skill through the Skill tool, because Kimi ignores skill frontmatter hooks. A typed `/skill:` command fires no hook, so then they do not run. Kimi gets no background-agent deferral, because the manifest registers no `SubagentStop`
 
 The 17 skills that run scripts start with a one-line note telling the model how to resolve `${CLAUDE_PLUGIN_ROOT}` when a platform leaves it unfilled. Keep it when you add a skill that runs a script.
 

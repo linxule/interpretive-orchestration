@@ -110,7 +110,7 @@ Every analytical decision is traced to enable verification of the interpretive p
 |--------|-------|
 | Stage 1 Complete | ${config.sandwich_status?.stage1_complete ? 'Yes' : 'No'} |
 | Documents Manually Coded | ${config.sandwich_status?.stage1_details?.documents_manually_coded || 0} |
-| Documents AI-Assisted | ${config.coding_progress?.documents_coded || 0} |
+| Documents Coded (Progress Counter) | ${config.coding_progress?.documents_coded || 0} |
 | Quotes Extracted | ${config.coding_progress?.quotes_extracted || 0} |
 | Concepts in Framework | ${config.coding_progress?.concepts_in_framework || 0} |
 
@@ -142,7 +142,7 @@ Every analytical decision is traced to enable verification of the interpretive p
     coding: logs.filter(l => l.action === 'coding' || l.activity_type === 'coding'),
     synthesis: logs.filter(l => l.action === 'synthesis' || l.activity_type === 'synthesis'),
     reflection: logs.filter(l => l.action === 'reflection' || l.activity_type === 'reflexive_insight'),
-    decisions: logs.filter(l => l.from === 'human_researcher'),
+    decisions: logs.filter(l => (l.from === 'human_researcher' || l.agent === 'human_researcher')),
     tool_usage: logs.filter(l => l.activity_type === 'deep_reasoning' || l.activity_type === 'paradox_navigation')
   };
 
@@ -150,7 +150,7 @@ Every analytical decision is traced to enable verification of the interpretive p
   if (categories.coding.length === 0) {
     markdown += '*No coding activities recorded.*\n\n';
   } else {
-    for (let i = 0; i < Math.min(categories.coding.length, 20); i++) {
+    for (let i = 0; i < categories.coding.length; i++) {
       const log = categories.coding[i];
       markdown += `**${i + 1}. ${log.timestamp}** - ${log.agent || log.from || 'Unknown'}
 > ${log.content || log.message || 'No content'}
@@ -158,9 +158,6 @@ ${log.document_id ? `Document: ${log.document_id}` : ''}
 ${log.concept_id ? `Concept: ${log.concept_id}` : ''}
 
 `;
-    }
-    if (categories.coding.length > 20) {
-      markdown += `*...and ${categories.coding.length - 20} more coding activities*\n\n`;
     }
   }
 
@@ -249,7 +246,7 @@ function generateJsonAudit(config, logs, sessions) {
     state: {
       stage1_complete: config.sandwich_status?.stage1_complete,
       documents_manually_coded: config.sandwich_status?.stage1_details?.documents_manually_coded,
-      documents_ai_coded: config.coding_progress?.documents_coded,
+      documents_coded_progress: config.coding_progress?.documents_coded,
       quotes_extracted: config.coding_progress?.quotes_extracted
     },
     sessions: sessions,
@@ -257,7 +254,7 @@ function generateJsonAudit(config, logs, sessions) {
     statistics: {
       total_logs: logs.length,
       coding_activities: logs.filter(l => l.action === 'coding').length,
-      human_decisions: logs.filter(l => l.from === 'human_researcher').length,
+      human_decisions: logs.filter(l => (l.from === 'human_researcher' || l.agent === 'human_researcher')).length,
       reflexive_insights: logs.filter(l => l.activity_type === 'reflexive_insight').length
     }
   };

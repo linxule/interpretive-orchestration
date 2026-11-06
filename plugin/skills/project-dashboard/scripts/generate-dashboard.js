@@ -42,28 +42,11 @@ function readConfig(projectPath) {
   }
 }
 
-function countFiles(dirPath, extensions = []) {
-  if (!fs.existsSync(dirPath)) return 0;
-  try {
-    const files = fs.readdirSync(dirPath).filter(f => !f.startsWith('.'));
-    if (extensions.length === 0) return files.length;
-    return files.filter(f => extensions.some(ext => f.endsWith(ext))).length;
-  } catch (error) {
-    return 0;
-  }
-}
-
 function calculateAllProgress(config, projectPath) {
   const stage1Details = config.sandwich_status?.stage1_details || {};
-  let docs = stage1Details.documents_manually_coded || 0;
-  let memos = stage1Details.memos_written || 0;
-
-  if (docs === 0) {
-    docs = countFiles(path.join(projectPath, 'stage1-foundation', 'manual-codes'), ['.md', '.json', '.txt']);
-  }
-  if (memos === 0) {
-    memos = countFiles(path.join(projectPath, 'stage1-foundation', 'memos'), ['.md']);
-  }
+  // Recorded counts only: manual-codes/ also holds raw transcripts.
+  const docs = stage1Details.documents_manually_coded || 0;
+  const memos = stage1Details.memos_written || 0;
 
   const stage1Progress = Math.round(Math.min(docs / 10, 1) * 70 + Math.min(memos / 3, 1) * 30);
 
@@ -81,6 +64,7 @@ function calculateAllProgress(config, projectPath) {
     (statusValue[phaseStatus.phase3] || 0) * 34
   );
 
+  statusValue.true = 1;
   const stage3Progress = config.sandwich_status?.stage3_progress || {};
   const s3Components = {
     evidence: stage3Progress.evidence_organized || 'not_started',

@@ -50,35 +50,15 @@ function readConfig(projectPath) {
   }
 }
 
-function countFiles(dirPath, extensions = []) {
-  if (!fs.existsSync(dirPath)) return 0;
-
-  try {
-    const files = fs.readdirSync(dirPath).filter(f => !f.startsWith('.'));
-    if (extensions.length === 0) return files.length;
-    return files.filter(f => extensions.some(ext => f.endsWith(ext))).length;
-  } catch (error) {
-    return 0;
-  }
-}
-
 function calculateStage1Progress(config, projectPath) {
   // Stage 1 formula: (docs/10 * 70) + (min(memos,3)/3 * 30)
   // Target: 10 documents, 3 memos
 
   const stage1Details = config.sandwich_status?.stage1_details || {};
 
-  let docsManuallyCodeded = stage1Details.documents_manually_coded || 0;
-  if (docsManuallyCodeded === 0) {
-    const manualCodesDir = path.join(projectPath, 'stage1-foundation', 'manual-codes');
-    docsManuallyCodeded = countFiles(manualCodesDir, ['.md', '.json', '.txt']);
-  }
-
-  let memosWritten = stage1Details.memos_written || 0;
-  if (memosWritten === 0) {
-    const memosDir = path.join(projectPath, 'stage1-foundation', 'memos');
-    memosWritten = countFiles(memosDir, ['.md']);
-  }
+  // Recorded counts only: manual-codes/ also holds raw transcripts.
+  const docsManuallyCodeded = stage1Details.documents_manually_coded || 0;
+  const memosWritten = stage1Details.memos_written || 0;
 
   const docScore = Math.min(docsManuallyCodeded / 10, 1) * 70;
   const memoScore = Math.min(memosWritten / 3, 1) * 30;
@@ -152,7 +132,7 @@ function calculateStage3Progress(config) {
 
   for (const [component, weight] of Object.entries(componentWeight)) {
     const status = stage3Progress[component] || 'not_started';
-    const value = statusValue[status] || 0;
+    const value = status === true ? 1 : (statusValue[status] || 0);
     components[component] = { status, contribution: Math.round(value * weight) };
     totalProgress += value * weight;
   }

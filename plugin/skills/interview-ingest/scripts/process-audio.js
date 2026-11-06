@@ -133,7 +133,8 @@ function loadOrCreateInventory(projectPath) {
     try {
       return JSON.parse(fs.readFileSync(inventoryPath, 'utf8'));
     } catch (error) {
-      // Corrupted file, create new
+      console.error(JSON.stringify({ success: false, error: `Failed to parse data inventory: ${error.message}` }));
+      process.exit(1);
     }
   }
 
@@ -264,7 +265,7 @@ function getToolInstruction(format, tier, filePath) {
 
 function generateWorkflow(files, tier, projectPath, outputDir) {
   const inventory = loadOrCreateInventory(projectPath);
-  const outputPath = path.join(projectPath, outputDir);
+  const outputPath = outputDir;
 
   if (!fs.existsSync(outputPath)) {
     fs.mkdirSync(outputPath, { recursive: true });
@@ -278,6 +279,7 @@ function generateWorkflow(files, tier, projectPath, outputDir) {
     steps: []
   };
 
+  const reservedDocuments = [...inventory.documents];
   const byFormat = {};
   for (const file of files) {
     if (!byFormat[file.format]) {
@@ -297,13 +299,17 @@ function generateWorkflow(files, tier, projectPath, outputDir) {
       file_count: formatFiles.length,
       tool: toolInfo.tool,
       action: toolInfo.action,
-      files: formatFiles.map(f => ({
-        name: f.name,
-        path: f.path,
-        size_mb: f.size_mb,
-        suggested_id: generateDocumentId(inventory.documents, format),
-        output_name: `${generateDocumentId(inventory.documents, format)}-${path.parse(f.name).name}.md`
-      })),
+      files: formatFiles.map(f => {
+        const id = generateDocumentId(reservedDocuments, format);
+        reservedDocuments.push({ id });
+        return {
+          name: f.name,
+          path: f.path,
+          size_mb: f.size_mb,
+          suggested_id: id,
+          output_name: `${id}-${path.parse(f.name).name}.md`
+        };
+      }),
       instruction: toolInfo.command,
       notes: toolInfo.notes,
       fallback: toolInfo.fallback
@@ -426,7 +432,7 @@ function main() {
   }
 
   const tier = detectTier();
-  const workflow = generateWorkflow(scanResult.files, tier, resolvedPath, outputDir);
+  const workflow = generateWorkflow(scanResult.files, tier, resolvedPath, resolvedOutput);
 
   console.log(JSON.stringify({
     success: true,

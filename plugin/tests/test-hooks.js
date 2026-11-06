@@ -335,7 +335,12 @@ function testHookAdapterBehaviour() {
   const kimi = { KIMI_PLUGIN_ROOT: path.join(HOOKS_DIR, '..', '..') };
   const kimiSession = `kimi-test-${process.pid}`;
 
-  test('adapter (Kimi): denies @dialogical-coder once, then lets the confirmed retry through', () => {
+  const kimiReply = session => ({
+    hook_event_name: 'UserPromptSubmit', cwd: incomplete, session_id: session,
+    client_type: 'kimi_code_cli', prompt: [{ type: 'text', text: 'yes, go ahead' }], is_steer: false
+  });
+
+  test('adapter (Kimi): holds @dialogical-coder, then lets one retry through after the researcher replies', () => {
     const call = {
       hook_event_name: 'PreToolUse', tool_name: 'Agent', cwd: incomplete, session_id: kimiSession,
       client_type: 'kimi_code_cli', tool_input: { subagent_type: 'dialogical-coder', prompt: 'code R01' }
@@ -343,19 +348,33 @@ function testHookAdapterBehaviour() {
     const first = runAdapter('check-stage1-complete.js', call, kimi);
     assert(first.json && first.json.hookSpecificOutput.permissionDecision === 'deny', 'First call should be denied');
     assert(first.json.hookSpecificOutput.permissionDecisionReason.includes('ask whether they want to proceed'), 'Should ask the researcher');
-    assert(runAdapter('check-stage1-complete.js', call, kimi).raw === '', 'Confirmed retry should pass');
+    assert(runAdapter('check-stage1-complete.js', call, kimi).json, 'A retry before the researcher replies is held again');
+    runAdapter('session-stance.js', kimiReply(kimiSession), kimi);
+    assert(runAdapter('check-stage1-complete.js', call, kimi).raw === '', 'A retry after the reply should pass');
     assert(runAdapter('check-stage1-complete.js', call, kimi).json, 'A later call is checked again');
   });
 
-  test('adapter (Kimi): the retry pass lapses after 30 minutes', () => {
+  test('adapter (Kimi): a reply in another session does not release the call', () => {
     const call = {
-      hook_event_name: 'PreToolUse', tool_name: 'Agent', cwd: incomplete, session_id: `${kimiSession}-lapse`,
+      hook_event_name: 'PreToolUse', tool_name: 'Agent', cwd: incomplete, session_id: `${kimiSession}-own`,
       tool_input: { subagent_type: 'dialogical-coder' }
     };
     assert(runAdapter('check-stage1-complete.js', call, kimi).json, 'First call should be denied');
+    runAdapter('session-stance.js', kimiReply(`${kimiSession}-other`), kimi);
+    assert(runAdapter('check-stage1-complete.js', call, kimi).json, 'Another session\'s reply should not count');
+  });
+
+  test('adapter (Kimi): the retry pass lapses 30 minutes after the reply', () => {
+    const session = `${kimiSession}-lapse`;
+    const call = {
+      hook_event_name: 'PreToolUse', tool_name: 'Agent', cwd: incomplete, session_id: session,
+      tool_input: { subagent_type: 'dialogical-coder' }
+    };
+    assert(runAdapter('check-stage1-complete.js', call, kimi).json, 'First call should be denied');
+    runAdapter('session-stance.js', kimiReply(session), kimi);
     const marker = path.join(os.tmpdir(), 'interpretive-orchestration-hooks',
-      `${kimiSession}-lapse.dialogical-coder.check-stage1-complete.js.confirmed`);
-    assert(fs.existsSync(marker), 'Denial should leave a retry pass');
+      `${session}.dialogical-coder.check-stage1-complete.js.confirmed`);
+    assert(fs.existsSync(marker), 'The reply should leave a retry pass');
     const old = new Date(Date.now() - 31 * 60 * 1000);
     fs.utimesSync(marker, old, old);
     assert(runAdapter('check-stage1-complete.js', call, kimi).json, 'A lapsed pass should not let the call through');

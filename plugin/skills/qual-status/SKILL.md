@@ -45,7 +45,7 @@ Show where you are in the sandwich methodology and what comes next.
    - Determine percentages for each stage
 
 3. **Check Readiness**
-   - Use `${CLAUDE_PLUGIN_ROOT}/skills/project-dashboard/scripts/check-readiness.js --project-path <project folder>`
+   - Use `${CLAUDE_PLUGIN_ROOT}/skills/project-dashboard/scripts/check-readiness.js --project-path <project folder> --target-stage stage2`
    - Determine if ready for stage transitions
 
 4. **Display Dashboard**

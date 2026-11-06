@@ -75,7 +75,7 @@ First, tell me about your research:
 
 **Exploratory/Complex Analysis (Building Framework):**
 ```
-Recommendation: Claude Opus 4
+Recommendation: The most capable model you have, such as Opus
 Why: Best at nuanced interpretation, theoretical abstraction
 Thinking budget: High (10k-16k tokens for deep reasoning)
 Best for: Stage 1 foundation, complex pattern recognition
@@ -87,7 +87,7 @@ Fits Opus? [Explain why yes/no]
 
 **Established Framework Application:**
 ```
-Recommendation: Claude Sonnet 4.5
+Recommendation: A balanced model, such as Sonnet
 Why: Fast, reliable, good quality for structured tasks
 Thinking budget: Medium (5k tokens)
 Best for: Stage 2 deductive coding with clear framework
@@ -98,7 +98,7 @@ Your situation: [Assess]
 
 **High Volume + Budget Conscious:**
 ```
-Recommendation: Gemini 2.5 Flash
+Recommendation: A fast, low-cost model
 Why: Excellent speed, very cost-effective
 Thinking budget: Standard
 Best for: Large datasets where speed matters
@@ -110,8 +110,8 @@ Your volume ([N] items) makes this practical
 
 **Synthesis Across Long Contexts:**
 ```
-Recommendation: Gemini 2.5 Pro
-Why: 1M token context, excellent for synthesis
+Recommendation: A long-context model
+Why: Excellent for synthesis across many documents
 Thinking budget: High for complex integration
 Best for: Phase 2 synthesis, pattern consolidation
 Cost: Moderate
@@ -257,7 +257,7 @@ Questions:
 Perfect! Here's my recommendation:
 
 Stage 2 Strategy:
-- Model: Claude Sonnet 4.5 (good quality, cost-effective)
+- Model: Claude Sonnet (good quality, cost-effective)
 - Thinking budget: Medium (5k tokens)
 - Processing: Batches of 10 (iterative refinement)
 
@@ -304,7 +304,7 @@ Phase 1: Sample Coding (20 diverse documents)
 - Purpose: Develop your framework with depth
 
 Phase 2: Batch Processing (remaining 180)
-- Model: Gemini 2.5 Flash (cost-effective for volume)
+- Model: A fast, low-cost model (cost-effective for volume)
 - Thinking: Standard
 - Processing: Parallel API (if you're comfortable, or I can help setup)
 - Cost: ~$40-60 for 180
@@ -441,13 +441,13 @@ Anthropic (Claude):
 Google (Gemini):
 - Strengths: Long context (1M tokens!), speed, cost-effective
 - Best for: Synthesis across many documents, high volume
-- Models: 2.5 Pro (synthesis), 2.5 Flash (speed)
+- Models: Choose a long-context model for synthesis or a fast, low-cost model for volume
 - Great for: Phase 2 integration, large datasets
 
 OpenAI (GPT):
 - Strengths: Familiar, widely used, good general capability
 - Best for: Standard tasks, when you want second opinion
-- Models: o3, o4-mini
+- Models: Choose a current general-purpose model
 - Use via: Zen MCP (multi-model validation)
 
 For YOUR research:

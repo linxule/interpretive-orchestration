@@ -139,12 +139,12 @@ Claude Code runs every part of the plugin. The other platforms run the same comm
 | Commands, skills and Lotus Wisdom | Yes | Yes | Yes | Yes |
 | Agents, such as `@dialogical-coder` | Yes | No, Codex plugins cannot include agents | Yes | Yes |
 | Partnership principles and Stage 1 progress given to the AI at the start of each session | Yes | Yes, once you trust the hooks | Yes | Yes, with your first message, which you also see |
-| Stage 1 check before Stage 2 work | Claude Code asks you when the AI starts the work. For a command you type, the AI is told to ask you | The AI is told to ask you when you name a Stage 2 command, once you trust the hooks | Same as Claude Code | The AI's first try is blocked and it is told to ask you. A repeat try goes through |
+| Stage 1 check before Stage 2 work | Claude Code asks you when the AI starts the work. For a command you type, the AI is told to ask you | The AI is told to ask you when you name a Stage 2 command, once you trust the hooks | Same as Claude Code | The AI's call is held and it is told to ask you. It goes through once you have replied |
 | Interpretive pause and coherence check after `@dialogical-coder` | Shown to you | No | The AI passes them on | Written to the conversation log only |
 | Audit trail and phase transition after Stage 2 commands | Yes | No | No | Only when the AI starts the command, not when you type it |
 | Session reflection | Written to the conversation log | Written to the conversation log | Written to the conversation log | Written to the conversation log when you exit |
 
-Where the AI is told to ask you, nothing forces it to. Every model we tested asked, but that depends on the model. The start-of-session reminder works the same way.
+Where the AI is told to ask you, nothing forces it to. In one test, the AI took the request for the work as your consent and went ahead until a hook held the call. Since 0.3.1, the instructions say that asking for the work is not consent, and in later tests the AI asked first. This still depends on the model. The start-of-session reminder works the same way.
 
 The [next-version list](https://github.com/linxule/interpretive-orchestration/issues/4) tracks the gaps.
 

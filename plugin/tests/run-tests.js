@@ -17,7 +17,8 @@ console.log('');
 
 const tests = [
   { name: 'Hook Tests', file: './test-hooks.js' },
-  { name: 'Schema Tests', file: './test-schemas.js' }
+  { name: 'Schema Tests', file: './test-schemas.js' },
+  { name: 'Script Tests', file: './test-scripts.js' }
 ];
 
 let totalPassed = 0;

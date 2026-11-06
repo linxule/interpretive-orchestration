@@ -1,57 +1,168 @@
 {
-  "project": {
-    "name": "tutorial-quickstart",
-    "created": "2025-01-01T00:00:00.000Z",
-    "version": "0.1.0"
+  "research_design": {
+    "study_type": "single_case",
+    "cases": [],
+    "waves": [],
+    "streams": {
+      "theoretical": {
+        "folder_path": "literature",
+        "sources": [
+          "sensemaking"
+        ]
+      },
+      "empirical": {
+        "folder_path": "data",
+        "sources": [
+          "interviews"
+        ]
+      }
+    },
+    "data_sources": [
+      {
+        "type": "interviews",
+        "role": "primary",
+        "count": 12,
+        "description": "Semi-structured interviews about how teams respond to organizational change"
+      }
+    ],
+    "isolation_config": {
+      "case_isolation": {
+        "enabled": false,
+        "relaxes_at": "phase3_pattern_characterization",
+        "friction_level": "challenge"
+      },
+      "wave_isolation": {
+        "enabled": false,
+        "relaxes_at": "cross_wave_analysis",
+        "friction_level": "challenge"
+      },
+      "stream_separation": {
+        "enabled": true,
+        "relaxes_at": "phase2_synthesis",
+        "friction_level": "nudge"
+      },
+      "custom_isolations": []
+    },
+    "rule_overrides": []
   },
-  "epistemic_stance": {
+  "project_info": {
+    "name": "Tutorial Quickstart: Team Responses to Change",
+    "research_question": "How do team members make sense of organizational change?",
+    "domain": "organizational behavior",
+    "created_date": "2025-01-01",
+    "researcher_name": "Tutorial Researcher"
+  },
+  "philosophical_stance": {
     "ontology": "interpretivist",
-    "epistemology": "systematic_co_construction",
+    "epistemology": "systematic_interpretation",
     "tradition": "gioia_corley",
     "ai_relationship": "epistemic_partner",
-    "language_preference": {
-      "use": ["construct", "characterize", "interpret", "build"],
-      "avoid": ["discover", "find", "extract", "identify"]
-    }
+    "vocabulary_mode": "systematic",
+    "coding_verbs": [
+      "construct",
+      "interpret",
+      "characterize",
+      "organize",
+      "build"
+    ],
+    "avoid_verbs": [
+      "discover",
+      "find",
+      "extract",
+      "uncover",
+      "reveal"
+    ],
+    "reflexivity_level": "high",
+    "interpretive_authority": "human"
   },
-  "methodology": {
-    "approach": "atelier_three_stage",
-    "stages": {
-      "stage1": {
-        "name": "Solo Practice",
-        "status": "not_started",
-        "documents_coded": 0,
-        "target_documents": 15,
-        "memos_written": 0
-      },
-      "stage2": {
-        "name": "Side-by-Side Collaboration",
-        "status": "locked",
-        "phases": ["parallel_streams", "synthesis", "pattern_characterization"]
-      },
-      "stage3": {
-        "name": "Dialogue with Tradition",
-        "status": "locked"
-      }
-    }
-  },
-  "data": {
-    "total_documents": 0,
-    "documents_location": "./your-documents/",
-    "data_structure_version": 0
-  },
-  "mcps": {
-    "bundled": {
-      "lotus_wisdom": true
+  "sandwich_status": {
+    "current_stage": "stage1_foundation",
+    "stage1_complete": false,
+    "stage1_details": {
+      "documents_manually_coded": 4,
+      "initial_structure_created": true,
+      "memos_written": 2,
+      "theoretical_frameworks_consulted": []
     },
-    "optional": {
-      "zen_mcp": false,
-      "jina": false,
-      "exa": false,
-      "zotero": false
+    "stage2_progress": {
+      "phase1_parallel_streams": "not_started",
+      "phase2_synthesis": "not_started",
+      "phase3_pattern_characterization": "not_started"
+    },
+    "stage3_progress": {
+      "evidence_organized": false,
+      "theory_developed": false,
+      "manuscript_drafted": false
     }
   },
-  "notes": {
-    "description": "This is a sample configuration file for the tutorial quickstart. Replace with your actual project settings after running /qual-init."
+  "data_structure": {
+    "aggregate_dimensions": [],
+    "second_order_themes": [],
+    "first_order_concepts": [
+      {
+        "id": "C1",
+        "name": "Protecting team routines",
+        "definition": "Actions team members take to preserve familiar ways of working",
+        "informant_terms": [
+          "keep our rhythm"
+        ],
+        "example_quotes": []
+      },
+      {
+        "id": "C2",
+        "name": "Making room for experimentation",
+        "definition": "Attempts to try new practices without disrupting essential work",
+        "informant_terms": [
+          "test it on a small scale"
+        ],
+        "example_quotes": []
+      },
+      {
+        "id": "C3",
+        "name": "Seeking cues from leaders",
+        "definition": "Ways team members use leadership signals to interpret the change",
+        "informant_terms": [
+          "watch what they prioritize"
+        ],
+        "example_quotes": []
+      }
+    ],
+    "version_history": [
+      {
+        "version": "0.1",
+        "date": "2025-01-01",
+        "changes": "Initial structure created",
+        "rationale": "Project initialization"
+      },
+      {
+        "version": "0.2",
+        "date": "2025-01-15",
+        "changes": "Added three first-order concepts",
+        "rationale": "Manual coding of the first four interviews"
+      }
+    ]
+  },
+  "mcp_integrations": {
+    "active_mcps": [
+      "lotus-wisdom"
+    ],
+    "mcp_usage_log": []
+  },
+  "epistemic_growth": {
+    "reflexive_moments": [],
+    "assumption_challenges": [],
+    "philosophical_tensions": []
+  },
+  "interaction_preferences": {
+    "teaching_moment_frequency": "key_decisions",
+    "philosophical_depth": "beginner",
+    "preferred_dialogue_style": "socratic_questions",
+    "uncertainty_comfort": "comfortable_with_ambiguity"
+  },
+  "coding_progress": {
+    "documents_coded": 4,
+    "quotes_extracted": 18,
+    "concepts_in_framework": 3,
+    "last_coding_session": "2025-01-15T14:30:00.000Z"
   }
 }

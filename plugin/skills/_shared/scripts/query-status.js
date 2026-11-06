@@ -73,8 +73,9 @@ function queryStatus(projectPath) {
   const actualMemos = countFiles(memosDir, ['.md', '.txt']);
 
   const stage1 = config.sandwich_status?.stage1_details || {};
-  const documentsCount = Math.max(stage1.documents_manually_coded || 0, actualCodes);
-  const memosCount = Math.max(stage1.memos_written || 0, actualMemos);
+  // Readiness comes from recorded counts: manual-codes/ also holds raw transcripts.
+  const documentsCount = stage1.documents_manually_coded || 0;
+  const memosCount = stage1.memos_written || 0;
 
   const stage1Ready = documentsCount >= 10 && memosCount >= 3;
   const stage1Progress = Math.min(100, Math.round((documentsCount / 10) * 70 + (Math.min(memosCount, 3) / 3) * 30));
@@ -89,9 +90,10 @@ function queryStatus(projectPath) {
                         (phase3Done ? 34 : (stage2.phase3_pattern_characterization === 'in_progress' ? 15 : 0));
 
   const stage3 = config.sandwich_status?.stage3_progress || {};
-  const stage3Progress = (stage3.evidence_organized ? 33 : 0) +
-                        (stage3.theory_developed ? 33 : 0) +
-                        (stage3.manuscript_drafted ? 34 : 0);
+  const done = value => value === true || value === 'complete';
+  const stage3Progress = (done(stage3.evidence_organized) ? 33 : 0) +
+                        (done(stage3.theory_developed) ? 33 : 0) +
+                        (done(stage3.manuscript_drafted) ? 34 : 0);
 
   const recommendations = [];
 
@@ -110,6 +112,15 @@ function queryStatus(projectPath) {
         reason: 'Memos capture emerging insights and build reflexive awareness'
       });
     }
+  }
+
+  if (!config.sandwich_status?.stage1_complete && (actualCodes > documentsCount || actualMemos > memosCount)) {
+    recommendations.push({
+      priority: 'medium',
+      action: `Record your Stage 1 counts with update-progress.js (--documents-coded, --memos-written): ` +
+        `${actualCodes} file(s) in manual-codes and ${actualMemos} in memos, recorded ${documentsCount} and ${memosCount}`,
+      reason: 'Readiness uses recorded counts, because manual-codes also holds raw transcripts'
+    });
   }
 
   if (stage1Ready && !config.sandwich_status?.stage1_complete) {

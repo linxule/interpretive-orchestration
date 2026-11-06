@@ -1,6 +1,7 @@
 # ADR: Project Rules Feature
 
 **Status:** Decided - Not Implementing
+**Current status:** Superseded - rules are now generated into `.claude/rules/` by the methodological-rules skill.
 **Date:** 2025-12-13
 **Context:** Explored whether to add Claude Code's `.claude/rules/` path-specific configuration
 
@@ -122,7 +123,7 @@ Need path-specific behavior?
 
 - **Claude Code Documentation:** [Memory Management](https://docs.anthropic.com/en/docs/claude-code/memory), [Settings](https://docs.anthropic.com/en/docs/claude-code/settings)
 - **External Consultation:** Gemini 3 Pro, Kimi K2 (2025-12-13)
-- **Related:** [ARCHITECTURE.md](./ARCHITECTURE.md) (current plugin architecture)
+- **Related:** [ARCHITECTURE.md](../ARCHITECTURE.md) (current plugin architecture)
 
 ---
 

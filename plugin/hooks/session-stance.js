@@ -43,6 +43,7 @@ function stage1Status(config) {
     `and ${details.memos_written || 0} memos written so far. Before any AI-assisted coding, ` +
     'whether or not the researcher used a /qual-* command, explain why the manual foundation ' +
     'matters (principle 1 below) and ask whether they want to proceed anyway, and why. ' +
+    'Asking for the work is not that confirmation: ask, then wait for their answer. ' +
     'If they confirm, respect their decision.';
 }
 

@@ -25,7 +25,7 @@ Use this skill when:
 2. Initial data structure exists
 3. Project is properly initialized
 
-Use `${CLAUDE_PLUGIN_ROOT}/skills/_shared/scripts/read-config.js` to check readiness.
+Use `${CLAUDE_PLUGIN_ROOT}/skills/_shared/scripts/read-config.js --project-path <project folder>` to check readiness.
 
 ## Workflow Stages
 

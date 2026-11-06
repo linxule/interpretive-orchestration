@@ -1,7 +1,7 @@
 {
   "name": "interpretive-orchestration",
   "displayName": "Interpretive Orchestration: Epistemic Partnership System",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Atelier of Co-Apprenticeship for interpretive qualitative research. Human and AI learn together as apprentices to the craft tradition (rigor, reflexivity, theoretical sensitivity). Three stages: Solo Practice → Side-by-Side Collaboration → Dialogue with Tradition. Instantiates Partnership Agency from Cognitio Emergens framework. Prevents calculator mindset, embeds meta-cognition, maintains human interpretive authority. Built with care on Gioia/Constructivist principles.",
   "author": {
     "name": "Xule Lin (SKEMA Business School) and Kevin Corley (Imperial College London)",
@@ -98,6 +98,7 @@
       "PreStage2",
       "PostFiveDocuments",
       "PostSynthesis",
+      "SessionStart",
       "SessionEnd",
       "EpistemicCoherence",
       "PostPhaseTransition"
@@ -127,10 +128,10 @@
   "requires": {
     "claudeCode": ">=2.1.319 (tested version)",
     "models": {
-      "recommended": "claude-opus-4-6",
+      "recommended": "the most capable model you have",
       "alternatives": [
-        "claude-sonnet-4-5",
-        "gemini-2.5-pro"
+        "a balanced model such as sonnet",
+        "a long-context model for synthesis"
       ]
     },
     "platforms": {

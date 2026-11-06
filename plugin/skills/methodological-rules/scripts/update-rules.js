@@ -15,7 +15,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
+const { execFileSync } = require('child_process');
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -70,7 +70,7 @@ const checkPhaseScript = path.join(__dirname, 'check-phase.js');
 let phaseInfo;
 
 try {
-  const output = execSync(`node "${checkPhaseScript}" --project-path "${projectPath}"`, {
+  const output = execFileSync(process.execPath, [checkPhaseScript, '--project-path', projectPath], {
     encoding: 'utf8'
   });
   phaseInfo = JSON.parse(output);
@@ -121,7 +121,7 @@ const generateScript = path.join(__dirname, 'generate-rules.js');
 let generateResult;
 
 try {
-  const output = execSync(`node "${generateScript}" --project-path "${projectPath}"`, {
+  const output = execFileSync(process.execPath, [generateScript, '--project-path', projectPath], {
     encoding: 'utf8'
   });
   generateResult = JSON.parse(output);
