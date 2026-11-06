@@ -39,7 +39,6 @@ function parseArgs() {
 }
 
 function getVocabulary(ontology, epistemology) {
-  // Determine vocabulary mode based on stance
   if (ontology === 'objectivist' || epistemology === 'objectivist_discovery') {
     return {
       mode: 'discovery',
@@ -63,11 +62,9 @@ function getVocabulary(ontology, epistemology) {
 }
 
 /**
- * Generate research_design section from arguments
- * Handles both simple --study-type and complex --research-design JSON
+ * Accept either complete research-design JSON or individual design arguments.
  */
 function generateResearchDesign(args) {
-  // If full research-design JSON provided, parse and use it
   if (args['research-design']) {
     try {
       return JSON.parse(args['research-design']);
@@ -76,7 +73,6 @@ function generateResearchDesign(args) {
     }
   }
 
-  // Build from individual arguments
   const studyType = args['study-type'] || 'single_case';
 
   const design = {
@@ -216,15 +212,12 @@ function atomicWrite(filePath, content) {
   const tempPath = filePath + '.tmp.' + process.pid;
 
   try {
-    // Write to temp file first
     fs.writeFileSync(tempPath, content);
 
-    // Atomic rename
     fs.renameSync(tempPath, filePath);
 
     return { success: true };
   } catch (error) {
-    // Clean up temp file if it exists
     try {
       if (fs.existsSync(tempPath)) {
         fs.unlinkSync(tempPath);
@@ -261,7 +254,6 @@ function loadExistingConfig(configPath) {
   }
 }
 
-// Main execution
 const args = parseArgs();
 
 if (!args['project-path']) {
@@ -286,11 +278,10 @@ if (!configPath.startsWith(resolvedPath + path.sep) && configPath !== resolvedPa
   process.exit(1);
 }
 
-// Ensure directory exists
 try {
   fs.mkdirSync(configDir, { recursive: true });
 } catch (error) {
-  // Directory might already exist
+  // Defer directory errors to the atomic write.
 }
 
 // CRITICAL: Load existing config if present to preserve progress
@@ -310,29 +301,24 @@ if (existingConfig) {
     mcp_integrations: existingConfig.mcp_integrations
   };
 
-  // Start with new config structure
   finalConfig = { ...newConfig };
 
-  // Restore preserved fields
   Object.assign(finalConfig, preservedFields);
 
   // Handle research_design - preserve if exists unless explicitly updating
   if (existingConfig.research_design) {
     if (args['research-design'] || args['study-type']) {
-      // User is explicitly updating research design - merge carefully
       finalConfig.research_design = {
         ...existingConfig.research_design,
         ...newConfig.research_design,
         // Preserve rule_overrides (audit trail)
         rule_overrides: existingConfig.research_design.rule_overrides || [],
-        // Merge isolation_config carefully
         isolation_config: {
           ...existingConfig.research_design.isolation_config,
           ...newConfig.research_design.isolation_config
         }
       };
     } else {
-      // No explicit update - preserve existing research_design entirely
       finalConfig.research_design = existingConfig.research_design;
     }
   }
@@ -344,7 +330,6 @@ if (existingConfig) {
     created_date: existingConfig.project_info.created_date  // Never change creation date
   };
 
-  // Merge philosophical_stance (allow updates)
   if (args.ontology || args.epistemology || args.tradition || args['ai-relationship']) {
     finalConfig.philosophical_stance = {
       ...existingConfig.philosophical_stance,
@@ -354,7 +339,6 @@ if (existingConfig) {
     finalConfig.philosophical_stance = existingConfig.philosophical_stance;
   }
 
-  // Merge interaction_preferences (allow updates)
   finalConfig.interaction_preferences = {
     ...existingConfig.interaction_preferences,
     ...newConfig.interaction_preferences

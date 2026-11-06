@@ -53,7 +53,6 @@ ${message}
   }
 }
 
-// Main execution
 const args = parseArgs();
 
 if (!args['project-path']) {
@@ -67,7 +66,6 @@ if (!args['project-path']) {
 const projectPath = path.resolve(args['project-path']);
 const rulesDir = path.join(projectPath, '.claude', 'rules');
 
-// First, check current phase status
 const checkPhaseScript = path.join(__dirname, 'check-phase.js');
 let phaseInfo;
 
@@ -84,7 +82,6 @@ try {
   process.exit(1);
 }
 
-// Check if any rules exist that need updating
 const existingRules = [];
 if (fs.existsSync(rulesDir)) {
   const files = fs.readdirSync(rulesDir);
@@ -95,17 +92,14 @@ if (fs.existsSync(rulesDir)) {
   }
 }
 
-// Determine what changed
 const relaxedRules = phaseInfo.rules_should_relax.map(r => r.name);
 const rulesNeedingUpdate = existingRules.filter(ruleName => {
-  // Read current rule to check its status
   const rulePath = path.join(rulesDir, `${ruleName}.md`);
   try {
     const content = fs.readFileSync(rulePath, 'utf8');
     const isCurrentlyActive = content.includes('**Rule Status:** ACTIVE');
     const shouldBeRelaxed = relaxedRules.includes(ruleName);
 
-    // Need update if status mismatch
     return isCurrentlyActive && shouldBeRelaxed;
   } catch (e) {
     return false;
@@ -139,7 +133,6 @@ try {
   process.exit(1);
 }
 
-// Log the transition
 const transitionMessage = `**Phase Transition Detected**
 
 **New Phase:** ${phaseInfo.current_phase}
@@ -154,7 +147,6 @@ This is a natural part of your analytical progression. Rules relax when methodol
 
 logToJournal(projectPath, transitionMessage);
 
-// Output result
 console.log(JSON.stringify({
   success: true,
   current_phase: phaseInfo.current_phase,

@@ -41,9 +41,7 @@ function loadConfig(projectPath) {
   return JSON.parse(fs.readFileSync(configPath, 'utf8'));
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
 // ASCII Art & Formatting Helpers
-// ═══════════════════════════════════════════════════════════════════════════
 
 const BOX = {
   topLeft: '┌',
@@ -112,9 +110,7 @@ function box(title, content, width = 60) {
   return output.join('\n');
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
 // Saturation Visualization
-// ═══════════════════════════════════════════════════════════════════════════
 
 function vizSaturation(config) {
   const tracking = config.saturation_tracking;
@@ -125,7 +121,6 @@ function vizSaturation(config) {
 
   const lines = [];
 
-  // Header
   const level = tracking.saturation_signals?.overall_level || 'unknown';
   const levelEmoji = {
     low: '○○○○○',
@@ -138,15 +133,12 @@ function vizSaturation(config) {
   lines.push(`Saturation Level: ${level.toUpperCase()} ${levelEmoji}`);
   lines.push('');
 
-  // Code Generation Rate Chart
   lines.push('CODE GENERATION (new codes per document)');
   const codesByDoc = tracking.code_generation?.codes_by_document || [];
   if (codesByDoc.length > 0) {
-    // ASCII sparkline of last 10 documents
     const recent = codesByDoc.slice(-10);
     const maxCodes = Math.max(...recent.map(d => d.new_codes_created), 1);
 
-    // Draw mini bar chart
     const chartHeight = 4;
     for (let row = chartHeight; row > 0; row--) {
       const threshold = (row / chartHeight) * maxCodes;
@@ -169,7 +161,6 @@ function vizSaturation(config) {
 
   lines.push('');
 
-  // Refinement Activity
   lines.push('REFINEMENT ACTIVITY');
   const refinement = tracking.refinement || {};
   lines.push(`  Recent changes: ${refinement.changes_last_5_documents || 0}`);
@@ -177,7 +168,6 @@ function vizSaturation(config) {
 
   lines.push('');
 
-  // Redundancy Score
   lines.push('REDUNDANCY');
   const redundancy = tracking.redundancy || {};
   const redScore = redundancy.redundancy_score || 0;
@@ -188,7 +178,6 @@ function vizSaturation(config) {
 
   lines.push('');
 
-  // Recommendation
   if (tracking.saturation_signals?.recommendation) {
     lines.push('RECOMMENDATION');
     const rec = tracking.saturation_signals.recommendation;
@@ -209,9 +198,7 @@ function vizSaturation(config) {
   return box('SATURATION TRACKING', lines.join('\n'), 60);
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
 // Rules Visualization
-// ═══════════════════════════════════════════════════════════════════════════
 
 function vizRules(config) {
   const research = config.research_design || {};
@@ -220,12 +207,10 @@ function vizRules(config) {
 
   const lines = [];
 
-  // Phase info
   const phase = getCurrentPhase(config);
   lines.push(`Current Phase: ${phase}`);
   lines.push('');
 
-  // Isolation Rules Table
   lines.push('ISOLATION RULES');
   lines.push('─────────────────────────────────────────────────');
   lines.push('Rule              Status    Friction   Relaxes At');
@@ -243,7 +228,6 @@ function vizRules(config) {
     const friction = cfg.friction_level || 'nudge';
     const relaxesAt = cfg.relaxes_at || 'manual';
 
-    // Check if strained
     const overrideCount = strain.override_counts?.[rule.id]?.count || 0;
     const isStrained = overrideCount >= (strain.strain_threshold || 3);
 
@@ -264,14 +248,12 @@ function vizRules(config) {
 
   lines.push('');
 
-  // Strain Summary
   if (strain.strained_rules?.length > 0) {
     lines.push('⚠ STRAIN DETECTED');
     lines.push(`Rules: ${strain.strained_rules.join(', ')}`);
     lines.push('Run strain-check.js for review prompts');
   }
 
-  // Methodology Preset
   if (research.methodology_preset) {
     lines.push('');
     lines.push(`Methodology: ${research.methodology_preset}`);
@@ -297,9 +279,7 @@ function getCurrentPhase(config) {
   return 'Phase 1: Parallel Streams';
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
 // Branches Visualization
-// ═══════════════════════════════════════════════════════════════════════════
 
 function vizBranches(config) {
   const branches = config.workspace_branches;
@@ -312,10 +292,8 @@ function vizBranches(config) {
   lines.push(`Current: ${branches.current_branch}`);
   lines.push('');
 
-  // Build tree structure
   lines.push('BRANCH TREE');
 
-  // Group by parent
   const byParent = {};
   for (const branch of branches.branches) {
     const parent = branch.parent_branch || 'root';
@@ -323,7 +301,6 @@ function vizBranches(config) {
     byParent[parent].push(branch);
   }
 
-  // Render tree from main
   function renderTree(branchId, indent = '') {
     const children = byParent[branchId] || [];
     for (let i = 0; i < children.length; i++) {
@@ -346,7 +323,6 @@ function vizBranches(config) {
     }
   }
 
-  // Start from main
   const main = branches.branches.find(b => b.id === 'main');
   if (main) {
     lines.push(`● ${main.name} (main)`);
@@ -355,7 +331,6 @@ function vizBranches(config) {
 
   lines.push('');
 
-  // Stats
   const active = branches.branches.filter(b => b.status === 'active').length;
   const merged = branches.branches.filter(b => b.status === 'merged').length;
   const abandoned = branches.branches.filter(b => b.status === 'abandoned').length;
@@ -365,14 +340,11 @@ function vizBranches(config) {
   return box('WORKSPACE BRANCHES', lines.join('\n'), 60);
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
 // Combined Dashboard
-// ═══════════════════════════════════════════════════════════════════════════
 
 function vizAll(config) {
   const output = [];
 
-  // Header
   const projectName = config.project_info?.name || 'Unnamed Project';
   output.push('');
   output.push('╔════════════════════════════════════════════════════════════╗');
@@ -381,7 +353,6 @@ function vizAll(config) {
   output.push('╚════════════════════════════════════════════════════════════╝');
   output.push('');
 
-  // Sandwich Status Bar
   const stage = config.sandwich_status?.current_stage || 'unknown';
   const stageNum = stage.includes('1') ? 1 : stage.includes('3') ? 3 : 2;
   output.push('Stage Progress: ' +
@@ -401,9 +372,7 @@ function vizAll(config) {
   return output.join('\n');
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
 // Mermaid Export
-// ═══════════════════════════════════════════════════════════════════════════
 
 function mermaidCodeLineage(config) {
   const tracking = config.saturation_tracking;
@@ -412,7 +381,6 @@ function mermaidCodeLineage(config) {
   const lines = ['```mermaid', 'flowchart TD'];
   lines.push('  subgraph "Data Structure"');
 
-  // Build from data_structure if available
   if (dataStructure?.aggregate_dimensions) {
     for (const dim of dataStructure.aggregate_dimensions) {
       lines.push(`    AD_${dim.id}["${dim.name}"]`);
@@ -439,7 +407,6 @@ function mermaidCodeLineage(config) {
 
   lines.push('  end');
 
-  // Add refinement history if available
   if (tracking?.refinement?.definition_changes?.length > 0) {
     lines.push('  subgraph "Recent Refinements"');
     const recent = tracking.refinement.definition_changes.slice(-5);
@@ -478,9 +445,7 @@ function mermaidBranchTree(config) {
   return lines.join('\n');
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
 // Main Execution
-// ═══════════════════════════════════════════════════════════════════════════
 
 const args = parseArgs();
 
@@ -497,7 +462,6 @@ if (!config) {
   process.exit(1);
 }
 
-// Handle different views
 const view = args.view || 'all';
 const mermaid = args.mermaid;
 

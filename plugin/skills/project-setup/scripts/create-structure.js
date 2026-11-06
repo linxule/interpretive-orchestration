@@ -23,7 +23,6 @@ function parseArgs() {
     if (args[i].startsWith('--')) {
       const key = args[i].replace('--', '');
       const nextArg = args[i + 1];
-      // Check if next arg is a value or another flag
       if (nextArg && !nextArg.startsWith('--')) {
         parsed[key] = nextArg;
         i++;
@@ -51,9 +50,6 @@ function safeWriteFile(filePath, content, force) {
   }
 }
 
-/**
- * Create a README for a case folder
- */
 function createCaseReadme(caseDef) {
   return `# Case: ${caseDef.name}
 
@@ -76,9 +72,6 @@ This folder contains data for a single case in your comparative study.
 `;
 }
 
-/**
- * Create a README for a wave folder
- */
 function createWaveReadme(waveDef) {
   return `# Wave: ${waveDef.name}
 
@@ -114,7 +107,6 @@ function createStructure(projectPath, projectName, force = false, researchDesign
     'outputs'
   ];
 
-  // Add case folders if specified in research design
   if (researchDesign && researchDesign.cases && researchDesign.cases.length > 0) {
     for (const caseDef of researchDesign.cases) {
       if (caseDef.folder_path) {
@@ -123,7 +115,6 @@ function createStructure(projectPath, projectName, force = false, researchDesign
     }
   }
 
-  // Add wave folders if specified in research design
   if (researchDesign && researchDesign.waves && researchDesign.waves.length > 0) {
     for (const waveDef of researchDesign.waves) {
       if (waveDef.folder_path) {
@@ -132,7 +123,6 @@ function createStructure(projectPath, projectName, force = false, researchDesign
     }
   }
 
-  // Add stream folders if specified
   if (researchDesign && researchDesign.streams) {
     if (researchDesign.streams.theoretical && researchDesign.streams.theoretical.folder_path) {
       directories.push(researchDesign.streams.theoretical.folder_path);
@@ -149,7 +139,6 @@ function createStructure(projectPath, projectName, force = false, researchDesign
     errors: []
   };
 
-  // Create directories
   for (const dir of directories) {
     const fullPath = path.join(projectPath, dir);
     try {
@@ -161,7 +150,6 @@ function createStructure(projectPath, projectName, force = false, researchDesign
     }
   }
 
-  // Initialize reflexivity journal
   const journalPath = path.join(projectPath, '.interpretive-orchestration', 'reflexivity-journal.md');
   const journalContent = `# Reflexivity Journal
 ## ${projectName}
@@ -192,7 +180,7 @@ What drew you to this research question? What assumptions might you bring?
     results.errors.push({ path: journalPath, error: journalResult.error });
   }
 
-  // Initialize empty conversation log (special case - always safe to create if missing)
+  // Preserve an existing conversation log; create it only when missing.
   const logPath = path.join(projectPath, '.interpretive-orchestration', 'conversation-log.jsonl');
   if (!fs.existsSync(logPath)) {
     try {
@@ -205,7 +193,6 @@ What drew you to this research question? What assumptions might you bring?
     results.skipped.push({ path: logPath, reason: 'Log file exists (preserved)' });
   }
 
-  // Initialize decision history
   const decisionPath = path.join(projectPath, '.interpretive-orchestration', 'decision-history.md');
   const decisionContent = `# Decision History
 ## ${projectName}
@@ -233,7 +220,6 @@ This document tracks significant analytical decisions and their rationale.
     results.errors.push({ path: decisionPath, error: decisionResult.error });
   }
 
-  // Create Stage 1 README
   const stage1ReadmePath = path.join(projectPath, 'stage1-foundation', 'README.md');
   const stage1Content = `# Stage 1: Human Foundation
 
@@ -267,7 +253,6 @@ The sandwich starts with human bread!
     results.errors.push({ path: stage1ReadmePath, error: stage1Result.error });
   }
 
-  // Create README files for case folders
   if (researchDesign && researchDesign.cases && researchDesign.cases.length > 0) {
     for (const caseDef of researchDesign.cases) {
       if (caseDef.folder_path) {
@@ -283,12 +268,10 @@ The sandwich starts with human bread!
         }
       }
     }
-    // Track research design info
     results.researchDesign = results.researchDesign || {};
     results.researchDesign.casesCreated = researchDesign.cases.length;
   }
 
-  // Create README files for wave folders
   if (researchDesign && researchDesign.waves && researchDesign.waves.length > 0) {
     for (const waveDef of researchDesign.waves) {
       if (waveDef.folder_path) {
@@ -304,7 +287,6 @@ The sandwich starts with human bread!
         }
       }
     }
-    // Track research design info
     results.researchDesign = results.researchDesign || {};
     results.researchDesign.wavesCreated = researchDesign.waves.length;
   }
@@ -312,7 +294,6 @@ The sandwich starts with human bread!
   return results;
 }
 
-// Main execution
 const args = parseArgs();
 
 if (!args['project-path']) {
@@ -327,7 +308,6 @@ const projectPath = args['project-path'];
 const projectName = args['project-name'] || 'Qualitative Research Project';
 const force = args.force === true;
 
-// Parse research design if provided
 let researchDesign = null;
 if (args['research-design']) {
   try {
@@ -354,7 +334,6 @@ if (!configTarget.startsWith(resolvedPath + path.sep) && configTarget !== resolv
 
 const results = createStructure(resolvedPath, projectName, force, researchDesign);
 
-// Add warning if files were skipped
 if (results.skipped.length > 0) {
   results.warning = `${results.skipped.length} file(s) skipped to preserve existing content. Use --force to overwrite.`;
 }

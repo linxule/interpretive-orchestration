@@ -63,12 +63,10 @@ function estimateCosts(args) {
   const pricing = PRICING[model];
   const outputRatio = OUTPUT_RATIO[verbosity] || OUTPUT_RATIO.standard;
 
-  // Calculate tokens
   const tokensPerDoc = avgPages * TOKENS_PER_PAGE;
   const totalInputTokens = documents * tokensPerDoc * passes;
   const totalOutputTokens = totalInputTokens * outputRatio;
 
-  // Calculate costs
   const inputCost = (totalInputTokens / 1_000_000) * pricing.input;
   const outputCost = (totalOutputTokens / 1_000_000) * pricing.output;
   const totalCost = inputCost + outputCost;
@@ -140,7 +138,6 @@ function generateRecommendations(documents, model, cost) {
   return recs;
 }
 
-// Main execution
 const args = parseArgs();
 
 const result = estimateCosts(args);

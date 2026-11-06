@@ -74,7 +74,6 @@ function shouldRelax(relaxesAt, currentPhase) {
   return currentIndex >= relaxIndex;
 }
 
-// Main execution
 const args = parseArgs();
 
 if (!args['project-path']) {
@@ -124,7 +123,6 @@ const result = {
   }
 };
 
-// Check each rule
 if (isolation.case_isolation?.enabled !== false && design.cases?.length > 0) {
   const relaxesAt = isolation.case_isolation?.relaxes_at || 'phase3_pattern_characterization';
   if (shouldRelax(relaxesAt, currentPhase)) {

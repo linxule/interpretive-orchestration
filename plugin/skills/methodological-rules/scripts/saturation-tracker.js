@@ -112,14 +112,10 @@ ${message}
   }
 }
 
-/**
- * Record a document coding event
- */
 function recordDocument(config, docId, docName, newCodes) {
   const tracking = initSaturationTracking(config);
   const now = new Date().toISOString();
 
-  // Add to codes_by_document
   tracking.code_generation.codes_by_document.push({
     document_id: docId,
     document_name: docName,
@@ -127,15 +123,12 @@ function recordDocument(config, docId, docName, newCodes) {
     timestamp: now
   });
 
-  // Update total codes
   tracking.code_generation.total_codes += newCodes;
 
-  // Calculate rolling average (last 5 documents)
   const recentDocs = tracking.code_generation.codes_by_document.slice(-5);
   const avgRate = recentDocs.reduce((sum, d) => sum + d.new_codes_created, 0) / recentDocs.length;
   tracking.code_generation.generation_rate = Math.round(avgRate * 100) / 100;
 
-  // Check if stabilized (rate dropped below threshold)
   const threshold = tracking.thresholds?.code_generation_stable || 0.5;
   if (!tracking.code_generation.stabilized_at_document && avgRate < threshold && recentDocs.length >= 3) {
     tracking.code_generation.stabilized_at_document = docId;
@@ -159,7 +152,6 @@ function recordRefinement(config, codeId, changeType, oldState, newState, ration
   const tracking = initSaturationTracking(config);
   const now = new Date().toISOString();
 
-  // Add to definition_changes
   tracking.refinement.definition_changes.push({
     code_id: codeId,
     change_type: changeType,
@@ -169,13 +161,11 @@ function recordRefinement(config, codeId, changeType, oldState, newState, ration
     timestamp: now
   });
 
-  // Update split_merge_count
   if (changeType === 'split' || changeType === 'merge') {
     tracking.refinement.split_merge_count++;
   }
 
-  // Calculate changes in last 5 documents
-  // (approximation: last 5 changes within recent timeframe)
+  // Approximate recent refinement activity from the last 10 changes within five days.
   const recentChanges = tracking.refinement.definition_changes.slice(-10);
   const fiveDaysAgo = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString();
   const recentCount = recentChanges.filter(c => c.timestamp > fiveDaysAgo).length;
@@ -191,14 +181,10 @@ function recordRefinement(config, codeId, changeType, oldState, newState, ration
   };
 }
 
-/**
- * Update code coverage statistics
- */
 function updateCoverage(config, coverageData) {
   const tracking = initSaturationTracking(config);
   const totalDocuments = config.coding_progress?.documents_coded || 1;
 
-  // Update coverage by code
   for (const [codeId, data] of Object.entries(coverageData)) {
     const coveragePercent = (data.document_count / totalDocuments) * 100;
     tracking.code_coverage.coverage_by_code[codeId] = {
@@ -208,7 +194,6 @@ function updateCoverage(config, coverageData) {
     };
   }
 
-  // Identify rare and universal codes
   const rareCodes = [];
   const universalCodes = [];
 
@@ -250,9 +235,6 @@ function updateRedundancy(config, score, notes) {
   };
 }
 
-/**
- * Assess overall saturation level
- */
 function assessSaturation(config) {
   const tracking = initSaturationTracking(config);
   const thresholds = tracking.thresholds;
@@ -267,7 +249,6 @@ function assessSaturation(config) {
 
   let saturationScore = 0;
 
-  // 1. Code Generation Assessment
   const genRate = tracking.code_generation.generation_rate;
   if (genRate < thresholds.code_generation_stable) {
     evidence.code_generation_signal = `STABLE: ${genRate} new codes/doc (threshold: ${thresholds.code_generation_stable})`;
@@ -279,7 +260,6 @@ function assessSaturation(config) {
     evidence.code_generation_signal = `ACTIVE: ${genRate} new codes/doc - still generating`;
   }
 
-  // 2. Coverage Assessment
   const coverageData = tracking.code_coverage.coverage_by_code;
   const codeCount = Object.keys(coverageData).length;
   if (codeCount > 0) {
@@ -298,7 +278,6 @@ function assessSaturation(config) {
     evidence.coverage_signal = 'NO DATA: Coverage not yet tracked';
   }
 
-  // 3. Refinement Assessment
   const recentRefinements = tracking.refinement.changes_last_5_documents;
   if (recentRefinements <= thresholds.refinement_stable) {
     evidence.refinement_signal = `STABLE: ${recentRefinements} changes recently (threshold: ${thresholds.refinement_stable})`;
@@ -308,7 +287,6 @@ function assessSaturation(config) {
     saturationScore += 5;
   }
 
-  // 4. Redundancy Assessment
   const redundancyScore = tracking.redundancy.redundancy_score;
   if (redundancyScore >= thresholds.redundancy_high) {
     evidence.redundancy_signal = `HIGH: ${Math.round(redundancyScore * 100)}% redundancy`;
@@ -320,7 +298,6 @@ function assessSaturation(config) {
     evidence.redundancy_signal = `LOW: ${Math.round(redundancyScore * 100)}% redundancy - still finding novelty`;
   }
 
-  // Determine overall level
   let level, recommendation;
   if (saturationScore >= 90) {
     level = 'saturated';
@@ -339,7 +316,6 @@ function assessSaturation(config) {
     recommendation = 'Low saturation. Actively developing codes. Focus on open coding and memo writing.';
   }
 
-  // Update tracking
   tracking.saturation_signals = {
     overall_level: level,
     last_assessment: now,
@@ -366,9 +342,6 @@ function assessSaturation(config) {
   };
 }
 
-/**
- * Get current status
- */
 function getStatus(config) {
   const tracking = config.saturation_tracking;
   if (!tracking) {
@@ -401,7 +374,6 @@ function getStatus(config) {
   };
 }
 
-// Main execution
 const args = parseArgs();
 
 if (!args['project-path']) {
@@ -423,7 +395,6 @@ if (!config) {
   process.exit(1);
 }
 
-// Handle different modes
 if (args.status) {
   console.log(JSON.stringify(getStatus(config), null, 2));
   process.exit(0);
@@ -482,7 +453,7 @@ This indicates theoretical elaboration - your understanding is becoming more nua
 }
 
 if (args['update-coverage']) {
-  // Expects JSON coverage data via stdin or --coverage-json
+  // Coverage data is passed as JSON via --coverage-json.
   let coverageData = {};
   if (args['coverage-json']) {
     try {
@@ -543,6 +514,5 @@ Score: ${result.saturation_score}/100
   process.exit(0);
 }
 
-// Default: show status
 console.log(JSON.stringify(getStatus(config), null, 2));
 process.exit(0);

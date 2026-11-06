@@ -92,9 +92,6 @@ ${message}
   }
 }
 
-/**
- * Set primary researcher
- */
 function setPrimaryResearcher(config, name, email) {
   const team = initResearcherTeam(config);
   const now = new Date().toISOString();
@@ -113,15 +110,11 @@ function setPrimaryResearcher(config, name, email) {
   };
 }
 
-/**
- * Add a team member
- */
 function addMember(config, name, email, role) {
   const team = initResearcherTeam(config);
   const now = new Date().toISOString();
   const id = generateId(name);
 
-  // Check for duplicates
   if (team.team_members.some(m => m.id === id)) {
     return {
       success: false,
@@ -156,9 +149,6 @@ function addMember(config, name, email, role) {
   };
 }
 
-/**
- * Remove or deactivate a team member
- */
 function removeMember(config, researcherId) {
   const team = initResearcherTeam(config);
 
@@ -185,13 +175,9 @@ function removeMember(config, researcherId) {
   };
 }
 
-/**
- * Set current active researcher
- */
 function setCurrentResearcher(config, researcherId) {
   const team = initResearcherTeam(config);
 
-  // Validate researcher exists
   if (researcherId !== 'primary') {
     const member = team.team_members.find(m => m.id === researcherId && m.status === 'active');
     if (!member) {
@@ -204,7 +190,6 @@ function setCurrentResearcher(config, researcherId) {
 
   team.current_researcher = researcherId;
 
-  // Get name for response
   let name = 'Primary Researcher';
   if (researcherId !== 'primary') {
     const member = team.team_members.find(m => m.id === researcherId);
@@ -221,9 +206,6 @@ function setCurrentResearcher(config, researcherId) {
   };
 }
 
-/**
- * Assign documents to a researcher
- */
 function assignDocuments(config, researcherId, documentIds) {
   const team = initResearcherTeam(config);
 
@@ -252,23 +234,17 @@ function assignDocuments(config, researcherId, documentIds) {
   };
 }
 
-/**
- * Start an intercoder reliability session
- */
 function startICRSession(config, participantIds, documentIds) {
   const team = initResearcherTeam(config);
   const now = new Date().toISOString();
 
-  // Enable ICR if not already
   team.intercoder_reliability.enabled = true;
 
   const participants = participantIds.split(',').map(p => p.trim());
   const documents = documentIds.split(',').map(d => d.trim());
 
-  // Generate session ID
   const sessionId = `icr-${Date.now().toString(36)}`;
 
-  // Add to overlap documents
   for (const doc of documents) {
     const existing = team.intercoder_reliability.overlap_documents.find(d => d.document_id === doc);
     if (existing) {
@@ -288,7 +264,6 @@ function startICRSession(config, participantIds, documentIds) {
     }
   }
 
-  // Create session record
   const session = {
     session_id: sessionId,
     date: now.split('T')[0],
@@ -310,9 +285,6 @@ function startICRSession(config, participantIds, documentIds) {
   };
 }
 
-/**
- * Record ICR session outcome
- */
 function recordICROutcome(config, sessionId, outcomeType, details) {
   const team = initResearcherTeam(config);
 
@@ -345,9 +317,6 @@ function recordICROutcome(config, sessionId, outcomeType, details) {
   };
 }
 
-/**
- * Complete ICR session
- */
 function completeICRSession(config, sessionId, notes) {
   const team = initResearcherTeam(config);
 
@@ -361,7 +330,6 @@ function completeICRSession(config, sessionId, notes) {
 
   session.notes = notes || '';
 
-  // Mark compared documents as resolved
   for (const docId of session.documents_compared) {
     const doc = team.intercoder_reliability.overlap_documents.find(d => d.document_id === docId);
     if (doc) {
@@ -379,9 +347,6 @@ function completeICRSession(config, sessionId, notes) {
   };
 }
 
-/**
- * Log an attribution event
- */
 function logAttribution(config, action, targetId, notes) {
   const team = initResearcherTeam(config);
   const now = new Date().toISOString();
@@ -411,9 +376,6 @@ function logAttribution(config, action, targetId, notes) {
   };
 }
 
-/**
- * Get team status
- */
 function getStatus(config) {
   const team = config.researcher_team;
 
@@ -451,9 +413,6 @@ function getStatus(config) {
   };
 }
 
-/**
- * List all team members
- */
 function listMembers(config) {
   const team = config.researcher_team;
 
@@ -490,7 +449,6 @@ function listMembers(config) {
   };
 }
 
-// Main execution
 const args = parseArgs();
 
 if (!args['project-path']) {
@@ -512,7 +470,6 @@ if (!config) {
   process.exit(1);
 }
 
-// Handle different modes
 if (args.status) {
   console.log(JSON.stringify(getStatus(config), null, 2));
   process.exit(0);
@@ -643,6 +600,5 @@ if (args['log-attribution']) {
   process.exit(result.success ? 0 : 1);
 }
 
-// Default: show status
 console.log(JSON.stringify(getStatus(config), null, 2));
 process.exit(0);

@@ -66,12 +66,10 @@ function checkStage2Readiness(config, projectPath) {
   const requirements_missing = [];
   const recommendations = [];
 
-  // Get actual counts
   const stage1Details = config.sandwich_status?.stage1_details || {};
   let docsManuallyCodeded = stage1Details.documents_manually_coded || 0;
   let memosWritten = stage1Details.memos_written || 0;
 
-  // Fallback to file counting
   if (docsManuallyCodeded === 0) {
     docsManuallyCodeded = countFiles(path.join(projectPath, 'stage1-foundation', 'manual-codes'), ['.md', '.json', '.txt']);
   }
@@ -79,21 +77,18 @@ function checkStage2Readiness(config, projectPath) {
     memosWritten = countFiles(path.join(projectPath, 'stage1-foundation', 'memos'), ['.md']);
   }
 
-  // Requirement 1: Minimum 10 documents manually coded
   if (docsManuallyCodeded >= 10) {
     requirements_met.push(`${docsManuallyCodeded} documents manually coded (minimum: 10)`);
   } else {
     requirements_missing.push(`Only ${docsManuallyCodeded} documents coded (need 10 minimum)`);
   }
 
-  // Requirement 2: At least 1 memo
   if (memosWritten >= 1) {
     requirements_met.push(`${memosWritten} analytical memo(s) written`);
   } else {
     requirements_missing.push('No analytical memos written (need at least 1)');
   }
 
-  // Requirement 3: Philosophical stance declared
   if (config.philosophical_stance?.tradition) {
     requirements_met.push(`Philosophical stance declared: ${config.philosophical_stance.tradition}`);
   } else {
@@ -133,7 +128,6 @@ function checkStage3Readiness(config, projectPath) {
   const requirements_missing = [];
   const recommendations = [];
 
-  // Requirement 1: Stage 2 must be complete
   const stage2Progress = config.sandwich_status?.stage2_progress || {};
   const phase1Complete = stage2Progress.phase1_parallel_streams === 'complete';
   const phase2Complete = stage2Progress.phase2_synthesis === 'complete';
@@ -157,7 +151,6 @@ function checkStage3Readiness(config, projectPath) {
     requirements_missing.push('Phase 3 (Pattern Characterization) not complete');
   }
 
-  // Requirement 2: Sufficient quotes extracted
   const quotesExtracted = config.coding_progress?.quotes_extracted || 0;
   if (quotesExtracted >= 50) {
     requirements_met.push(`${quotesExtracted} quotes extracted (sufficient for analysis)`);
@@ -165,7 +158,6 @@ function checkStage3Readiness(config, projectPath) {
     requirements_missing.push(`Only ${quotesExtracted} quotes extracted (recommend 50+ for robust analysis)`);
   }
 
-  // Requirement 3: Data structure populated
   const conceptsCount = config.coding_progress?.concepts_in_framework || 0;
   if (conceptsCount >= 10) {
     requirements_met.push(`${conceptsCount} concepts in data structure`);
@@ -173,7 +165,6 @@ function checkStage3Readiness(config, projectPath) {
     requirements_missing.push(`Only ${conceptsCount} concepts in data structure (recommend 10+)`);
   }
 
-  // Recommendations
   if (quotesExtracted < 100) {
     recommendations.push('Consider extracting more quotes for richer evidence tables');
   }
@@ -205,7 +196,6 @@ function checkPhase2Readiness(config, projectPath) {
   const requirements_missing = [];
   const recommendations = [];
 
-  // Check Phase 1 completion
   const phase1Status = config.sandwich_status?.stage2_progress?.phase1_parallel_streams;
 
   if (phase1Status === 'complete') {
@@ -214,7 +204,6 @@ function checkPhase2Readiness(config, projectPath) {
     requirements_missing.push('Phase 1 (Parallel Streams) not complete');
   }
 
-  // Check for theoretical stream work
   const theoreticalDir = path.join(projectPath, 'stage2-collaboration', 'stream-a-theoretical');
   const theoreticalFiles = countFiles(theoreticalDir, ['.md']);
   if (theoreticalFiles >= 3) {
@@ -223,7 +212,6 @@ function checkPhase2Readiness(config, projectPath) {
     requirements_missing.push(`Only ${theoreticalFiles} theoretical documents (recommend 3+)`);
   }
 
-  // Check for empirical stream work
   const empiricalDir = path.join(projectPath, 'stage2-collaboration', 'stream-b-empirical');
   const empiricalFiles = countFiles(empiricalDir, ['.md', '.json']);
   if (empiricalFiles >= 5) {
@@ -293,7 +281,6 @@ function checkReadiness(projectPath, targetStage) {
   };
 }
 
-// Main execution
 const args = parseArgs();
 
 if (!args['project-path']) {

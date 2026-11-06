@@ -13,7 +13,6 @@
 const fs = require('fs');
 const path = require('path');
 
-// Find project root by looking for .interpretive-orchestration/ directory
 function findProjectRoot(startPath) {
   let currentPath = startPath;
   while (currentPath !== path.parse(currentPath).root) {
@@ -41,7 +40,6 @@ function outputRemediation(code, severity, reason, nextCommands, nextSkills, can
   console.error(JSON.stringify(remediation));
 }
 
-// Main hook logic
 function checkStage1Complete() {
   const projectRoot = findProjectRoot(process.cwd());
 
@@ -79,7 +77,6 @@ function checkStage1Complete() {
 
   const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 
-  // Check if Stage 1 is complete
   if (!config.sandwich_status || !config.sandwich_status.stage1_complete) {
     const stage1Details = config.sandwich_status?.stage1_details || {};
     const documentsCoded = stage1Details.documents_manually_coded || 0;
@@ -118,7 +115,6 @@ function checkStage1Complete() {
     console.log('');
     console.log('   📋 Current Stage 1 Progress:');
 
-    // Reuse stage1Details, documentsCoded, memosWritten from above
     const structureCreated = stage1Details.initial_structure_created || false;
 
     console.log(`   • Documents manually coded: ${documentsCoded}/10+ [${documentsCoded >= 10 ? '✓' : '○'}]`);
@@ -138,7 +134,6 @@ function checkStage1Complete() {
     process.exit(1);
   }
 
-  // Stage 1 is complete - allow proceeding
   const stage1Details = config.sandwich_status.stage1_details || {};
 
   console.log('');
@@ -159,7 +154,6 @@ function checkStage1Complete() {
   process.exit(0);
 }
 
-// Run the check
 try {
   checkStage1Complete();
 } catch (error) {

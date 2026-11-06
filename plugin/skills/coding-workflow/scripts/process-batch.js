@@ -112,7 +112,6 @@ function processBatch(projectPath, args) {
     };
   }
 
-  // Parse document list
   const documents = args.documents
     ? args.documents.split(',').map(d => d.trim()).filter(d => d)
     : [];
@@ -129,7 +128,6 @@ function processBatch(projectPath, args) {
   const phase = args.phase || 'phase1_parallel_streams';
   const isDryRun = args['dry-run'] === true;
 
-  // Validate phase
   const validPhases = ['phase1_parallel_streams', 'phase2_synthesis', 'phase3_pattern_characterization'];
   if (!validPhases.includes(phase)) {
     return {
@@ -139,7 +137,6 @@ function processBatch(projectPath, args) {
     };
   }
 
-  // Validate agent
   const validAgents = ['dialogical-coder', 'scholarly-companion'];
   if (!validAgents.includes(agent)) {
     return {
@@ -149,13 +146,11 @@ function processBatch(projectPath, args) {
     };
   }
 
-  // Initialize or load document tracking
   config.batch_tracking = config.batch_tracking || {
     sessions: [],
     document_status: {}
   };
 
-  // Create batch session
   const sessionId = `session_${Date.now()}`;
   const session = {
     id: sessionId,
@@ -171,7 +166,6 @@ function processBatch(projectPath, args) {
   if (!isDryRun) {
     config.batch_tracking.sessions.push(session);
 
-    // Mark documents as in_progress
     for (const doc of documents) {
       config.batch_tracking.document_status[doc] = {
         status: 'in_progress',
@@ -180,7 +174,6 @@ function processBatch(projectPath, args) {
       };
     }
 
-    // Update phase status
     if (!config.sandwich_status.stage2_progress) {
       config.sandwich_status.stage2_progress = {};
     }
@@ -188,7 +181,6 @@ function processBatch(projectPath, args) {
       config.sandwich_status.stage2_progress[phase] = 'in_progress';
     }
 
-    // Save config
     if (!updateConfig(projectPath, config)) {
       return {
         success: false,
@@ -196,7 +188,6 @@ function processBatch(projectPath, args) {
       };
     }
 
-    // Log the session start
     appendLog(projectPath, {
       timestamp: new Date().toISOString(),
       agent: 'batch-processor',
@@ -211,7 +202,6 @@ function processBatch(projectPath, args) {
     });
   }
 
-  // Generate workflow guidance
   const workflow = generateWorkflowGuidance(agent, phase, documents);
 
   return {
@@ -247,7 +237,6 @@ function generateWorkflowGuidance(agent, phase, documents) {
     document_approach: ''
   };
 
-  // Agent-specific guidance
   if (agent === 'dialogical-coder') {
     guidance.agent_instructions = `
 Use @dialogical-coder's 4-stage visible reasoning process:
@@ -268,7 +257,6 @@ Use @scholarly-companion for theoretical dialogue:
 `;
   }
 
-  // Phase-specific context
   switch (phase) {
     case 'phase1_parallel_streams':
       guidance.phase_context = `
@@ -296,7 +284,6 @@ Phase 3: Pattern Characterization
       break;
   }
 
-  // Document approach
   guidance.document_approach = `
 For each of the ${documents.length} documents:
 1. Read the full document for context
@@ -309,7 +296,6 @@ For each of the ${documents.length} documents:
   return guidance;
 }
 
-// Main execution
 const args = parseArgs();
 
 if (!args['project-path']) {

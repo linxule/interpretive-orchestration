@@ -306,16 +306,12 @@ function main() {
     process.exit(1);
   }
 
-  // Ensure directory structure exists
   ensureDirectoryStructure(resolvedPath);
 
-  // Load existing inventory
   const inventory = loadOrCreateInventory(resolvedPath);
 
-  // Detect available tier
   const tier = detectTier();
 
-  // Generate appropriate workflow
   let workflow;
   const query = args.query;
   const urls = args.urls;
@@ -330,7 +326,6 @@ function main() {
     workflow = generateTier3Workflow(urls, resolvedPath);
   }
 
-  // Save updated inventory (with new search query if applicable)
   const inventoryPath = saveInventory(resolvedPath, inventory);
 
   console.log(JSON.stringify({

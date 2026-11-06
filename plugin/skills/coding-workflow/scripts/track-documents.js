@@ -77,7 +77,6 @@ function updateConfig(projectPath, config) {
 }
 
 function scanDocuments(projectPath) {
-  // Scan for documents in stage1-foundation and stage2-collaboration
   const locations = [
     path.join(projectPath, 'stage1-foundation', 'manual-codes'),
     path.join(projectPath, 'stage2-collaboration', 'stream-b-empirical')
@@ -110,7 +109,6 @@ function trackDocuments(projectPath, args) {
     };
   }
 
-  // Initialize tracking if not present
   config.batch_tracking = config.batch_tracking || {
     sessions: [],
     document_status: {}
@@ -118,7 +116,6 @@ function trackDocuments(projectPath, args) {
 
   const docStatus = config.batch_tracking.document_status;
 
-  // Handle --add-document
   if (args['add-document']) {
     const docId = args['add-document'];
     if (!docStatus[docId]) {
@@ -145,7 +142,6 @@ function trackDocuments(projectPath, args) {
     }
   }
 
-  // Handle --mark-coded
   if (args['mark-coded']) {
     const docId = args['mark-coded'];
     const previous = docStatus[docId]?.status || 'unknown';
@@ -156,7 +152,6 @@ function trackDocuments(projectPath, args) {
       updated_at: new Date().toISOString()
     };
 
-    // Update coding progress count
     const codedCount = Object.values(docStatus).filter(d =>
       d.status === 'coded' || d.status === 'reviewed' || d.status === 'finalized'
     ).length;
@@ -177,7 +172,6 @@ function trackDocuments(projectPath, args) {
     };
   }
 
-  // Handle --mark-reviewed
   if (args['mark-reviewed']) {
     const docId = args['mark-reviewed'];
     const previous = docStatus[docId]?.status || 'unknown';
@@ -199,7 +193,6 @@ function trackDocuments(projectPath, args) {
     };
   }
 
-  // Handle --mark-pending
   if (args['mark-pending']) {
     const docId = args['mark-pending'];
     const previous = docStatus[docId]?.status || 'unknown';
@@ -220,7 +213,6 @@ function trackDocuments(projectPath, args) {
     };
   }
 
-  // Handle --summary (quick stats only)
   if (args.summary) {
     const statusCounts = {
       pending: 0,
@@ -245,12 +237,9 @@ function trackDocuments(projectPath, args) {
     };
   }
 
-  // Default --list behavior: show all documents
   if (args.list || (!args['add-document'] && !args['mark-coded'] && !args['mark-reviewed'] && !args['mark-pending'])) {
-    // Auto-discover documents from filesystem
     const discoveredDocs = scanDocuments(projectPath);
 
-    // Merge discovered with tracked
     for (const docId of discoveredDocs) {
       if (!docStatus[docId]) {
         docStatus[docId] = {
@@ -262,12 +251,10 @@ function trackDocuments(projectPath, args) {
       }
     }
 
-    // Save any newly discovered documents
     if (discoveredDocs.length > 0) {
       updateConfig(projectPath, config);
     }
 
-    // Organize by status
     const byStatus = {
       pending: [],
       in_progress: [],
@@ -286,7 +273,6 @@ function trackDocuments(projectPath, args) {
       }
     }
 
-    // Calculate summary
     const summary = {
       total: Object.keys(docStatus).length,
       pending: byStatus.pending.length,
@@ -317,7 +303,6 @@ function trackDocuments(projectPath, args) {
   };
 }
 
-// Main execution
 const args = parseArgs();
 
 if (!args['project-path']) {

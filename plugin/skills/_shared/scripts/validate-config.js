@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * validate-config.js
- * Validates configuration against the JSON schema using Ajv
+ * Validates configuration against the JSON schema
  *
  * Usage:
  *   node validate-config.js --project-path /path/to/project
@@ -20,7 +20,6 @@
 const fs = require('fs');
 const path = require('path');
 
-// Schema path relative to this script
 const SCHEMA_PATH = path.join(__dirname, '../../project-setup/templates/config.schema.json');
 
 function loadSchema() {
@@ -45,13 +44,11 @@ function validateAgainstSchema(config, schema, path = '') {
     return errors;
   }
 
-  // Check type
   if (schema.type) {
     const actualType = Array.isArray(config) ? 'array' : typeof config;
     const expectedTypes = Array.isArray(schema.type) ? schema.type : [schema.type];
 
     if (config === null && expectedTypes.includes('null')) {
-      // null is valid
     } else if (!expectedTypes.includes(actualType)) {
       errors.push({
         path: path || 'root',
@@ -62,7 +59,6 @@ function validateAgainstSchema(config, schema, path = '') {
     }
   }
 
-  // Check enum
   if (schema.enum && !schema.enum.includes(config)) {
     errors.push({
       path: path || 'root',
@@ -73,7 +69,6 @@ function validateAgainstSchema(config, schema, path = '') {
     });
   }
 
-  // Check const
   if (schema.const !== undefined && config !== schema.const) {
     errors.push({
       path: path || 'root',
@@ -82,7 +77,6 @@ function validateAgainstSchema(config, schema, path = '') {
     });
   }
 
-  // Check minimum (for numbers)
   if (schema.minimum !== undefined && typeof config === 'number') {
     if (config < schema.minimum) {
       errors.push({
@@ -93,7 +87,6 @@ function validateAgainstSchema(config, schema, path = '') {
     }
   }
 
-  // Check required properties
   if (schema.type === 'object' && schema.required && typeof config === 'object' && config !== null) {
     for (const reqProp of schema.required) {
       if (config[reqProp] === undefined) {
@@ -106,7 +99,6 @@ function validateAgainstSchema(config, schema, path = '') {
     }
   }
 
-  // Validate object properties
   if (schema.type === 'object' && schema.properties && typeof config === 'object' && config !== null) {
     for (const [propName, propSchema] of Object.entries(schema.properties)) {
       if (config[propName] !== undefined) {
@@ -117,7 +109,6 @@ function validateAgainstSchema(config, schema, path = '') {
     }
   }
 
-  // Validate array items
   if (schema.type === 'array' && schema.items && Array.isArray(config)) {
     for (let i = 0; i < config.length; i++) {
       const itemPath = `${path}[${i}]`;
@@ -191,10 +182,8 @@ function parseArgs() {
   return parsed;
 }
 
-// Export for use as module
 module.exports = { validateConfig, loadSchema, validateAgainstSchema };
 
-// Main execution (only when run directly)
 if (require.main === module) {
   const args = parseArgs();
 

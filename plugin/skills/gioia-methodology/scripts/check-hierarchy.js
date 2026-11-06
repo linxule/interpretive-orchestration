@@ -77,7 +77,6 @@ function analyzeHierarchy(structure) {
 
     dimAnalysis.theme_count = dimension.second_order_themes.length;
 
-    // Check theme count per dimension
     if (dimAnalysis.theme_count < 2) {
       analysis.recommendations.push(
         `Dimension "${dimension.name}" has only ${dimAnalysis.theme_count} theme(s) - consider if this is truly a dimension or should be a theme`
@@ -96,7 +95,6 @@ function analyzeHierarchy(structure) {
       totalConcepts += conceptCount;
       conceptsPerTheme.push(conceptCount);
 
-      // Check concept count per theme
       if (conceptCount < 2) {
         analysis.recommendations.push(
           `Theme "${theme.name}" has only ${conceptCount} concept(s) - may need more empirical grounding or merge with another theme`
@@ -107,9 +105,7 @@ function analyzeHierarchy(structure) {
         );
       }
 
-      // Analyze each concept
       for (const concept of theme.first_order_concepts) {
-        // Check quote coverage
         if (concept.example_quotes && concept.example_quotes.length > 0) {
           analysis.quote_coverage.concepts_with_quotes++;
           analysis.quote_coverage.total_quotes += concept.example_quotes.length;
@@ -117,7 +113,6 @@ function analyzeHierarchy(structure) {
           analysis.quote_coverage.concepts_without_quotes++;
         }
 
-        // Check abstraction level of 1st-order concepts
         const conceptName = (concept.name || '').toLowerCase();
         const conceptDef = (concept.definition || '').toLowerCase();
         const combinedText = conceptName + ' ' + conceptDef;
@@ -168,7 +163,6 @@ function analyzeHierarchy(structure) {
     }
   }
 
-  // Overall health assessment
   const quoteCoverage = analysis.quote_coverage.concepts_with_quotes /
     (analysis.quote_coverage.concepts_with_quotes + analysis.quote_coverage.concepts_without_quotes || 1);
 
@@ -193,7 +187,6 @@ function analyzeHierarchy(structure) {
   return analysis;
 }
 
-// Main execution
 const args = parseArgs();
 
 if (!args['structure-path']) {

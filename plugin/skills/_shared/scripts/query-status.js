@@ -47,7 +47,6 @@ function countFiles(dirPath, extensions = null) {
 function queryStatus(projectPath) {
   const configPath = path.join(projectPath, '.interpretive-orchestration', 'config.json');
 
-  // Check if project is initialized
   if (!fs.existsSync(configPath)) {
     return {
       success: false,
@@ -67,14 +66,12 @@ function queryStatus(projectPath) {
     };
   }
 
-  // Count actual files in directories
   const manualCodesDir = path.join(projectPath, 'stage1-foundation', 'manual-codes');
   const memosDir = path.join(projectPath, 'stage1-foundation', 'memos');
 
   const actualCodes = countFiles(manualCodesDir);
   const actualMemos = countFiles(memosDir, ['.md', '.txt']);
 
-  // Calculate Stage 1 readiness
   const stage1 = config.sandwich_status?.stage1_details || {};
   const documentsCount = Math.max(stage1.documents_manually_coded || 0, actualCodes);
   const memosCount = Math.max(stage1.memos_written || 0, actualMemos);
@@ -82,7 +79,6 @@ function queryStatus(projectPath) {
   const stage1Ready = documentsCount >= 10 && memosCount >= 3;
   const stage1Progress = Math.min(100, Math.round((documentsCount / 10) * 70 + (Math.min(memosCount, 3) / 3) * 30));
 
-  // Calculate Stage 2 progress
   const stage2 = config.sandwich_status?.stage2_progress || {};
   const phase1Done = stage2.phase1_parallel_streams === 'complete';
   const phase2Done = stage2.phase2_synthesis === 'complete';
@@ -92,13 +88,11 @@ function queryStatus(projectPath) {
                         (phase2Done ? 33 : (stage2.phase2_synthesis === 'in_progress' ? 15 : 0)) +
                         (phase3Done ? 34 : (stage2.phase3_pattern_characterization === 'in_progress' ? 15 : 0));
 
-  // Calculate Stage 3 progress
   const stage3 = config.sandwich_status?.stage3_progress || {};
   const stage3Progress = (stage3.evidence_organized ? 33 : 0) +
                         (stage3.theory_developed ? 33 : 0) +
                         (stage3.manuscript_drafted ? 34 : 0);
 
-  // Determine overall status and recommendations
   const recommendations = [];
 
   if (!config.sandwich_status?.stage1_complete && !stage1Ready) {
@@ -136,7 +130,6 @@ function queryStatus(projectPath) {
     }
   }
 
-  // Build status response
   const status = {
     success: true,
     initialized: true,
@@ -222,7 +215,6 @@ Stage 3 (Human Synthesis)      ${bar(s3, s2 < 100)}
 `;
 }
 
-// Main execution
 const args = parseArgs();
 
 if (!args['project-path']) {

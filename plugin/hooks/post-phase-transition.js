@@ -14,7 +14,6 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-// Find project root by looking for .interpretive-orchestration/ directory
 function findProjectRoot(startPath) {
   let currentPath = startPath;
   while (currentPath !== path.parse(currentPath).root) {
@@ -26,13 +25,11 @@ function findProjectRoot(startPath) {
   return null;
 }
 
-// Get plugin root (where this hook script lives)
 function getPluginRoot() {
   // This script is in hooks/, so plugin root is parent
   return path.dirname(__dirname);
 }
 
-// Main hook logic
 function handlePhaseTransition() {
   const projectRoot = findProjectRoot(process.cwd());
 
@@ -50,7 +47,6 @@ function handlePhaseTransition() {
     process.exit(0);
   }
 
-  // Check if rules exist (if not, nothing to update)
   if (!fs.existsSync(rulesDir)) {
     console.log('ℹ️  No rules directory. Consider running /qual-design to configure research design.');
     process.exit(0);
@@ -62,7 +58,6 @@ function handlePhaseTransition() {
     process.exit(0);
   }
 
-  // Run the update-rules script
   const pluginRoot = getPluginRoot();
   const updateScript = path.join(pluginRoot, 'skills', 'methodological-rules', 'scripts', 'update-rules.js');
 
@@ -97,7 +92,6 @@ function handlePhaseTransition() {
       console.log('   📓 Change logged to reflexivity journal.');
       console.log('');
     } else {
-      // Silent exit if no changes
       console.log(`ℹ️  Phase: ${result.current_phase}. No rule updates needed.`);
     }
 
@@ -110,7 +104,6 @@ function handlePhaseTransition() {
   }
 }
 
-// Run the hook
 try {
   handlePhaseTransition();
 } catch (error) {

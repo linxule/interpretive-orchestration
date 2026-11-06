@@ -36,7 +36,6 @@ function validateStructure(structure) {
     }
   };
 
-  // Check for aggregate_dimensions array
   if (!structure.aggregate_dimensions || !Array.isArray(structure.aggregate_dimensions)) {
     results.errors.push('Missing or invalid aggregate_dimensions array');
     results.valid = false;
@@ -45,11 +44,9 @@ function validateStructure(structure) {
 
   const seenIds = new Set();
 
-  // Validate each dimension
   for (const dimension of structure.aggregate_dimensions) {
     results.stats.dimensions++;
 
-    // Check dimension fields
     if (!dimension.id) {
       results.errors.push(`Dimension missing id: ${JSON.stringify(dimension).slice(0, 50)}...`);
       results.valid = false;
@@ -60,7 +57,6 @@ function validateStructure(structure) {
       }
       seenIds.add(dimension.id);
 
-      // Check ID format (should start with AD)
       if (!dimension.id.startsWith('AD')) {
         results.warnings.push(`Dimension id "${dimension.id}" should start with "AD" (e.g., AD1)`);
       }
@@ -75,7 +71,6 @@ function validateStructure(structure) {
       results.warnings.push(`Dimension ${dimension.id}: missing definition`);
     }
 
-    // Validate themes
     if (!dimension.second_order_themes || !Array.isArray(dimension.second_order_themes)) {
       results.errors.push(`Dimension ${dimension.id}: missing second_order_themes array`);
       results.valid = false;
@@ -89,7 +84,6 @@ function validateStructure(structure) {
     for (const theme of dimension.second_order_themes) {
       results.stats.themes++;
 
-      // Check theme fields
       if (!theme.id) {
         results.errors.push(`Theme missing id in dimension ${dimension.id}`);
         results.valid = false;
@@ -100,7 +94,7 @@ function validateStructure(structure) {
         }
         seenIds.add(theme.id);
 
-        // Check ID format (should include parent dimension)
+        // Theme IDs encode their parent dimension
         if (!theme.id.includes('_T')) {
           results.warnings.push(`Theme id "${theme.id}" should follow format "AD1_T1"`);
         }
@@ -115,7 +109,6 @@ function validateStructure(structure) {
         results.warnings.push(`Theme ${theme.id}: missing researcher_interpretation (important for audit trail)`);
       }
 
-      // Validate concepts
       if (!theme.first_order_concepts || !Array.isArray(theme.first_order_concepts)) {
         results.errors.push(`Theme ${theme.id}: missing first_order_concepts array`);
         results.valid = false;
@@ -129,7 +122,6 @@ function validateStructure(structure) {
       for (const concept of theme.first_order_concepts) {
         results.stats.concepts++;
 
-        // Check concept fields
         if (!concept.id) {
           results.errors.push(`Concept missing id in theme ${theme.id}`);
           results.valid = false;
@@ -140,7 +132,6 @@ function validateStructure(structure) {
           }
           seenIds.add(concept.id);
 
-          // Check ID format
           if (!concept.id.includes('_C')) {
             results.warnings.push(`Concept id "${concept.id}" should follow format "AD1_T1_C1"`);
           }
@@ -155,7 +146,6 @@ function validateStructure(structure) {
           results.warnings.push(`Concept ${concept.id}: missing informant_terms (important for 1st-order grounding)`);
         }
 
-        // Count quotes
         if (concept.example_quotes && Array.isArray(concept.example_quotes)) {
           for (const quote of concept.example_quotes) {
             results.stats.quotes++;
@@ -181,7 +171,6 @@ function validateStructure(structure) {
   return results;
 }
 
-// Main execution
 const args = parseArgs();
 
 if (!args['structure-path']) {

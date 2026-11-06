@@ -82,12 +82,10 @@ function applyPreset(config, presetName, presetsData, promptsData) {
     return { success: false, error: `Unknown preset: ${presetName}` };
   }
 
-  // Initialize research_design if needed
   if (!config.research_design) {
     config.research_design = {};
   }
 
-  // Apply methodology preset
   config.research_design.methodology_preset = presetName;
 
   // Apply isolation defaults (only if not already configured)
@@ -105,7 +103,6 @@ function applyPreset(config, presetName, presetsData, promptsData) {
     }
   }
 
-  // Apply proactive prompts configuration
   if (!config.research_design.proactive_prompts) {
     config.research_design.proactive_prompts = {
       enabled: true,
@@ -115,7 +112,6 @@ function applyPreset(config, presetName, presetsData, promptsData) {
     };
   }
 
-  // Set which prompts are active for this methodology
   config.research_design.proactive_prompts.active_prompts = preset.proactive_prompts || [];
 
   // Apply philosophical defaults (only if not already set)
@@ -157,10 +153,8 @@ function applyPreset(config, presetName, presetsData, promptsData) {
   };
 }
 
-// Main execution
 const args = parseArgs();
 
-// List presets mode
 if (args['list-presets']) {
   const presetsData = loadPresets();
   const presetList = Object.entries(presetsData.presets).map(([id, preset]) => ({
@@ -178,7 +172,6 @@ if (args['list-presets']) {
   process.exit(0);
 }
 
-// Apply preset mode
 if (!args['project-path']) {
   console.error(JSON.stringify({
     success: false,
@@ -214,7 +207,6 @@ const result = applyPreset(config, args.preset, presetsData, promptsData);
 if (result.success) {
   saveConfig(projectPath, config);
 
-  // Log to journal
   logToJournal(projectPath, `**Applied Methodology Preset: ${result.preset_name}**
 
 ${result.description}

@@ -36,7 +36,6 @@ function outputRemediation(code, severity, reason, nextCommands, nextSkills, can
     details
   };
 
-  // Output JSON to stderr for machine parsing
   console.error(JSON.stringify(remediation));
 }
 
@@ -52,8 +51,8 @@ function getSessionStats(projectRoot) {
     .filter(line => line.trim())
     .map(line => JSON.parse(line));
 
-  // Get today's entries (simplified - last session)
-  const recentLogs = logs.slice(-20); // Last 20 entries
+  // Use the last 20 entries as a simplified session window
+  const recentLogs = logs.slice(-20);
 
   const toolsUsed = [...new Set(recentLogs
     .filter(log => log.activity_type === 'deep_reasoning' || log.activity_type === 'paradox_navigation')
@@ -76,7 +75,6 @@ function main() {
 
   const stats = getSessionStats(projectRoot);
 
-  // Output structured remediation for machine parsing
   outputRemediation(
     'SESSION_REFLECTION',
     'info',  // This is a reflection prompt, not a warning or blocker
@@ -135,7 +133,6 @@ function main() {
   console.log('   Regular reflection makes that visible and productive.');
   console.log('');
 
-  // Log the session end
   const logPath = path.join(projectRoot, '.interpretive-orchestration', 'conversation-log.jsonl');
   const logEntry = {
     timestamp: new Date().toISOString(),
