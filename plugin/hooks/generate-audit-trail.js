@@ -274,8 +274,8 @@ function main() {
     timestamp: new Date().toISOString(),
     from: 'post_synthesis_hook',
     to: 'human_researcher',
-    message: 'Audit trail generated automatically after synthesis. Complete documentation of analytical process created for confirmability.',
-    stage: 'stage2_synthesis_complete',
+    message: 'Audit trail generated automatically at the end of a turn after /qual-synthesize started. Complete documentation of analytical process created for confirmability.',
+    stage: 'stage2_synthesis',
     activity_type: 'audit_trail_generation',
     metadata: {
       output_file: 'outputs/audit-trail.md',

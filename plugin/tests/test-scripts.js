@@ -354,6 +354,20 @@ async function run() {
       const message = json(r).message;
       assert(message.includes('does not keep its own copy') && !/safe/i.test(message), message);
     });
+    test('U1: update-rules reports only rules it actually relaxed', () => {
+      const p = project(); const c = getConfig(p);
+      c.sandwich_status.current_stage = 'stage2_collaboration';
+      c.sandwich_status.stage2_progress.phase2_synthesis = 'in_progress';
+      const design = c.research_design; delete c.research_design; setConfig(p, c);
+      write(p, '.claude/rules/stream-separation.md', '# Stream separation\n**Rule Status:** ACTIVE\n');
+      const journal = write(p, '.interpretive-orchestration/reflexivity-journal.md', '# Journal\n');
+      const update = () => json(runFile('methodological-rules/scripts/update-rules.js', p));
+      for (let i = 0; i < 2; i++) assert((update().rules_updated || []).length === 0, 'nothing was regenerated, so nothing relaxed');
+      assert(!fs.readFileSync(journal, 'utf8').includes('Phase Transition Detected'), 'no journal entry for a relaxation that did not happen');
+      c.research_design = design; setConfig(p, c);
+      assert(update().rules_updated.includes('stream-separation'));
+      assert((update().rules_updated || []).length === 0, 'a relaxed rule is reported once');
+    });
     test('K6: a malformed data inventory is reported, never replaced', () => {
       const p = project(); const inv = write(p, 'stage1-foundation/data-inventory.json', '{"documents": [');
       const input = path.join(p, 'input'); fs.mkdirSync(input); fs.writeFileSync(path.join(input, 'a.mp3'), 'x');

@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.3.4] - 2026-11-06 - Audit trail and rule updates on Codex and Copilot CLI
+
+Closes the Codex and Copilot CLI item on the [next-version list](https://github.com/linxule/interpretive-orchestration/issues/4). Tested live on Codex 0.165.0, Copilot CLI 1.0.106 and Claude Code 2.1.319. Codex and Kimi reviewed the changes.
+
+### Added
+
+- Codex and Copilot CLI now write the audit trail after `/qual-synthesize`, and update methodological rules after commands that change the stage or phase, as Claude Code and Kimi Code do. In Codex, name the command (`$interpretive-orchestration:qual-synthesize`); a skill Codex picks without a `$` mention starts nothing. In Copilot CLI, type the command or let the AI load the skill; Copilot does not show you their notices. Both platforms ignore the hooks in a skill's frontmatter, so new `after-skill` hooks in `hooks.json` and `codex-hooks.json` stand in for them. On Claude Code they do nothing. Codex asks you to trust the hooks again after this update.
+
+### Fixed
+
+- Rule updates reported a rule as relaxed, and added a journal entry, every time they ran when the project had no research design, although the rule file stayed active. They now report only rules whose files actually relaxed.
+- The audit trail's first notice in a session could be lost. It was marked as shown before it ran, so a first run outside a project, or one that failed, made the later successful run silent.
+- The audit trail's log entry no longer says synthesis is done. It runs at the end of each turn once `/qual-synthesize` has started, which can be before the work is done.
+
+---
+
 ## [0.3.3] - 2026-11-06 - One Stage 1 rule, and wording that matches behavior
 
 This release closes items from the [next-version list](https://github.com/linxule/interpretive-orchestration/issues/4) that did not need a redesign. Codex and Kimi reviewed the changes, and Codex reviewed the fixes.

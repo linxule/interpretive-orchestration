@@ -92,21 +92,18 @@ if (fs.existsSync(rulesDir)) {
   }
 }
 
-const relaxedRules = phaseInfo.rules_should_relax.map(r => r.name);
-const rulesNeedingUpdate = existingRules.filter(ruleName => {
-  const rulePath = path.join(rulesDir, `${ruleName}.md`);
+function ruleStatus(ruleName) {
   try {
-    const content = fs.readFileSync(rulePath, 'utf8');
-    const isCurrentlyActive = content.includes('**Rule Status:** ACTIVE');
-    const shouldBeRelaxed = relaxedRules.includes(ruleName);
-
-    return isCurrentlyActive && shouldBeRelaxed;
+    const content = fs.readFileSync(path.join(rulesDir, `${ruleName}.md`), 'utf8');
+    if (content.includes('**Rule Status:** ACTIVE')) return 'ACTIVE';
+    if (content.includes('**Rule Status:** RELAXED')) return 'RELAXED';
   } catch (e) {
-    return false;
+    // A missing or unreadable rule file has no status.
   }
-});
+  return null;
+}
 
-if (rulesNeedingUpdate.length === 0) {
+function noUpdates() {
   console.log(JSON.stringify({
     success: true,
     message: 'No rules need updating',
@@ -115,6 +112,12 @@ if (rulesNeedingUpdate.length === 0) {
   }));
   process.exit(0);
 }
+
+const relaxedRules = phaseInfo.rules_should_relax.map(r => r.name);
+const rulesNeedingUpdate = existingRules.filter(ruleName =>
+  ruleStatus(ruleName) === 'ACTIVE' && relaxedRules.includes(ruleName));
+
+if (rulesNeedingUpdate.length === 0) noUpdates();
 
 // Regenerate all rules (simplest approach - ensures consistency)
 const generateScript = path.join(__dirname, 'generate-rules.js');
@@ -133,12 +136,17 @@ try {
   process.exit(1);
 }
 
+// Report only rules the regeneration actually relaxed. Without a research
+// design, for example, nothing is regenerated and the file stays ACTIVE.
+const rulesRelaxed = rulesNeedingUpdate.filter(ruleName => ruleStatus(ruleName) === 'RELAXED');
+if (rulesRelaxed.length === 0) noUpdates();
+
 const transitionMessage = `**Phase Transition Detected**
 
 **New Phase:** ${phaseInfo.current_phase}
 
 **Rules Relaxed:**
-${rulesNeedingUpdate.map(r => `- ${r}`).join('\n') || '- None'}
+${rulesRelaxed.map(r => `- ${r}`).join('\n')}
 
 **Rules Still Active:**
 ${phaseInfo.rules_still_active.map(r => `- ${r.name} (until ${r.relaxes_at})`).join('\n') || '- None'}
@@ -150,9 +158,9 @@ logToJournal(projectPath, transitionMessage);
 console.log(JSON.stringify({
   success: true,
   current_phase: phaseInfo.current_phase,
-  rules_updated: rulesNeedingUpdate,
+  rules_updated: rulesRelaxed,
   rules_regenerated: generateResult.rules_generated?.length || 0,
-  message: `Phase transition: ${rulesNeedingUpdate.length} rule(s) relaxed`
+  message: `Phase transition: ${rulesRelaxed.length} rule(s) relaxed`
 }, null, 2));
 
 process.exit(0);

@@ -1,5 +1,5 @@
 {
-  "description": "Codex version of hooks.json. Codex has no Skill tool or UserPromptExpansion event and does not support the 'ask' decision, so the Stage 1 check reads $skill mentions in the prompt and asks the researcher through the model. Codex cannot install plugin agents, so the after-agent hooks are not registered. SessionEnd hooks are limited to 3 seconds.",
+  "description": "Codex version of hooks.json. Codex has no Skill tool or UserPromptExpansion event and does not support the 'ask' decision, so the Stage 1 check reads $skill mentions in the prompt and asks the researcher through the model. Codex ignores skill frontmatter hooks, so a $skill mention also starts the after-skill hooks: the audit trail and phase transition then run at Stop. Codex cannot install plugin agents, so the after-agent hooks are not registered. SessionEnd hooks are limited to 3 seconds.",
   "hooks": {
     "SessionStart": [
       {
@@ -19,6 +19,32 @@
             "type": "command",
             "command": "node \"${PLUGIN_ROOT}/hooks/run-hook.js\" check-stage1-complete.js",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/hooks/run-hook.js\" generate-audit-trail.js after-skill",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/hooks/run-hook.js\" post-phase-transition.js after-skill",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/hooks/run-hook.js\" generate-audit-trail.js after-skill",
+            "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/hooks/run-hook.js\" post-phase-transition.js after-skill",
+            "timeout": 30
           }
         ]
       }

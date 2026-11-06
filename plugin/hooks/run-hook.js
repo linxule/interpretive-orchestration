@@ -70,9 +70,12 @@ const KIMI_HOLD_NOTE =
 // than waiting for an unrelated call later in the session.
 const KIMI_CONFIRM_WINDOW_MS = 30 * 60 * 1000;
 
-// Kimi ignores the hooks in a skill's frontmatter. The plugin's Stop hook stands
-// in for them, and runs after one of the hook's skills was loaded.
+// Codex, Copilot CLI and Kimi Code ignore the hooks in a skill's frontmatter.
+// There the plugin's own Stop hook stands in for them, and runs after one of
+// the hook's skills was loaded. In hooks.json and codex-hooks.json these
+// stand-in hooks pass "after-skill"; Kimi is detected, so its manifest does not.
 const SKILL_STOP_SCRIPTS = new Set(['generate-audit-trail.js', 'post-phase-transition.js']);
+const AFTER_SKILL = process.argv[3] === 'after-skill';
 
 const COPILOT_NOTICE =
   'Interpretive Orchestration methodology notice. The researcher has not seen it yet, ' +
@@ -145,8 +148,9 @@ function targetOf(payload) {
   return { kind: 'other', name: '' };
 }
 
+// Copilot CLI's userPromptTransformed payload names the session sessionId.
 function sessionMarker(payload, ...parts) {
-  const session = String(payload.session_id || 'session').replace(/[^\w-]/g, '');
+  const session = String(payload.session_id || payload.sessionId || 'session').replace(/[^\w-]/g, '');
   return path.join(PENDING_DIR, [session, ...parts.map(part => String(part).replace(/[^\w.-]/g, ''))].join('.'));
 }
 
@@ -178,33 +182,55 @@ function armKimiPasses(payload) {
 // Kimi only: true when a triggered call should exit without running the script.
 function kimiSkip(script, payload) {
   const event = payload.hook_event_name;
-  const target = targetOf(payload);
   if (event === 'PreToolUse') {
-    return takeMarker(sessionMarker(payload, target.name, script, 'confirmed'), KIMI_CONFIRM_WINDOW_MS);
+    return takeMarker(sessionMarker(payload, targetOf(payload).name, script, 'confirmed'), KIMI_CONFIRM_WINDOW_MS);
   }
-  // The Skill tool returns once the instructions load, before the skill's work is done.
-  if (event === 'PostToolUse' && target.kind === 'skill' && SKILL_STOP_SCRIPTS.has(script)) {
-    putMarker(sessionMarker(payload, script, 'stop'));
-    return true;
-  }
-  if (event === 'Stop') {
-    return !(SKILL_STOP_SCRIPTS.has(script) && fs.existsSync(sessionMarker(payload, script, 'stop')));
-  }
-  return false;
+  // Kimi registers Stop only for the stand-ins, which skillStopSkip has let through.
+  return event === 'Stop' && !SKILL_STOP_SCRIPTS.has(script);
+}
+
+// Stand-in for a skill's frontmatter Stop hook: true when the call should exit
+// without running the script. Loading one of the script's skills leaves a
+// marker for the session, and from then on Stop runs the script. The Skill tool
+// returns once the instructions load, before the skill's work is done, so the
+// script never runs at the load itself.
+//   Kimi:    the Skill tool (PostToolUse)
+//   Copilot: the lowercase skill tool (PostToolUse) or a typed slash command
+//   Codex:   a $skill mention in the prompt (UserPromptSubmit, registered only
+//            in codex-hooks.json)
+// Claude Code runs the frontmatter hooks itself. It never leaves the marker,
+// since it is none of the above, so there the stand-ins in hooks.json do nothing.
+function skillStopSkip(script, payload) {
+  if (!SKILL_STOP_SCRIPTS.has(script) || !(ON_KIMI || AFTER_SKILL)) return false;
+  const event = payload.hook_event_name;
+  const marker = sessionMarker(payload, script, 'stop');
+  if (event === 'Stop') return !fs.existsSync(marker);
+  // On Kimi the phase transition also follows @dialogical-coder, as everywhere.
+  if (targetOf(payload).kind !== 'skill') return AFTER_SKILL;
+  // Copilot reports a skill that failed to load as a non-success result.
+  const result = payload.tool_result && payload.tool_result.result_type;
+  const failed = Boolean(result) && result !== 'success';
+  const loaded = (event === 'PostToolUse' && (ON_KIMI || ON_COPILOT) && !failed) ||
+    (ON_COPILOT && isCopilotSlashCommand(payload)) ||
+    (AFTER_SKILL && event === 'UserPromptSubmit');
+  if (loaded) putMarker(marker);
+  return true;
 }
 
 // A skill's Stop hooks run at the end of every turn once the skill has
 // started, because its work can span several turns. So at Stop they report
 // only news: rules that changed, a problem, or the audit trail's first run.
 // The audit trail is rewritten each time, so it covers the whole synthesis.
+// Only a run that wrote the audit trail counts as its first run (see main).
 function quietAtStop(script, payload) {
   if (payload.hook_event_name !== 'Stop') return false;
   if (script === 'post-phase-transition.js') return true;
-  if (script !== 'generate-audit-trail.js' || !payload.session_id) return false;
-  const marker = sessionMarker(payload, script, 'ran');
-  if (fs.existsSync(marker)) return true;
-  putMarker(marker);
-  return false;
+  return script === 'generate-audit-trail.js' && hasSession(payload) &&
+    fs.existsSync(sessionMarker(payload, script, 'ran'));
+}
+
+function hasSession(payload) {
+  return Boolean(payload.session_id || payload.sessionId);
 }
 
 // Copilot CLI's userPromptTransformed event: a typed slash command arrives
@@ -287,6 +313,7 @@ function main() {
   const stanceShown = kimiStance && sessionMarker(payload, script, 'shown');
   if (stanceShown && fs.existsSync(stanceShown)) process.exit(0);
   if (payload && !kimiStance && !isTriggered(script, payload)) process.exit(0);
+  if (payload && skillStopSkip(script, payload)) process.exit(0);
   if (payload && ON_KIMI && kimiSkip(script, payload)) process.exit(0);
   if (payload && deferForBackgroundAgent(script, payload)) process.exit(0);
 
@@ -309,6 +336,12 @@ function main() {
   const flagged = result.status !== 0;
   const forClaude = details ? `${text}\n\nStructured details: ${details}` : text;
   const event = payload.hook_event_name;
+
+  // An audit trail that was written makes later runs in the session quiet. A
+  // run outside a project prints nothing, and a failed one exits non-zero.
+  if (event === 'Stop' && script === 'generate-audit-trail.js' && !quiet && !flagged && text && hasSession(payload)) {
+    putMarker(sessionMarker(payload, script, 'ran'));
+  }
 
   if (kimiStance) {
     // Outside a project the stance prints nothing, so it can still come

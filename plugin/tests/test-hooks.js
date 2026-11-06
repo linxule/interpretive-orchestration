@@ -185,13 +185,13 @@ function makeProject(config) {
   return dir;
 }
 
-function runAdapter(script, payload, extraEnv = {}) {
+function runAdapter(script, payload, extraEnv = {}, args = []) {
   const { spawnSync } = require('child_process');
   const env = { ...process.env, ...extraEnv };
   for (const name of ['COPILOT_PLUGIN_ROOT', 'KIMI_PLUGIN_ROOT']) {
     if (!extraEnv[name]) delete env[name];
   }
-  const result = spawnSync(process.execPath, [path.join(HOOKS_DIR, 'run-hook.js'), script], {
+  const result = spawnSync(process.execPath, [path.join(HOOKS_DIR, 'run-hook.js'), script, ...args], {
     input: payload ? JSON.stringify(payload) : '',
     encoding: 'utf8',
     env
@@ -475,6 +475,122 @@ function testHookAdapterBehaviour() {
     assert(json && json.additionalContext.includes('INTERPRETIVE PAUSE'), 'Pause should fire when the agent finishes');
     assert(json.additionalContext.includes('has not seen it'), 'Model should pass it on');
     assert(!json.systemMessage, 'Copilot never shows systemMessage');
+  });
+
+  // The after-skill hooks in hooks.json and codex-hooks.json stand in for a
+  // skill's frontmatter Stop hooks on Codex and Copilot CLI.
+  const afterSkill = ['after-skill'];
+  const auditTrail = path.join(complete, 'outputs', 'audit-trail.md');
+  const clearOutputs = () => fs.rmSync(path.join(complete, 'outputs'), { recursive: true, force: true });
+  // A project with a stream-separation rule due to relax, so the phase
+  // transition speaks even at Stop: silence means it did not run.
+  const ruleProject = () => {
+    const dir = makeProject({
+      sandwich_status: {
+        stage1_complete: true, current_stage: 'stage2_collaboration',
+        stage2_progress: { phase2_synthesis: 'in_progress' }
+      },
+      research_design: {
+        study_type: 'single_case', cases: [], waves: [],
+        streams: { theoretical: { folder_path: 'literature', sources: [] }, empirical: { folder_path: 'data', sources: [] } },
+        isolation_config: { stream_separation: { enabled: true, relaxes_at: 'phase2_synthesis', friction_level: 'nudge' } }
+      }
+    });
+    fs.mkdirSync(path.join(dir, '.claude', 'rules'), { recursive: true });
+    fs.writeFileSync(path.join(dir, '.claude', 'rules', 'stream-separation.md'), '# Stream separation\n**Rule Status:** ACTIVE\n');
+    return dir;
+  };
+  test('adapter (Claude Code): the after-skill hooks in hooks.json do nothing', () => {
+    const session = `claude-after-skill-${process.pid}`;
+    const rules = ruleProject();
+    clearOutputs();
+    for (const [script, cwd] of [['generate-audit-trail.js', complete], ['post-phase-transition.js', rules]]) {
+      const loaded = {
+        hook_event_name: 'PostToolUse', tool_name: 'Skill', cwd, session_id: session,
+        tool_input: { skill: 'interpretive-orchestration:qual-synthesize' }, tool_response: { success: true }
+      };
+      const stop = { hook_event_name: 'Stop', cwd, session_id: session, stop_hook_active: false };
+      assert(runAdapter(script, loaded, {}, afterSkill).raw === '', `${script}: silent when the skill loads`);
+      assert(runAdapter(script, stop, {}, afterSkill).raw === '', `${script}: silent at Stop`);
+    }
+    assert(!fs.existsSync(auditTrail), 'No second audit-trail run on Claude Code');
+    const frontmatterStop = { hook_event_name: 'Stop', cwd: complete, session_id: session, stop_hook_active: false };
+    runAdapter('generate-audit-trail.js', frontmatterStop);
+    assert(fs.existsSync(auditTrail), 'The frontmatter Stop hook still writes the audit trail');
+    clearOutputs();
+    fs.rmSync(rules, { recursive: true, force: true });
+  });
+
+  // Payload shapes captured from codex-cli 0.165.0.
+  test('adapter (Codex): a $skill mention runs the audit trail and phase transition at Stop', () => {
+    const session = `codex-after-skill-${process.pid}`;
+    const rules = ruleProject();
+    const prompt = (cwd, text, id = session) => ({
+      hook_event_name: 'UserPromptSubmit', cwd, session_id: id, turn_id: 't1', prompt: text
+    });
+    const stop = (cwd, id = session) => ({ hook_event_name: 'Stop', cwd, session_id: id, turn_id: 't1', stop_hook_active: false });
+    clearOutputs();
+    runAdapter('generate-audit-trail.js', prompt(complete, '$qual-status please', `${session}-other`), {}, afterSkill);
+    assert(runAdapter('generate-audit-trail.js', stop(complete, `${session}-other`), {}, afterSkill).raw === '', 'Other skills start nothing');
+    assert(runAdapter('generate-audit-trail.js', stop(complete), {}, afterSkill).raw === '', 'Stop does nothing before the mention');
+    assert(!fs.existsSync(auditTrail), 'No audit trail before the mention');
+    assert(runAdapter('generate-audit-trail.js', prompt(complete, '$interpretive-orchestration:qual-synthesize merge'), {}, afterSkill).raw === '',
+      'Nothing runs at the prompt itself');
+    const first = runAdapter('generate-audit-trail.js', stop(complete), {}, afterSkill);
+    assert(first.json && first.json.systemMessage.includes('Audit trail generated'), 'First Stop writes the audit trail and says so');
+    clearOutputs();
+    assert(runAdapter('generate-audit-trail.js', stop(complete), {}, afterSkill).raw === '', 'Later Stops stay quiet');
+    assert(fs.existsSync(auditTrail), 'Later Stops still rewrite the audit trail');
+    clearOutputs();
+    assert(runAdapter('post-phase-transition.js', stop(rules), {}, afterSkill).raw === '', 'No phase transition before the mention');
+    runAdapter('post-phase-transition.js', prompt(rules, '$qual-advance-stage'), {}, afterSkill);
+    const moved = runAdapter('post-phase-transition.js', stop(rules), {}, afterSkill);
+    assert(moved.json && moved.json.systemMessage.includes('METHODOLOGICAL RULES UPDATED'), 'Stop runs the phase transition');
+    fs.rmSync(rules, { recursive: true, force: true });
+  });
+
+  test('adapter (Copilot): the skill tool or a typed command runs the audit trail at Stop', () => {
+    const session = `copilot-after-skill-${process.pid}`;
+    const stop = (id = session) => ({ hook_event_name: 'Stop', session_id: id, cwd: complete, stop_reason: 'end_turn', stop_hook_active: false });
+    clearOutputs();
+    assert(runAdapter('generate-audit-trail.js', stop(), copilot, afterSkill).raw === '', 'Stop does nothing before the skill loads');
+    const loaded = {
+      hook_event_name: 'PostToolUse', session_id: session, cwd: complete, tool_name: 'skill',
+      tool_input: { skill: 'qual-synthesize' }, tool_result: { result_type: 'success', text_result_for_llm: 'loaded' }
+    };
+    assert(runAdapter('generate-audit-trail.js', loaded, copilot, afterSkill).raw === '', 'Nothing runs when the skill loads');
+    const { json } = runAdapter('generate-audit-trail.js', stop(), copilot, afterSkill);
+    assert(json && json.additionalContext.includes('Audit trail generated'), 'Stop writes the audit trail and tells the model');
+    assert(json.additionalContext.includes('has not seen it'), 'Model should pass it on');
+    clearOutputs();
+    const typed = `${session}-typed`;
+    const command = {
+      sessionId: typed, cwd: complete, prompt: '/interpretive-orchestration:qual-synthesize',
+      transformedPrompt: '<skill-context name="interpretive-orchestration:qual-synthesize">...</skill-context>'
+    };
+    assert(runAdapter('generate-audit-trail.js', command, copilot, afterSkill).raw === '', 'The typed command is left as it is');
+    assert(runAdapter('generate-audit-trail.js', { ...stop(typed), agent_id: 'sub-1', session_id: 'sub-1' }, copilot, afterSkill).raw === '',
+      'A subagent\'s Stop does not run it');
+    runAdapter('generate-audit-trail.js', stop(typed), copilot, afterSkill);
+    assert(fs.existsSync(auditTrail), 'A typed command runs it at Stop too');
+    clearOutputs();
+    const failedId = `${session}-failed`;
+    runAdapter('generate-audit-trail.js', { ...loaded, session_id: failedId, tool_result: { result_type: 'failure', text_result_for_llm: 'Skill not found' } }, copilot, afterSkill);
+    assert(runAdapter('generate-audit-trail.js', stop(failedId), copilot, afterSkill).raw === '' && !fs.existsSync(auditTrail),
+      'A skill that failed to load starts nothing');
+  });
+
+  test('adapter: only an audit trail that was written makes later runs quiet', () => {
+    const session = `first-audit-${process.pid}`;
+    const outside = fs.mkdtempSync(path.join(os.tmpdir(), 'io-outside-'));
+    const stop = cwd => ({ hook_event_name: 'Stop', cwd, session_id: session, stop_hook_active: false });
+    clearOutputs();
+    assert(runAdapter('generate-audit-trail.js', stop(outside)).raw === '', 'Nothing to write outside a project');
+    const first = runAdapter('generate-audit-trail.js', stop(complete));
+    assert(first.json && first.json.systemMessage.includes('Audit trail generated'), 'The first written audit trail still says so');
+    assert(runAdapter('generate-audit-trail.js', stop(complete)).raw === '', 'Later runs are quiet');
+    clearOutputs();
+    fs.rmSync(outside, { recursive: true, force: true });
   });
 
   for (const dir of [incomplete, complete]) fs.rmSync(dir, { recursive: true, force: true });

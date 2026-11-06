@@ -290,7 +290,7 @@ function testHooksConfig() {
       const config = JSON.parse(fs.readFileSync(path.join(hooksDir, file), 'utf8'));
       const commands = Object.values(config.hooks).flat().flatMap(group => group.hooks.map(h => h.command));
       for (const command of commands) {
-        const match = command.match(/run-hook\.js"? ([\w-]+\.js)$/);
+        const match = command.match(/run-hook\.js"? ([\w-]+\.js)( after-skill)?$/);
         assert(match, `Hook does not use run-hook.js: ${command}`);
         assert(fs.existsSync(path.join(hooksDir, match[1])), `Missing hook script: ${match[1]}`);
         assert(adapter.includes(`'${match[1]}'`), `run-hook.js has no triggers for ${match[1]}`);
@@ -307,6 +307,55 @@ function testHooksConfig() {
       assert(adapter.includes(`'${match[1]}'`), `run-hook.js has no triggers for ${match[1]}`);
       assert(!hook.matcher || hook.matcher.startsWith('^'), `Kimi matchers are unanchored regexes; anchor ${hook.matcher}`);
     }
+  });
+
+  // Only Claude Code reads a skill's frontmatter hooks. On the other platforms
+  // each frontmatter Stop hook needs a stand-in: a hook that notes the skill
+  // loading, and a Stop hook that then runs the script.
+  test('every skill frontmatter Stop hook has a stand-in on Codex, Copilot CLI and Kimi Code', () => {
+    const skillsDir = path.join(PROJECT_ROOT, 'skills');
+    const scripts = new Set();
+    // The stand-ins start for the skills TRIGGERS lists, so each skill whose
+    // frontmatter has a Stop hook must be listed there for that script.
+    const triggers = Function(`return ${adapter.match(/const TRIGGERS = (\{[\s\S]*?\n\});/)[1]}`)();
+    const unlisted = [];
+    for (const dir of fs.readdirSync(skillsDir)) {
+      const fm = fs.existsSync(path.join(skillsDir, dir, 'SKILL.md')) && frontmatter(path.join(skillsDir, dir, 'SKILL.md'));
+      for (const match of String(fm || '').matchAll(/run-hook\.js"? ([\w-]+\.js)/g)) {
+        scripts.add(match[1]);
+        if (!triggers[match[1]].skills.includes(dir)) unlisted.push(`${dir} (${match[1]})`);
+      }
+    }
+    assert(scripts.size > 0, 'Expected frontmatter Stop hooks');
+    assert(unlisted.length === 0, `Skills missing from TRIGGERS in run-hook.js: ${unlisted.join(', ')}`);
+    const registered = (file, event, matcher) => {
+      const config = JSON.parse(fs.readFileSync(path.join(hooksDir, file), 'utf8'));
+      return (config.hooks[event] || [])
+        .filter(group => !matcher || (group.matcher || '').split('|').includes(matcher))
+        .flatMap(group => group.hooks.map(h => h.command));
+    };
+    const kimi = JSON.parse(fs.readFileSync(path.join(PROJECT_ROOT, '..', 'kimi.plugin.json'), 'utf8')).hooks;
+    const kimiHas = (event, script, tool) => kimi.some(h => h.event === event && h.command.endsWith(` ${script}`) &&
+      (!tool || new RegExp(h.matcher).test(tool)));
+    const missing = [];
+    for (const script of scripts) {
+      const standIn = `${script} after-skill`;
+      const needs = {
+        'hooks.json Stop': registered('hooks.json', 'Stop'),
+        'hooks.json PostToolUse skill': registered('hooks.json', 'PostToolUse', 'skill'),
+        'hooks.json userPromptTransformed': registered('hooks.json', 'userPromptTransformed'),
+        'codex-hooks.json Stop': registered('codex-hooks.json', 'Stop'),
+        'codex-hooks.json UserPromptSubmit': registered('codex-hooks.json', 'UserPromptSubmit')
+      };
+      for (const [where, commands] of Object.entries(needs)) {
+        if (!commands.some(c => c.endsWith(standIn))) missing.push(`${where}: ${standIn}`);
+      }
+      if (!kimiHas('Stop', script)) missing.push(`kimi.plugin.json Stop: ${script}`);
+      if (!kimiHas('PostToolUse', script, 'Skill')) missing.push(`kimi.plugin.json PostToolUse Skill: ${script}`);
+    }
+    assert(missing.length === 0, `Missing stand-ins: ${missing.join('; ')}`);
+    assert(adapter.includes(`new Set([${[...scripts].sort().map(s => `'${s}'`).join(', ')}])`),
+      'SKILL_STOP_SCRIPTS in run-hook.js should list exactly the frontmatter Stop hook scripts');
   });
 
   test('Codex manifest points at the Codex hooks file', () => {
