@@ -3,6 +3,8 @@ name: methodological-rules
 description: "This skill should be used when users mention 'generate rules', 'isolation rules', 'methodology preset', 'apply preset', 'saturation', 'am I saturated', 'branch', 'fork', 'explore alternative', 'team', 'add researcher', 'intercoder reliability', 'dashboard', 'show status', or after /qual-design completes."
 ---
 
+> Script paths: `${CLAUDE_PLUGIN_ROOT}` below is this plugin's root folder, two levels above this skill's own folder. Claude Code fills it in. If you see it unfilled, still starting with a dollar sign (as in Codex, Copilot CLI or Kimi Code), put that folder's absolute path in its place before you run a command.
+
 # Methodological Rules Skill
 
 Comprehensive methodological support: isolation rules, strain detection, saturation tracking, workspace branching, multi-researcher collaboration, and visualization.

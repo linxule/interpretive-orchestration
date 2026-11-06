@@ -3,6 +3,8 @@ name: project-dashboard
 description: "This skill should be used when users ask 'where am I?', 'what is my progress?', mentions 'status', 'dashboard', 'progress', wants to know if they are ready for the next stage, or needs an overview of their project state."
 ---
 
+> Script paths: `${CLAUDE_PLUGIN_ROOT}` below is this plugin's root folder, two levels above this skill's own folder. Claude Code fills it in. If you see it unfilled, still starting with a dollar sign (as in Codex, Copilot CLI or Kimi Code), put that folder's absolute path in its place before you run a command.
+
 # project-dashboard
 
 Progress visualization and status reporting for qualitative research projects. Shows where you are in the sandwich methodology and what comes next.

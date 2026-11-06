@@ -3,6 +3,8 @@ name: gioia-methodology
 description: "This skill should be used when users are building or refining their Gioia data structure, mentions 'Gioia', 'data structure', 'themes', 'concepts', 'dimensions', '1st-order', '2nd-order', 'aggregate', or needs to validate/export their analytical hierarchy for publication."
 ---
 
+> Script paths: `${CLAUDE_PLUGIN_ROOT}` below is this plugin's root folder, two levels above this skill's own folder. Claude Code fills it in. If you see it unfilled, still starting with a dollar sign (as in Codex, Copilot CLI or Kimi Code), put that folder's absolute path in its place before you run a command.
+
 # gioia-methodology
 
 Gioia method data structure building and validation. Helps researchers construct the three-level hierarchy (1st-order concepts, 2nd-order themes, aggregate dimensions) with validation and export capabilities.

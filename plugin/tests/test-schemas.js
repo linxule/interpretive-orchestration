@@ -283,17 +283,30 @@ function testAgentToolLists() {
 
 // Test: hooks.json only points at hook scripts the adapter knows
 function testHooksConfig() {
-  test('hooks.json: every command runs a known script through run-hook.js', () => {
-    const hooksDir = path.join(PROJECT_ROOT, 'hooks');
-    const config = JSON.parse(fs.readFileSync(path.join(hooksDir, 'hooks.json'), 'utf8'));
-    const adapter = fs.readFileSync(path.join(hooksDir, 'run-hook.js'), 'utf8');
-    const commands = Object.values(config.hooks).flat().flatMap(group => group.hooks.map(h => h.command));
-    for (const command of commands) {
-      const match = command.match(/run-hook\.js"? ([\w-]+\.js)$/);
-      assert(match, `Hook does not use run-hook.js: ${command}`);
-      assert(fs.existsSync(path.join(hooksDir, match[1])), `Missing hook script: ${match[1]}`);
-      assert(adapter.includes(`'${match[1]}'`), `run-hook.js has no triggers for ${match[1]}`);
-    }
+  const hooksDir = path.join(PROJECT_ROOT, 'hooks');
+  const adapter = fs.readFileSync(path.join(hooksDir, 'run-hook.js'), 'utf8');
+  for (const file of ['hooks.json', 'codex-hooks.json']) {
+    test(`${file}: every command runs a known script through run-hook.js`, () => {
+      const config = JSON.parse(fs.readFileSync(path.join(hooksDir, file), 'utf8'));
+      const commands = Object.values(config.hooks).flat().flatMap(group => group.hooks.map(h => h.command));
+      for (const command of commands) {
+        const match = command.match(/run-hook\.js"? ([\w-]+\.js)$/);
+        assert(match, `Hook does not use run-hook.js: ${command}`);
+        assert(fs.existsSync(path.join(hooksDir, match[1])), `Missing hook script: ${match[1]}`);
+        assert(adapter.includes(`'${match[1]}'`), `run-hook.js has no triggers for ${match[1]}`);
+      }
+    });
+  }
+
+  test('Codex manifest points at the Codex hooks file', () => {
+    const manifest = JSON.parse(fs.readFileSync(path.join(PROJECT_ROOT, '.codex-plugin', 'plugin.json'), 'utf8'));
+    assert(manifest.hooks === './hooks/codex-hooks.json', 'Codex should load codex-hooks.json, not hooks.json');
+  });
+
+  test('session-stance.js finds the principles in CLAUDE.md', () => {
+    const guide = fs.readFileSync(path.join(PROJECT_ROOT, 'CLAUDE.md'), 'utf8');
+    const match = guide.match(/## Core Philosophy[^\n]*\n([\s\S]*?)\n---/);
+    assert(match && match[1].includes('NEVER skip Stage 1 enforcement'), 'Core Philosophy section moved or changed');
   });
 }
 

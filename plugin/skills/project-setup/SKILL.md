@@ -3,6 +3,8 @@ name: project-setup
 description: "This skill should be used when users want to initialize a new qualitative research project, mentions 'setup', 'initialize', 'new project', 'getting started', or asks about establishing philosophical foundations and epistemic stance. Triggers on phrases like 'start my research project', 'create a new study', 'configure my stance'."
 ---
 
+> Script paths: `${CLAUDE_PLUGIN_ROOT}` below is this plugin's root folder, two levels above this skill's own folder. Claude Code fills it in. If you see it unfilled, still starting with a dollar sign (as in Codex, Copilot CLI or Kimi Code), put that folder's absolute path in its place before you run a command.
+
 # project-setup
 
 Initialize qualitative research projects with epistemic partnership at the core. This skill guides researchers through philosophical foundation establishment via Socratic dialogue, then creates the project infrastructure.

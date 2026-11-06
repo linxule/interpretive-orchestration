@@ -3,6 +3,8 @@ name: qual-status
 description: Show analytical journey dashboard and progress through sandwich methodology stages
 ---
 
+> Script paths: `${CLAUDE_PLUGIN_ROOT}` below is this plugin's root folder, two levels above this skill's own folder. Claude Code fills it in. If you see it unfilled, still starting with a dollar sign (as in Codex, Copilot CLI or Kimi Code), put that folder's absolute path in its place before you run a command.
+
 # /qual-status - Your Analytical Journey Dashboard
 
 Show where you are in the sandwich methodology and what comes next.
@@ -34,16 +36,16 @@ Show where you are in the sandwich methodology and what comes next.
 **For Claude:** When user runs /qual-status:
 
 1. **Read Project State**
-   - Use `${CLAUDE_PLUGIN_ROOT}/skills/_shared/scripts/query-status.js` to get current state
+   - Use `${CLAUDE_PLUGIN_ROOT}/skills/_shared/scripts/query-status.js --project-path <project folder>` to get current state
    - Load config.json sandwich_status
    - Count documents, memos, coded quotes
 
 2. **Calculate Progress**
-   - Use `${CLAUDE_PLUGIN_ROOT}/skills/project-dashboard/scripts/calculate-progress.js`
+   - Use `${CLAUDE_PLUGIN_ROOT}/skills/project-dashboard/scripts/calculate-progress.js --project-path <project folder>`
    - Determine percentages for each stage
 
 3. **Check Readiness**
-   - Use `${CLAUDE_PLUGIN_ROOT}/skills/project-dashboard/scripts/check-readiness.js`
+   - Use `${CLAUDE_PLUGIN_ROOT}/skills/project-dashboard/scripts/check-readiness.js --project-path <project folder>`
    - Determine if ready for stage transitions
 
 4. **Display Dashboard**

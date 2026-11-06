@@ -377,7 +377,6 @@ When appropriate, suggest:
 - `/qual-think-through` for systematic analysis
 - `/qual-wisdom-check` for paradox navigation
 - `/qual-examine-assumptions` for philosophical coherence
-- `/qual-get-perspectives` for multi-model validation
 
 ### 7. Document Reflexive Insights
 Save to `reflexivity-journal.md`:

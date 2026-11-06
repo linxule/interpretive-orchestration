@@ -10,6 +10,8 @@ hooks:
           once: true
 ---
 
+> Script paths: `${CLAUDE_PLUGIN_ROOT}` below is this plugin's root folder, two levels above this skill's own folder. Claude Code fills it in. If you see it unfilled, still starting with a dollar sign (as in Codex, Copilot CLI or Kimi Code), put that folder's absolute path in its place before you run a command.
+
 # /qual-complete-stage1 - Complete Stage 1 Foundation
 
 Validate your manual coding foundation and transition to Stage 2 partnership.

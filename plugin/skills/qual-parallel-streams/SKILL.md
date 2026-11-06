@@ -10,6 +10,8 @@ hooks:
           once: true
 ---
 
+> Script paths: `${CLAUDE_PLUGIN_ROOT}` below is this plugin's root folder, two levels above this skill's own folder. Claude Code fills it in. If you see it unfilled, still starting with a dollar sign (as in Codex, Copilot CLI or Kimi Code), put that folder's absolute path in its place before you run a command.
+
 # Parallel Streams Analysis
 
 This command guides you through the dual-stream approach from the Atelier methodology, where theoretical patterns from literature and empirical patterns from your data develop in parallel before synthesis.

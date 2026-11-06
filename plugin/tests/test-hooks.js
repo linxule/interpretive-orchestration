@@ -40,7 +40,8 @@ function testHookFilesExist() {
     'check-stage1-complete.js',
     'check-coherence.js',
     'interpretive-pause.js',
-    'session-reflect.js'
+    'session-reflect.js',
+    'session-stance.js'
   ];
 
   for (const hook of expectedHooks) {
@@ -183,11 +184,14 @@ function makeProject(config) {
   return dir;
 }
 
-function runAdapter(script, payload) {
+function runAdapter(script, payload, extraEnv = {}) {
   const { spawnSync } = require('child_process');
+  const env = { ...process.env, ...extraEnv };
+  if (!extraEnv.COPILOT_PLUGIN_ROOT) delete env.COPILOT_PLUGIN_ROOT;
   const result = spawnSync(process.execPath, [path.join(HOOKS_DIR, 'run-hook.js'), script], {
     input: payload ? JSON.stringify(payload) : '',
-    encoding: 'utf8'
+    encoding: 'utf8',
+    env
   });
   const out = result.stdout.trim();
   return { status: result.status, raw: out, json: out ? JSON.parse(out) : null };
@@ -273,6 +277,81 @@ function testHookAdapterBehaviour() {
     });
     assert(result.status === 1, `Expected exit 1, got ${result.status}`);
     assert(result.stdout.includes('METHODOLOGY CHECK'), 'Plain text should pass through');
+  });
+
+  test('adapter: session start gives the stance and Stage 1 status in a project', () => {
+    const { json } = runAdapter('session-stance.js', { hook_event_name: 'SessionStart', source: 'startup', cwd: incomplete });
+    const context = json && json.hookSpecificOutput.additionalContext;
+    assert(context && context.includes('Stage 1 is NOT complete'), 'Should report Stage 1 status');
+    assert(context.includes('NEVER skip Stage 1 enforcement'), 'Should carry the principles');
+  });
+
+  test('adapter: session start is silent outside a project', () => {
+    const os = require('os');
+    const { raw } = runAdapter('session-stance.js', { hook_event_name: 'SessionStart', source: 'startup', cwd: os.tmpdir() });
+    assert(raw === '', 'Should stay silent');
+  });
+
+  // Payload shape captured from codex-cli 0.165.0.
+  test('adapter (Codex): a $skill mention in the prompt triggers the Stage 1 check', () => {
+    const prompt = (text) => ({ hook_event_name: 'UserPromptSubmit', cwd: incomplete, prompt: text });
+    const { json } = runAdapter('check-stage1-complete.js', prompt('$interpretive-orchestration:qual-synthesize now'));
+    assert(json && json.hookSpecificOutput.hookEventName === 'UserPromptSubmit', 'Expected UserPromptSubmit output');
+    assert(json.hookSpecificOutput.additionalContext.includes('ask whether they want to proceed'), 'Should ask the researcher');
+    assert(runAdapter('check-stage1-complete.js', prompt('$qual-code-deductive')).json, 'Short form should trigger too');
+    assert(runAdapter('check-stage1-complete.js', prompt('$qual-status please')).raw === '', 'Other skills pass silently');
+    assert(runAdapter('check-stage1-complete.js', prompt('code this for me')).raw === '', 'Plain prompts pass silently');
+  });
+
+  // Payload shapes captured from Copilot CLI 1.0.106.
+  const copilot = { COPILOT_PLUGIN_ROOT: path.join(HOOKS_DIR, '..') };
+
+  test('adapter (Copilot): asks before @dialogical-coder, named in agent_type', () => {
+    const { json } = runAdapter('check-stage1-complete.js', {
+      hook_event_name: 'PreToolUse', tool_name: 'Agent', cwd: incomplete,
+      tool_input: { agent_type: 'interpretive-orchestration:dialogical-coder', name: 'dialogical-coder' }
+    }, copilot);
+    assert(json && json.hookSpecificOutput.permissionDecision === 'ask', 'Expected permissionDecision ask');
+  });
+
+  test('adapter (Copilot): asks before a Stage 2 skill called through the lowercase skill tool', () => {
+    const { json } = runAdapter('check-stage1-complete.js', {
+      hook_event_name: 'PreToolUse', tool_name: 'skill', cwd: incomplete, tool_input: { skill: 'qual-synthesize' }
+    }, copilot);
+    assert(json && json.hookSpecificOutput.permissionDecision === 'ask', 'Expected permissionDecision ask');
+  });
+
+  test('adapter (Copilot): typed Stage 2 command gets the confirm note prepended', () => {
+    const transformedPrompt = '<skill-context name="interpretive-orchestration:qual-synthesize">...</skill-context>';
+    const { json } = runAdapter('check-stage1-complete.js', {
+      sessionId: 's', cwd: incomplete, prompt: '/interpretive-orchestration:qual-synthesize', transformedPrompt
+    }, copilot);
+    assert(json && json.modifiedTransformedPrompt.startsWith('Interpretive Orchestration: the Stage 1 check'), 'Confirm note first');
+    assert(json.modifiedTransformedPrompt.endsWith(transformedPrompt), 'Original prompt kept');
+    const other = { sessionId: 's', cwd: incomplete, prompt: 'hi', transformedPrompt: '<skill-context name="interpretive-orchestration:qual-status">' };
+    assert(runAdapter('check-stage1-complete.js', other, copilot).raw === '', 'Other skills pass silently');
+  });
+
+  test('adapter (Copilot): pause goes to the model at the top level, asking it to tell the researcher', () => {
+    const { json } = runAdapter('interpretive-pause.js', {
+      hook_event_name: 'PostToolUse', tool_name: 'Agent', cwd: complete,
+      tool_input: { agent_type: 'interpretive-orchestration:dialogical-coder' },
+      tool_result: { result_type: 'success', text_result_for_llm: 'PONG' }
+    }, copilot);
+    assert(json && json.additionalContext.includes('INTERPRETIVE PAUSE'), 'Model should see the pause');
+    assert(json.additionalContext.includes('has not seen it'), 'Model should pass it on');
+    assert(!json.hookSpecificOutput, 'No nested output on Copilot');
+  });
+
+  test('adapter (Copilot): background agent defers its pause to SubagentStop', () => {
+    const launch = runAdapter('interpretive-pause.js', {
+      hook_event_name: 'PostToolUse', tool_name: 'Agent', cwd: complete,
+      tool_input: { agent_type: 'interpretive-orchestration:dialogical-coder', mode: 'background' },
+      tool_result: { result_type: 'success', text_result_for_llm: 'Agent started in background with agent_id: copilot-bg-1.' }
+    }, copilot);
+    assert(launch.raw === '', 'Launch should stay silent');
+    const stop = { hook_event_name: 'SubagentStop', cwd: complete, agent_id: 'copilot-bg-1', agent_type: 'interpretive-orchestration:dialogical-coder' };
+    assert(runAdapter('interpretive-pause.js', stop, copilot).json, 'Pause should fire when the agent finishes');
   });
 
   for (const dir of [incomplete, complete]) fs.rmSync(dir, { recursive: true, force: true });

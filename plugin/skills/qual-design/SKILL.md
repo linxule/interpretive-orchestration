@@ -3,6 +3,8 @@ name: qual-design
 description: Configure research design for multi-case, longitudinal, or parallel stream studies
 ---
 
+> Script paths: `${CLAUDE_PLUGIN_ROOT}` below is this plugin's root folder, two levels above this skill's own folder. Claude Code fills it in. If you see it unfilled, still starting with a dollar sign (as in Codex, Copilot CLI or Kimi Code), put that folder's absolute path in its place before you run a command.
+
 # /qual-design - Configure Research Design Structure
 
 Configure detailed research design for complex studies (multi-case, longitudinal, parallel streams).

@@ -18,6 +18,7 @@
   ],
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
+  "hooks": "./hooks/codex-hooks.json",
   "interface": {
     "displayName": "Interpretive Orchestration",
     "shortDescription": "Human-AI partnership for interpretive qualitative research",
@@ -31,9 +32,9 @@
     ],
     "websiteURL": "https://github.com/linxule/interpretive-orchestration",
     "defaultPrompt": [
-      "Use $qual-init to start a new qualitative research project.",
-      "Use $qual-status to see where I am in the sandwich methodology.",
-      "Use $qual-memo to help me write an analytical memo."
+      "Use $interpretive-orchestration:qual-init to start a new qualitative research project.",
+      "Use $interpretive-orchestration:qual-status to see where I am in the sandwich methodology.",
+      "Use $interpretive-orchestration:qual-memo to help me write an analytical memo."
     ]
   }
 }

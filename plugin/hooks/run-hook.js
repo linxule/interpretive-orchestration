@@ -36,16 +36,25 @@ const TRIGGERS = {
     agents: ['dialogical-coder'],
     skills: ['qual-advance-stage', 'qual-complete-stage1', 'qual-parallel-streams', 'qual-synthesize', 'qual-characterize-patterns']
   },
-  'session-reflect.js': { agents: [], skills: [] }
+  'session-reflect.js': { agents: [], skills: [] },
+  'session-stance.js': { agents: [], skills: [] }
 };
 
 // Stop hooks are registered in a skill's own frontmatter, so the skill has
-// already scoped them. SessionEnd hooks apply to every session.
-const ALWAYS_EVENTS = new Set(['Stop', 'SessionEnd']);
+// already scoped them. Session hooks apply to every session.
+const ALWAYS_EVENTS = new Set(['Stop', 'SessionStart', 'SessionEnd']);
 
 // A background agent returns from its tool call as soon as it launches. Its
 // after-agent hooks wait for SubagentStop, matched by agent ID.
 const PENDING_DIR = path.join(os.tmpdir(), 'interpretive-orchestration-hooks');
+
+// Copilot CLI never shows systemMessage to the researcher, and reads
+// additionalContext only at the top level of the hook output.
+const ON_COPILOT = Boolean(process.env.COPILOT_PLUGIN_ROOT);
+
+// Codex has no Skill tool: a skill is named in the prompt as $name or
+// $interpretive-orchestration:name.
+const SKILL_MENTION = /\$(?:interpretive-orchestration:)?([a-z0-9-]+)/g;
 
 const CONFIRM_NOTE =
   'Interpretive Orchestration: the Stage 1 check did not pass for this command. ' +
@@ -71,15 +80,24 @@ function targetOf(payload) {
   const event = payload.hook_event_name;
   const input = payload.tool_input || {};
   if (event === 'PreToolUse' || event === 'PostToolUse') {
+    // Copilot CLI sends agent_type and a lowercase skill tool.
     if (payload.tool_name === 'Agent' || payload.tool_name === 'Task') {
-      return { kind: 'agent', name: baseName(input.subagent_type) };
+      return { kind: 'agent', name: baseName(input.subagent_type || input.agent_type) };
     }
-    if (payload.tool_name === 'Skill') {
+    if (payload.tool_name === 'Skill' || payload.tool_name === 'skill') {
       return { kind: 'skill', name: baseName(input.skill) };
     }
   }
   if (event === 'UserPromptExpansion') {
     return { kind: 'skill', name: baseName(payload.command_name) };
+  }
+  if (event === 'UserPromptSubmit') {
+    const names = [...String(payload.prompt || '').matchAll(SKILL_MENTION)].map(match => match[1]);
+    return { kind: 'skill', name: names };
+  }
+  if (isCopilotSlashCommand(payload)) {
+    const match = payload.transformedPrompt.match(/<skill-context name="([^"]+)">/);
+    return { kind: 'skill', name: match ? baseName(match[1]) : '' };
   }
   if (event === 'SubagentStop') {
     return { kind: 'agent', name: baseName(payload.agent_type) };
@@ -87,10 +105,22 @@ function targetOf(payload) {
   return { kind: 'other', name: '' };
 }
 
+// Copilot CLI's userPromptTransformed event: a typed slash command arrives
+// already expanded, with no hook_event_name.
+function isCopilotSlashCommand(payload) {
+  return !payload.hook_event_name && typeof payload.transformedPrompt === 'string';
+}
+
 function backgroundAgentId(payload) {
   const response = payload.tool_response;
-  if (!response || typeof response !== 'object') return null;
-  return response.status === 'async_launched' && response.agentId ? String(response.agentId) : null;
+  if (response && typeof response === 'object' && response.status === 'async_launched' && response.agentId) {
+    return String(response.agentId);
+  }
+  // Copilot CLI marks the launch in tool_input and puts the ID in the result text.
+  const result = payload.tool_result && payload.tool_result.text_result_for_llm;
+  const match = (payload.tool_input || {}).mode === 'background' && typeof result === 'string' &&
+    result.match(/agent_id: ([\w-]+)/);
+  return match ? match[1] : null;
 }
 
 function pendingMarker(agentId, script) {
@@ -120,8 +150,9 @@ function isTriggered(script, payload) {
   if (ALWAYS_EVENTS.has(payload.hook_event_name)) return true;
   const triggers = TRIGGERS[script];
   const target = targetOf(payload);
-  if (target.kind === 'agent') return triggers.agents.includes(target.name);
-  if (target.kind === 'skill') return triggers.skills.includes(target.name);
+  const names = [].concat(target.name);
+  if (target.kind === 'agent') return names.some(name => triggers.agents.includes(name));
+  if (target.kind === 'skill') return names.some(name => triggers.skills.includes(name));
   return false;
 }
 
@@ -180,27 +211,43 @@ function main() {
     } else if (text) {
       emit({ systemMessage: text });
     }
-  } else if (event === 'UserPromptExpansion') {
+  } else if (event === 'UserPromptExpansion' || event === 'UserPromptSubmit') {
     if (flagged) {
       emit({
         systemMessage: text || details,
         hookSpecificOutput: {
-          hookEventName: 'UserPromptExpansion',
+          hookEventName: event,
           additionalContext: `${CONFIRM_NOTE}\n\n${forClaude}`
         }
       });
     } else if (text) {
       emit({ systemMessage: text });
     }
+  } else if (isCopilotSlashCommand(payload)) {
+    if (flagged) {
+      emit({ modifiedTransformedPrompt: `${CONFIRM_NOTE}\n\n${forClaude}\n\n${payload.transformedPrompt}` });
+    }
   } else if (event === 'PostToolUse') {
     if (text || details) {
-      emit({
-        systemMessage: text || details,
-        hookSpecificOutput: {
-          hookEventName: 'PostToolUse',
-          additionalContext: `Interpretive Orchestration showed the researcher this methodology notice:\n\n${forClaude}`
-        }
-      });
+      if (ON_COPILOT) {
+        emit({
+          additionalContext: `Interpretive Orchestration methodology notice. The researcher has not seen it yet, so pass it on to them in your reply:\n\n${forClaude}`
+        });
+      } else {
+        emit({
+          systemMessage: text || details,
+          hookSpecificOutput: {
+            hookEventName: 'PostToolUse',
+            additionalContext: `Interpretive Orchestration showed the researcher this methodology notice:\n\n${forClaude}`
+          }
+        });
+      }
+    }
+  } else if (event === 'SessionStart') {
+    if (text) {
+      emit(ON_COPILOT
+        ? { additionalContext: text }
+        : { hookSpecificOutput: { hookEventName: 'SessionStart', additionalContext: text } });
     }
   } else if (event === 'Stop' || event === 'SubagentStop') {
     // Claude has finished this turn, or the background agent has finished,

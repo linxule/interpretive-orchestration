@@ -3,6 +3,8 @@ name: qual-configure-analysis
 description: Configure AI model selection, batch processing, and analysis parameters for Stage 2
 ---
 
+> Script paths: `${CLAUDE_PLUGIN_ROOT}` below is this plugin's root folder, two levels above this skill's own folder. Claude Code fills it in. If you see it unfilled, still starting with a dollar sign (as in Codex, Copilot CLI or Kimi Code), put that folder's absolute path in its place before you run a command.
+
 # /qual-configure-analysis - Technical Decision Support
 
 Get help choosing AI models, thinking budgets, and processing strategies for YOUR research - without needing programming knowledge.

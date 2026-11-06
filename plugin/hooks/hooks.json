@@ -1,9 +1,20 @@
 {
-  "description": "Interpretive Orchestration methodology hooks: the Stage 1 check, interpretive pauses, coherence prompts, rule updates and session reflection. Hooks that follow a command (audit trail, phase transition) live in that skill's frontmatter.",
+  "description": "Interpretive Orchestration methodology hooks: the partnership stance at session start, the Stage 1 check, interpretive pauses, coherence prompts, rule updates and session reflection. Hooks that follow a command (audit trail, phase transition) live in that skill's frontmatter.",
   "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.js\" session-stance.js",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
     "PreToolUse": [
       {
-        "matcher": "Agent|Task|Skill",
+        "matcher": "Agent|Task|Skill|skill",
         "hooks": [
           {
             "type": "command",
@@ -14,6 +25,17 @@
       }
     ],
     "UserPromptExpansion": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.js\" check-stage1-complete.js",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "userPromptTransformed": [
       {
         "hooks": [
           {
