@@ -144,6 +144,8 @@ Claude Code runs every part of the plugin. The other platforms run the same comm
 | Audit trail and phase transition after Stage 2 commands | Yes | No | No | Only when the AI starts the command, not when you type it |
 | Session reflection | Written to the conversation log | Written to the conversation log | Written to the conversation log | Written to the conversation log when you exit |
 
+Session reflection is never shown at the end of a session. `/qual-reflect` reads the log, tells you how many sessions have ended since your last reflection, and starts from the session-end questions.
+
 Where the AI is told to ask you, nothing forces it to. In one test, the AI took the request for the work as your consent and went ahead until a hook held the call. Since 0.3.1, the instructions say that asking for the work is not consent, and in later tests the AI asked first. This still depends on the model. The start-of-session reminder works the same way.
 
 The [next-version list](https://github.com/linxule/interpretive-orchestration/issues/4) tracks the gaps.

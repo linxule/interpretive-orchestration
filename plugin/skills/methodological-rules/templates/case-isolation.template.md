@@ -1,12 +1,10 @@
 # Case Isolation Rule
----
-paths: {{case_paths}}
----
 
 ## Methodological Rule: Case Isolation
 
 **Study Type:** {{study_type}}
 **Cases:** {{case_names}} ({{case_count}} total)
+**Case folders:** {{case_paths}}
 **Current Phase:** {{current_phase}}
 **Rule Status:** {{rule_status}}
 **Friction Level:** {{friction_level}}

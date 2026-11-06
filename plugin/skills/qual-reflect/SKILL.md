@@ -3,6 +3,8 @@ name: qual-reflect
 description: Synthesis dialogue and reflexive pause for theoretical integration
 ---
 
+> Script paths: `${CLAUDE_PLUGIN_ROOT}` below is this plugin's root folder, two levels above this skill's own folder. Claude Code fills it in. If you see it unfilled, still starting with a dollar sign (as in Codex, Copilot CLI or Kimi Code), put that folder's absolute path in its place before you run a command.
+
 # /qual-reflect - Synthesis Dialogue & Reflexive Pause
 
 ## Purpose
@@ -69,6 +71,21 @@ When you run `/qual-reflect`, I'll guide you through structured reflection:
 - Your reflexivity journal entries
 - AI-to-AI conversation log highlights
 - Data structure evolution history
+- How many sessions have ended since your last reflection
+
+**Sessions since your last reflection:** at the end of each session the plugin logs a reflection prompt to `.interpretive-orchestration/conversation-log.jsonl`, because the session-end hook cannot show it to the researcher. Start by running:
+
+```bash
+node "${CLAUDE_PLUGIN_ROOT}/skills/_shared/scripts/reflection-sessions.js" --project-path <project folder>
+```
+
+If `sessions_since_reflection` is above 0, say how many sessions have ended since the last `/qual-reflect`, and open with the logged `questions`. If `last_reflection` is null, no reflection has been recorded yet (versions before 0.3.3 did not record them), so say how many sessions the log holds instead. If no questions were logged, ask what they learned about their data, what assumptions they examined, and how working with AI shaped their thinking.
+
+When the reflection dialogue ends, record it, so the next count starts from here:
+
+```bash
+node "${CLAUDE_PLUGIN_ROOT}/skills/_shared/scripts/reflection-sessions.js" --project-path <project folder> --record
+```
 
 **Then ask:**
 ```

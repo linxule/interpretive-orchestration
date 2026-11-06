@@ -34,7 +34,8 @@ Before completing Stage 1, you need:
 | Requirement | Minimum | Your Progress |
 |-------------|---------|---------------|
 | Documents coded | 10 | [checked at runtime] |
-| Analytical memos | 5 | [checked at runtime] |
+| Analytical memos | 1 (5 recommended) | [checked at runtime] |
+| Research tradition | Declared | [checked at runtime] |
 | Data structure | Created | [checked at runtime] |
 | Reflexivity journal entries | 3 | [checked at runtime] |
 
@@ -135,7 +136,8 @@ If validation fails or you want to continue Stage 1:
 
 2. **Check Stage 1 requirements** (all must pass):
    - `sandwich_status.stage1_details.documents_manually_coded >= 10`
-   - `sandwich_status.stage1_details.memos_written >= 5`
+   - `sandwich_status.stage1_details.memos_written >= 1` (5 are recommended: if there are fewer, say so, but do not block)
+   - `philosophical_stance.tradition` is set
    - At least 3 entries in `.interpretive-orchestration/reflexivity-journal.md`
    - `data_structure` exists with at least:
      - 3+ concepts in `data_structure.first_order_concepts[]`, OR

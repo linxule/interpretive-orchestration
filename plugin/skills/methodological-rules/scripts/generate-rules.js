@@ -130,7 +130,7 @@ function generateCaseIsolationRule(config, templatesDir, currentPhase) {
     study_type: design.study_type,
     case_count: design.cases.length,
     case_names: design.cases.map(c => c.name).join(', '),
-    case_paths: design.cases.map(c => c.folder_path).filter(Boolean).map(p => p + '/**').join(', ') || 'data/cases/**',
+    case_paths: design.cases.map(c => c.folder_path).filter(Boolean).join(', ') || 'not set',
     current_phase: currentPhase,
     rule_status: isRelaxed ? 'RELAXED' : 'ACTIVE',
     friction_level: isRelaxed ? 'SILENT' : (isolation.friction_level || 'challenge').toUpperCase(),
@@ -166,7 +166,7 @@ function generateWaveIsolationRule(config, templatesDir, currentPhase) {
     study_type: design.study_type,
     wave_count: design.waves.length,
     wave_names: design.waves.map(w => w.name).join(', '),
-    wave_paths: design.waves.map(w => w.folder_path).filter(Boolean).map(p => p + '/**').join(', ') || 'data/waves/**',
+    wave_paths: design.waves.map(w => w.folder_path).filter(Boolean).join(', ') || 'not set',
     waves: design.waves,
     current_phase: currentPhase,
     rule_status: isRelaxed ? 'RELAXED' : 'ACTIVE',
@@ -209,10 +209,6 @@ function generateStreamSeparationRule(config, templatesDir, currentPhase) {
     empirical_path: empirical.folder_path || 'data',
     theoretical_sources: (theoretical.sources || []).join(', ') || 'Not specified',
     empirical_sources: (empirical.sources || []).join(', ') || 'Not specified',
-    stream_paths: [
-      (theoretical.folder_path || 'literature') + '/**',
-      (empirical.folder_path || 'data') + '/**'
-    ].join(', '),
     current_phase: currentPhase,
     rule_status: isRelaxed ? 'RELAXED' : 'ACTIVE',
     friction_level: isRelaxed ? 'SILENT' : (isolation.friction_level || 'nudge').toUpperCase(),

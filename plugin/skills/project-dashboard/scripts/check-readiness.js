@@ -17,6 +17,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const T = require('../../_shared/scripts/stage1-thresholds.js');
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -74,9 +75,9 @@ function checkStage2Readiness(config, projectPath) {
   const requirements_missing = [];
   const recommendations = [];
 
-  const stage1Details = config.sandwich_status?.stage1_details || {};
-  let docsManuallyCodeded = stage1Details.documents_manually_coded || 0;
-  let memosWritten = stage1Details.memos_written || 0;
+  const readiness = T.stage1Readiness(config);
+  const docsManuallyCodeded = readiness.documents;
+  const memosWritten = readiness.memos;
 
   if (docsManuallyCodeded === 0) {
     const files = countVisibleFiles(path.join(projectPath, 'stage1-foundation', 'manual-codes'));
@@ -87,30 +88,30 @@ function checkStage2Readiness(config, projectPath) {
     if (files) recommendations.push(`${files} file(s) in memos; record the written count with _shared/scripts/update-progress.js --project-path <project> --memos-written <count>`);
   }
 
-  if (docsManuallyCodeded >= 10) {
-    requirements_met.push(`${docsManuallyCodeded} documents manually coded (minimum: 10)`);
+  if (!readiness.missing.includes('documents')) {
+    requirements_met.push(`${docsManuallyCodeded} documents manually coded (minimum: ${T.DOCUMENTS_REQUIRED})`);
   } else {
-    requirements_missing.push(`Only ${docsManuallyCodeded} documents coded (need 10 minimum)`);
+    requirements_missing.push(`Only ${docsManuallyCodeded} documents coded (need ${T.DOCUMENTS_REQUIRED} minimum)`);
   }
 
-  if (memosWritten >= 1) {
+  if (!readiness.missing.includes('memos')) {
     requirements_met.push(`${memosWritten} analytical memo(s) written`);
   } else {
-    requirements_missing.push('No analytical memos written (need at least 1)');
+    requirements_missing.push(`No analytical memos written (need at least ${T.MEMOS_REQUIRED})`);
   }
 
-  if (config.philosophical_stance?.tradition) {
+  if (!readiness.missing.includes('tradition')) {
     requirements_met.push(`Philosophical stance declared: ${config.philosophical_stance.tradition}`);
   } else {
     requirements_missing.push('No philosophical stance declared');
   }
 
   // Recommendations (not blocking)
-  if (docsManuallyCodeded < 15) {
-    recommendations.push(`Consider coding ${15 - docsManuallyCodeded} more documents for stronger foundation`);
+  if (docsManuallyCodeded < T.DOCUMENTS_RECOMMENDED) {
+    recommendations.push(`Consider coding ${T.DOCUMENTS_RECOMMENDED - docsManuallyCodeded} more documents for stronger foundation`);
   }
-  if (memosWritten < 3) {
-    recommendations.push(`Consider writing ${3 - memosWritten} more memos for deeper reflection`);
+  if (memosWritten < T.MEMOS_RECOMMENDED) {
+    recommendations.push(`Consider writing ${T.MEMOS_RECOMMENDED - memosWritten} more memos for deeper reflection (${T.MEMOS_RECOMMENDED} recommended)`);
   }
   if (!config.project_info?.research_question) {
     recommendations.push('Document your research question for clarity');

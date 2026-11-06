@@ -94,7 +94,7 @@ This document preserves the philosophical rationale for each hook in the Interpr
 
 **Triggered by:** Session end events
 
-**Limit:** Claude Code does not show hook output at session end, so the researcher does not see this prompt. The hook still records the session end in `.interpretive-orchestration/conversation-log.jsonl`.
+**Limit:** Claude Code does not show hook output at session end, so the researcher does not see this prompt. The hook still records the session end in `.interpretive-orchestration/conversation-log.jsonl`, and `/qual-reflect` reads those entries: it says how many sessions have ended since the last `/qual-reflect` and opens with the session-end questions.
 
 ---
 

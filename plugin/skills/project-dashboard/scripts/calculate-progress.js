@@ -17,6 +17,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const T = require('../../_shared/scripts/stage1-thresholds.js');
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -51,22 +52,21 @@ function readConfig(projectPath) {
 }
 
 function calculateStage1Progress(config, projectPath) {
-  // Stage 1 formula: (docs/10 * 70) + (min(memos,3)/3 * 30)
-  // Target: 10 documents, 3 memos
-
-  const stage1Details = config.sandwich_status?.stage1_details || {};
-
+  // Progress aims for the required documents and the recommended memos
+  // (stage1-thresholds.js); readiness needs the required counts and a tradition.
   // Recorded counts only: manual-codes/ also holds raw transcripts.
-  const docsManuallyCodeded = stage1Details.documents_manually_coded || 0;
-  const memosWritten = stage1Details.memos_written || 0;
+  const readiness = T.stage1Readiness(config);
+  const documents = readiness.documents;
+  const memosWritten = readiness.memos;
 
-  const docScore = Math.min(docsManuallyCodeded / 10, 1) * 70;
-  const memoScore = Math.min(memosWritten / 3, 1) * 30;
+  const docScore = Math.min(documents / T.DOCUMENTS_REQUIRED, 1) * T.DOCUMENTS_WEIGHT;
+  const memoScore = Math.min(memosWritten / T.MEMOS_RECOMMENDED, 1) * T.MEMOS_WEIGHT;
 
   return {
     progress: Math.round(docScore + memoScore),
-    documents: docsManuallyCodeded,
+    documents,
     memos: memosWritten,
+    ready: readiness.ready,
     complete: config.sandwich_status?.stage1_complete || false
   };
 }
