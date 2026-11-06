@@ -136,7 +136,7 @@ The tool doesn't resolve tensions by choosing sides - it helps you see how both 
 
 ## Integration Notes
 
-- **Complements Sequential Thinking** - ST for step-by-step, LW for paradox
+- **Complements deep-reasoning** - step-by-step thinking for analysis, Lotus Wisdom for paradox
 - **Supports reflexivity** - Makes your interpretive stance explicit
 - **Preserves complexity** - Doesn't flatten nuance
 

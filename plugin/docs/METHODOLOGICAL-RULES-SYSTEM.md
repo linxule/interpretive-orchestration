@@ -885,7 +885,7 @@ The rules don't replace methodological judgment. They make methodological judgme
 **Document History:**
 - Created: 2025-12-13
 - Status: Complete, pending beta testing
-- Authors: Xule Lin (Imperial College London), Claude Opus 4.5 (Anthropic)
+- Authors: Xule Lin (SKEMA Business School), Claude Opus 4.5 (Anthropic)
 - Related: METHODS-PAPER-OUTLINE.md, DESIGN-PHILOSOPHY.md, ARCHITECTURE.md
 
 ---

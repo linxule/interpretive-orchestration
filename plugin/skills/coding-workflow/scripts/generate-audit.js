@@ -74,7 +74,6 @@ function readConversationLog(projectPath, sinceDate) {
   const content = fs.readFileSync(logPath, 'utf8');
   const result = parseJsonlSafely(content);
 
-  // Filter by date if specified
   if (sinceDate) {
     const sinceTimestamp = new Date(sinceDate).getTime();
     result.logs = result.logs.filter(log => {
@@ -121,7 +120,6 @@ Every analytical decision is traced to enable verification of the interpretive p
 
 `;
 
-  // Document batch sessions
   if (sessions.length === 0) {
     markdown += '*No batch sessions recorded yet.*\n\n';
   } else {
@@ -140,7 +138,6 @@ Every analytical decision is traced to enable verification of the interpretive p
 
   markdown += '---\n\n## Conversation Log Analysis\n\n';
 
-  // Categorize log entries
   const categories = {
     coding: logs.filter(l => l.action === 'coding' || l.activity_type === 'coding'),
     synthesis: logs.filter(l => l.action === 'synthesis' || l.activity_type === 'synthesis'),
@@ -149,7 +146,6 @@ Every analytical decision is traced to enable verification of the interpretive p
     tool_usage: logs.filter(l => l.activity_type === 'deep_reasoning' || l.activity_type === 'paradox_navigation')
   };
 
-  // Coding activities
   markdown += `### Coding Activities (${categories.coding.length} entries)\n\n`;
   if (categories.coding.length === 0) {
     markdown += '*No coding activities recorded.*\n\n';
@@ -168,7 +164,6 @@ ${log.concept_id ? `Concept: ${log.concept_id}` : ''}
     }
   }
 
-  // Human decisions
   markdown += `### Human Decisions (${categories.decisions.length} entries)\n\n`;
   if (categories.decisions.length === 0) {
     markdown += '*No human decisions explicitly recorded.*\n\n';
@@ -186,7 +181,6 @@ ${log.metadata?.rationale ? `Rationale: ${log.metadata.rationale}` : ''}
     }
   }
 
-  // Reflexive insights
   markdown += `### Reflexive Insights (${categories.reflection.length} entries)\n\n`;
   if (categories.reflection.length === 0) {
     markdown += '*No reflexive insights recorded.*\n\n';
@@ -199,7 +193,6 @@ ${log.metadata?.rationale ? `Rationale: ${log.metadata.rationale}` : ''}
     }
   }
 
-  // Tool usage
   markdown += `### Epistemic Tool Usage (${categories.tool_usage.length} entries)\n\n`;
   if (categories.tool_usage.length === 0) {
     markdown += '*No epistemic tool usage recorded.*\n\n';
@@ -212,7 +205,6 @@ ${log.metadata?.rationale ? `Rationale: ${log.metadata.rationale}` : ''}
     }
   }
 
-  // Confirmability statement
   markdown += `---
 
 ## Confirmability Statement
@@ -282,26 +274,21 @@ function generateAudit(projectPath, args) {
     };
   }
 
-  // Read conversation log
   const { logs, skipped } = readConversationLog(projectPath, args.since);
 
-  // Get sessions from config
   const sessions = config.batch_tracking?.sessions || [];
 
-  // Filter to specific session if requested
   let filteredSessions = sessions;
   let filteredLogs = logs;
 
   if (args.session) {
     filteredSessions = sessions.filter(s => s.id === args.session);
-    // Filter logs to those from this session if possible
     filteredLogs = logs.filter(l =>
       l.metadata?.session_id === args.session ||
       !l.metadata?.session_id  // Include logs without session ID
     );
   }
 
-  // Generate output
   const format = args.format || 'markdown';
   let output;
   let outputPath;
@@ -314,13 +301,11 @@ function generateAudit(projectPath, args) {
     outputPath = path.join(projectPath, 'outputs', args.output || 'audit-trail.md');
   }
 
-  // Ensure outputs directory exists
   const outputDir = path.dirname(outputPath);
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
   }
 
-  // Write output
   fs.writeFileSync(outputPath, output);
 
   return {
@@ -336,7 +321,6 @@ function generateAudit(projectPath, args) {
   };
 }
 
-// Main execution
 const args = parseArgs();
 
 if (!args['project-path']) {

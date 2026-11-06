@@ -42,7 +42,6 @@ function parseArgs() {
 function appendLog(projectPath, args) {
   const logPath = path.join(projectPath, '.interpretive-orchestration', 'conversation-log.jsonl');
 
-  // Ensure directory exists - create if missing
   const logDir = path.dirname(logPath);
   if (!fs.existsSync(logDir)) {
     try {
@@ -55,7 +54,6 @@ function appendLog(projectPath, args) {
     }
   }
 
-  // Build log entry
   const entry = {
     timestamp: new Date().toISOString(),
     agent: args.agent || 'unknown',
@@ -63,7 +61,6 @@ function appendLog(projectPath, args) {
     content: args.content || ''
   };
 
-  // Add optional fields
   if (args['document-id']) {
     entry.document_id = args['document-id'];
   }
@@ -80,7 +77,6 @@ function appendLog(projectPath, args) {
     }
   }
 
-  // Append to log file (create if doesn't exist)
   try {
     fs.appendFileSync(logPath, JSON.stringify(entry) + '\n');
 
@@ -98,7 +94,6 @@ function appendLog(projectPath, args) {
   }
 }
 
-// Main execution
 const args = parseArgs();
 
 if (!args['project-path']) {

@@ -66,7 +66,6 @@ function isTechnicalContext(text) {
 function checkLanguageCoherence(stance, recentActivity) {
   const issues = [];
 
-  // Define problematic verbs for each stance
   const stanceVocabulary = {
     constructivist: {
       good: ['construct', 'interpret', 'characterize', 'build', 'develop', 'co-create'],
@@ -85,8 +84,7 @@ function checkLanguageCoherence(stance, recentActivity) {
   const vocabularyMode = stance.vocabulary_mode || 'constructivist';
   const avoidVerbs = stance.avoid_verbs || stanceVocabulary[vocabularyMode]?.avoid || [];
 
-  // Simple check: look for avoided verbs in activity description
-  // In real implementation, would analyze actual tool outputs
+  // Checks only the activity description, not tool outputs
   const activityText = JSON.stringify(recentActivity).toLowerCase();
 
   // Skip checking if the context is clearly technical (file operations, debugging)
@@ -125,7 +123,6 @@ function main() {
   const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
   const stance = config.philosophical_stance || {};
 
-  // Get recent activity from conversation log
   const logPath = path.join(projectRoot, '.interpretive-orchestration', 'conversation-log.jsonl');
   let recentActivity = {};
 
@@ -135,14 +132,14 @@ function main() {
       .filter(line => line.trim())
       .map(line => JSON.parse(line));
 
-    recentActivity = logs[logs.length - 1] || {};
+    // Skip the plugin's own hook entries: the interpretive pause can log just
+    // before this check runs, and this check logs its own notes.
+    recentActivity = logs.reverse().find(entry => !String(entry.from || '').endsWith('_hook')) || {};
   }
 
-  // Check for language inconsistencies
   const issues = checkLanguageCoherence(stance, recentActivity);
 
   if (issues.length > 0) {
-    // Output structured remediation for machine parsing
     outputRemediation(
       'COHERENCE_CHECK_NOTE',
       'warning',  // This is a reflection prompt, not a blocker
@@ -182,7 +179,6 @@ function main() {
     console.log('   (Technical language like "find file" or "identify error" is always fine.)');
     console.log('');
 
-    // Log the coherence check
     const logEntry = {
       timestamp: new Date().toISOString(),
       from: 'epistemic_coherence_hook',
@@ -201,7 +197,6 @@ function main() {
       fs.appendFileSync(logPath, JSON.stringify(logEntry) + '\n');
     }
   } else {
-    // Coherence maintained
     console.log('');
     console.log('✓ Philosophical coherence maintained');
     console.log(`  Your ${stance.vocabulary_mode || 'constructivist'} language is consistent. Good reflexive practice!`);

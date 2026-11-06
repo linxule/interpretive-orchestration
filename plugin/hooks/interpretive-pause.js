@@ -37,7 +37,6 @@ function outputRemediation(code, severity, reason, nextCommands, nextSkills, can
     details
   };
 
-  // Output JSON to stderr for machine parsing
   console.error(JSON.stringify(remediation));
 }
 
@@ -50,7 +49,6 @@ function getDocumentCount(projectRoot) {
 }
 
 function shouldPause(count) {
-  // Pause every 5 documents
   return count > 0 && count % 5 === 0;
 }
 
@@ -65,7 +63,6 @@ function main() {
   const documentCount = getDocumentCount(projectRoot);
 
   if (shouldPause(documentCount)) {
-    // Output structured remediation for machine parsing
     outputRemediation(
       'INTERPRETIVE_PAUSE',
       'info',  // This is a methodological reminder, not a warning or blocker
@@ -109,7 +106,6 @@ function main() {
     console.log('   When ready to continue, the pause completes automatically.');
     console.log('');
 
-    // Log to conversation journal
     const logPath = path.join(projectRoot, '.interpretive-orchestration', 'conversation-log.jsonl');
     const logEntry = {
       timestamp: new Date().toISOString(),

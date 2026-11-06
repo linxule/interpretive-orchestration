@@ -42,7 +42,6 @@
   },
   "mcps": {
     "bundled": {
-      "sequential_thinking": true,
       "lotus_wisdom": true
     },
     "optional": {

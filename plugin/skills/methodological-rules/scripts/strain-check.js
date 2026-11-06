@@ -83,11 +83,7 @@ ${message}
   }
 }
 
-/**
- * Record an override and check for strain
- */
 function recordOverride(config, ruleId, justification, currentPhase) {
-  // Initialize strain tracking if needed
   if (!config.research_design) {
     config.research_design = {};
   }
@@ -103,7 +99,6 @@ function recordOverride(config, ruleId, justification, currentPhase) {
   const tracking = config.research_design.strain_tracking;
   const now = new Date().toISOString();
 
-  // Initialize count for this rule if needed
   if (!tracking.override_counts[ruleId]) {
     tracking.override_counts[ruleId] = {
       count: 0,
@@ -114,17 +109,14 @@ function recordOverride(config, ruleId, justification, currentPhase) {
 
   const ruleCount = tracking.override_counts[ruleId];
 
-  // Check if phase changed - reset count if so
   if (ruleCount.phase_when_overridden !== currentPhase) {
     ruleCount.count = 0;
     ruleCount.phase_when_overridden = currentPhase;
   }
 
-  // Increment count
   ruleCount.count++;
   ruleCount.last_override = now;
 
-  // Also log to rule_overrides array
   if (!config.research_design.rule_overrides) {
     config.research_design.rule_overrides = [];
   }
@@ -136,7 +128,6 @@ function recordOverride(config, ruleId, justification, currentPhase) {
     outcome: 'pending'
   });
 
-  // Check if strain threshold reached
   const threshold = tracking.strain_threshold || 3;
   const isStrained = ruleCount.count >= threshold;
 
@@ -188,7 +179,6 @@ function checkStrain(config, ruleId = null) {
     };
   }
 
-  // Check all rules
   const strainedRules = [];
   for (const [id, counts] of Object.entries(tracking.override_counts)) {
     if (counts.count >= threshold) {
@@ -208,15 +198,11 @@ function checkStrain(config, ruleId = null) {
   };
 }
 
-/**
- * Record resolution of a strain review
- */
 function recordStrainResolution(config, ruleId, resolution, notes) {
   if (!config.research_design?.strain_tracking) return;
 
   const tracking = config.research_design.strain_tracking;
 
-  // Add to strain reviews log
   tracking.strain_reviews.push({
     rule_id: ruleId,
     triggered_at: new Date().toISOString(),
@@ -225,7 +211,6 @@ function recordStrainResolution(config, ruleId, resolution, notes) {
     notes: notes || ''
   });
 
-  // If resolution involves adjusting the rule, handle that
   if (resolution === 'phase_transition') {
     // Reset counts since we're moving to new phase
     if (tracking.override_counts[ruleId]) {
@@ -233,7 +218,6 @@ function recordStrainResolution(config, ruleId, resolution, notes) {
     }
   }
 
-  // Remove from strained list if resolved
   const strainedIndex = tracking.strained_rules.indexOf(ruleId);
   if (strainedIndex > -1) {
     tracking.strained_rules.splice(strainedIndex, 1);
@@ -246,9 +230,6 @@ function recordStrainResolution(config, ruleId, resolution, notes) {
   };
 }
 
-/**
- * Generate the strain review prompt
- */
 function generateStrainPrompt(ruleId, overrideCount) {
   const prompts = {
     'case-isolation': `You've overridden case isolation ${overrideCount} times this phase. That's not wrong—it might mean your study is evolving.
@@ -282,7 +263,6 @@ How would you characterize what's happening?`
   return prompts[ruleId] || `You've overridden the ${ruleId} rule ${overrideCount} times. Let's review whether this rule fits your evolving methodology.`;
 }
 
-// Main execution
 const args = parseArgs();
 
 if (!args['project-path']) {
@@ -306,9 +286,7 @@ if (!config) {
 
 const currentPhase = getCurrentPhase(config.sandwich_status);
 
-// Handle different modes
 if (args['record-override']) {
-  // Recording an override
   if (!args['rule-id']) {
     console.error(JSON.stringify({
       success: false,
@@ -320,7 +298,6 @@ if (args['record-override']) {
   const result = recordOverride(config, args['rule-id'], args.justification, currentPhase);
   saveConfig(projectPath, config);
 
-  // If first time strained, log to journal and generate prompt
   if (result.first_time_strained) {
     const prompt = generateStrainPrompt(args['rule-id'], result.override_count);
     logToJournal(projectPath, `**Rule "${args['rule-id']}" has reached strain threshold (${result.override_count} overrides)**
@@ -339,7 +316,6 @@ ${prompt}`);
   console.log(JSON.stringify(result, null, 2));
 
 } else if (args['record-resolution']) {
-  // Recording resolution of strain review
   if (!args['rule-id'] || !args.resolution) {
     console.error(JSON.stringify({
       success: false,
@@ -358,11 +334,9 @@ Notes: ${args.notes || 'None provided'}`);
   console.log(JSON.stringify(result, null, 2));
 
 } else {
-  // Just checking strain status
   const result = checkStrain(config, args['rule-id']);
   result.current_phase = currentPhase;
 
-  // Add prompts for any strained rules
   if (result.has_strain) {
     if (args['rule-id']) {
       result.strain_prompt = generateStrainPrompt(args['rule-id'], result.override_count);

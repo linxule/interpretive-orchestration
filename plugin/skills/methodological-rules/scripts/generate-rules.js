@@ -61,9 +61,6 @@ function renderTemplate(template, data) {
   return result;
 }
 
-/**
- * Get current phase from sandwich_status
- */
 function getCurrentPhase(sandwichStatus) {
   if (!sandwichStatus) return 'stage1_foundation';
 
@@ -93,9 +90,6 @@ function getCurrentPhase(sandwichStatus) {
   return stage;
 }
 
-/**
- * Check if a rule should be relaxed based on current phase
- */
 function shouldRelax(relaxesAt, currentPhase) {
   const phaseOrder = [
     'stage1_foundation',
@@ -116,9 +110,6 @@ function shouldRelax(relaxesAt, currentPhase) {
   return currentIndex >= relaxIndex;
 }
 
-/**
- * Generate case isolation rule
- */
 function generateCaseIsolationRule(config, templatesDir, currentPhase) {
   const design = config.research_design;
   if (!design || !design.cases || design.cases.length === 0) return null;
@@ -155,9 +146,6 @@ function generateCaseIsolationRule(config, templatesDir, currentPhase) {
   };
 }
 
-/**
- * Generate wave isolation rule
- */
 function generateWaveIsolationRule(config, templatesDir, currentPhase) {
   const design = config.research_design;
   if (!design || !design.waves || design.waves.length === 0) return null;
@@ -195,9 +183,6 @@ function generateWaveIsolationRule(config, templatesDir, currentPhase) {
   };
 }
 
-/**
- * Generate stream separation rule
- */
 function generateStreamSeparationRule(config, templatesDir, currentPhase) {
   const design = config.research_design;
   if (!design) return null;
@@ -243,9 +228,6 @@ function generateStreamSeparationRule(config, templatesDir, currentPhase) {
   };
 }
 
-/**
- * Append to reflexivity journal
- */
 function logToJournal(projectPath, message) {
   const journalPath = path.join(projectPath, '.interpretive-orchestration', 'reflexivity-journal.md');
 
@@ -270,7 +252,6 @@ ${message}
   }
 }
 
-// Main execution
 const args = parseArgs();
 
 if (!args['project-path']) {
@@ -288,7 +269,6 @@ const rulesDir = path.join(projectPath, '.claude', 'rules');
 // Find templates directory (relative to this script)
 const templatesDir = path.join(__dirname, '..', 'templates');
 
-// Load config
 if (!fs.existsSync(configPath)) {
   console.error(JSON.stringify({
     success: false,
@@ -309,7 +289,6 @@ try {
   process.exit(1);
 }
 
-// Check if research_design exists
 if (!config.research_design) {
   console.log(JSON.stringify({
     success: true,
@@ -319,17 +298,14 @@ if (!config.research_design) {
   process.exit(0);
 }
 
-// Get current phase
 const currentPhase = getCurrentPhase(config.sandwich_status);
 
-// Ensure rules directory exists
 try {
   fs.mkdirSync(rulesDir, { recursive: true });
 } catch (e) {
   // Directory might exist
 }
 
-// Generate rules
 const results = {
   success: true,
   current_phase: currentPhase,
@@ -338,7 +314,6 @@ const results = {
   errors: []
 };
 
-// Case isolation
 const caseRule = generateCaseIsolationRule(config, templatesDir, currentPhase);
 if (caseRule) {
   if (caseRule.error) {
@@ -361,7 +336,6 @@ if (caseRule) {
   results.rules_skipped.push('case-isolation (no cases or disabled)');
 }
 
-// Wave isolation
 const waveRule = generateWaveIsolationRule(config, templatesDir, currentPhase);
 if (waveRule) {
   if (waveRule.error) {
@@ -384,7 +358,6 @@ if (waveRule) {
   results.rules_skipped.push('wave-isolation (no waves or disabled)');
 }
 
-// Stream separation
 const streamRule = generateStreamSeparationRule(config, templatesDir, currentPhase);
 if (streamRule) {
   if (streamRule.error) {
@@ -407,7 +380,6 @@ if (streamRule) {
   results.rules_skipped.push('stream-separation (disabled)');
 }
 
-// Log to journal
 if (results.rules_generated.length > 0) {
   const rulesSummary = results.rules_generated
     .map(r => `- **${r.name}**: ${r.status} (friction: ${r.friction})`)
@@ -416,7 +388,6 @@ if (results.rules_generated.length > 0) {
   logToJournal(projectPath, `**Rules Generated/Updated:**\n${rulesSummary}\n\n**Current Phase:** ${currentPhase}`);
 }
 
-// Set success based on errors
 results.success = results.errors.length === 0;
 
 console.log(JSON.stringify(results, null, 2));

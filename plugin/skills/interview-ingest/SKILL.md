@@ -3,6 +3,8 @@ name: interview-ingest
 description: "This skill should be used when users have audio interview recordings to transcribe, need to convert PDF documents, mentions 'import data', 'transcribe', 'convert', or is starting data preparation for Stage 1 or Stage 2."
 ---
 
+> Script paths: `${CLAUDE_PLUGIN_ROOT}` below is this plugin's root folder, two levels above this skill's own folder. Claude Code fills it in. If you see it unfilled, still starting with a dollar sign (as in Codex, Copilot CLI or Kimi Code), put that folder's absolute path in its place before you run a command.
+
 # interview-ingest
 
 Audio transcription and document conversion for qualitative data import. Converts interview recordings, PDFs, and other formats into analyzable markdown.
@@ -90,7 +92,7 @@ mineru_parse({
 Batch process interview recordings.
 
 ```bash
-node skills/interview-ingest/scripts/process-audio.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/interview-ingest/scripts/process-audio.js" \
   --project-path /path/to/project \
   --input-dir /path/to/recordings \
   --output-dir stage1-foundation/manual-codes

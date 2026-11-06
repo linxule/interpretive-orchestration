@@ -5,7 +5,7 @@ description: "This skill should be used when users need to think through a compl
 
 # deep-reasoning
 
-Structured step-by-step thinking for complex analytical decisions. Invokes Sequential Thinking MCP with qualitative research framing.
+Structured step-by-step thinking for complex analytical decisions. Think deeply and step by step before responding, with qualitative research framing.
 
 ## When to Use
 
@@ -17,13 +17,13 @@ Use this skill when:
 - Deciding between interpretive alternatives
 - Building theoretical frameworks in Stage 3
 
-## MCP Used
+## Method
 
-**Sequential Thinking** (bundled, no API key required)
+Think deeply and step by step before responding. Write the steps out in the conversation so the researcher can follow and question each one. No MCP server is needed.
 
 ## How It Works
 
-Sequential Thinking creates dynamic thought sequences that:
+Step-by-step thinking creates dynamic thought sequences that:
 - Break complex problems into manageable steps
 - Allow branching and revision as understanding deepens
 - Make reasoning explicit and traceable
@@ -57,10 +57,10 @@ Sequential Thinking creates dynamic thought sequences that:
 
 ## Invocation Pattern
 
-When this skill is relevant, invoke Sequential Thinking with appropriate framing:
+When this skill is relevant, think deeply and step by step with this framing:
 
 ```
-Use Sequential Thinking to work through: [PROBLEM]
+Think deeply and step by step about: [PROBLEM]
 
 Context:
 - Research question: [from config]
@@ -105,7 +105,7 @@ Help me think through the dimensions of the "Adaptive Routine Building" theme:
 
 ## Output Format
 
-Sequential Thinking produces a chain of thoughts:
+Step-by-step thinking produces a chain of thoughts:
 ```
 Thought 1/N: [Initial framing]
 Thought 2/N: [Analysis of first aspect]
@@ -128,6 +128,6 @@ Each thought can:
 
 ## Related
 
-- **MCPs:** Sequential Thinking (bundled)
+- **MCPs:** none needed
 - **Commands:** `/qual-think-through` triggers this skill
 - **Skills:** paradox-navigation for tensions, coherence-check for assumptions

@@ -3,6 +3,8 @@ name: project-dashboard
 description: "This skill should be used when users ask 'where am I?', 'what is my progress?', mentions 'status', 'dashboard', 'progress', wants to know if they are ready for the next stage, or needs an overview of their project state."
 ---
 
+> Script paths: `${CLAUDE_PLUGIN_ROOT}` below is this plugin's root folder, two levels above this skill's own folder. Claude Code fills it in. If you see it unfilled, still starting with a dollar sign (as in Codex, Copilot CLI or Kimi Code), put that folder's absolute path in its place before you run a command.
+
 # project-dashboard
 
 Progress visualization and status reporting for qualitative research projects. Shows where you are in the sandwich methodology and what comes next.
@@ -28,7 +30,7 @@ Use this skill when:
 Calculate progress percentages for each stage.
 
 ```bash
-node skills/project-dashboard/scripts/calculate-progress.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/project-dashboard/scripts/calculate-progress.js" \
   --project-path /path/to/project
 ```
 
@@ -46,7 +48,7 @@ node skills/project-dashboard/scripts/calculate-progress.js \
 Generate a formatted dashboard view.
 
 ```bash
-node skills/project-dashboard/scripts/generate-dashboard.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/project-dashboard/scripts/generate-dashboard.js" \
   --project-path /path/to/project \
   --format ascii|json|markdown
 ```
@@ -55,7 +57,7 @@ node skills/project-dashboard/scripts/generate-dashboard.js \
 Check readiness for stage transitions.
 
 ```bash
-node skills/project-dashboard/scripts/check-readiness.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/project-dashboard/scripts/check-readiness.js" \
   --project-path /path/to/project \
   --target-stage stage2
 ```
@@ -153,7 +155,7 @@ This skill reads from:
 - `stage1-foundation/` directory contents
 - `stage2-collaboration/` directory contents
 
-Use `_shared/scripts/query-status.js` for the underlying data.
+Use `${CLAUDE_PLUGIN_ROOT}/skills/_shared/scripts/query-status.js` for the underlying data.
 
 ## Integration Points
 

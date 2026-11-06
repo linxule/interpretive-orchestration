@@ -82,7 +82,7 @@ Skills can call these scripts directly or reference them in instructions:
 
 Run the state check:
 \`\`\`bash
-node skills/_shared/scripts/read-config.js --project-path .
+node "${CLAUDE_PLUGIN_ROOT}/skills/_shared/scripts/read-config.js" --project-path .
 \`\`\`
 
 Verify `stage1_complete: true` before proceeding.

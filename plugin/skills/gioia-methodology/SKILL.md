@@ -3,6 +3,8 @@ name: gioia-methodology
 description: "This skill should be used when users are building or refining their Gioia data structure, mentions 'Gioia', 'data structure', 'themes', 'concepts', 'dimensions', '1st-order', '2nd-order', 'aggregate', or needs to validate/export their analytical hierarchy for publication."
 ---
 
+> Script paths: `${CLAUDE_PLUGIN_ROOT}` below is this plugin's root folder, two levels above this skill's own folder. Claude Code fills it in. If you see it unfilled, still starting with a dollar sign (as in Codex, Copilot CLI or Kimi Code), put that folder's absolute path in its place before you run a command.
+
 # gioia-methodology
 
 Gioia method data structure building and validation. Helps researchers construct the three-level hierarchy (1st-order concepts, 2nd-order themes, aggregate dimensions) with validation and export capabilities.
@@ -52,7 +54,7 @@ Validates a Gioia data structure JSON file against the schema.
 
 **Usage:**
 ```bash
-node skills/gioia-methodology/scripts/validate-structure.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/gioia-methodology/scripts/validate-structure.js" \
   --structure-path /path/to/data-structure.json
 ```
 
@@ -69,7 +71,7 @@ Analyzes hierarchy quality and methodological consistency.
 
 **Usage:**
 ```bash
-node skills/gioia-methodology/scripts/check-hierarchy.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/gioia-methodology/scripts/check-hierarchy.js" \
   --structure-path /path/to/data-structure.json
 ```
 
@@ -86,7 +88,7 @@ Exports data structure to publication-ready formats.
 
 **Usage:**
 ```bash
-node skills/gioia-methodology/scripts/export-structure.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/gioia-methodology/scripts/export-structure.js" \
   --structure-path /path/to/data-structure.json \
   --format markdown|table|latex
 ```

@@ -1,11 +1,11 @@
 {
   "name": "interpretive-orchestration",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Epistemic Partnership System for interpretive qualitative research. Human and AI learn together as apprentices to the craft tradition.",
   "contributors": [
     {
       "name": "Xule Lin",
-      "email": "xule.lin@imperial.ac.uk"
+      "email": "x@linxule.com"
     },
     {
       "name": "Kevin Corley"

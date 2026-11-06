@@ -31,7 +31,6 @@ function parseArgs() {
 function readConfig(projectPath) {
   const configPath = path.join(projectPath, '.interpretive-orchestration', 'config.json');
 
-  // Check if config exists
   if (!fs.existsSync(configPath)) {
     return {
       success: false,
@@ -72,7 +71,6 @@ function readConfig(projectPath) {
   }
 }
 
-// Main execution
 const args = parseArgs();
 
 if (!args['project-path']) {

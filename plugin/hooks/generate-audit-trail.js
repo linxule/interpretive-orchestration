@@ -13,6 +13,10 @@
 const fs = require('fs');
 const path = require('path');
 
+// Set by run-hook.js after the first run in a session: refresh the file
+// silently, without another notice or log entry.
+const QUIET = process.env.INTERPRETIVE_ORCHESTRATION_QUIET === '1';
+
 function findProjectRoot(startPath) {
   let currentPath = startPath;
   while (currentPath !== path.parse(currentPath).root) {
@@ -74,7 +78,6 @@ function generateAuditTrail(projectRoot) {
   const logContent = fs.readFileSync(logPath, 'utf8');
   const { logs, malformedCount, errors: parseErrors } = parseJsonlSafely(logContent);
 
-  // Generate audit trail markdown
   const auditTrail = `# Audit Trail: Synthesis Activities
 
 **Generated:** ${new Date().toISOString()}
@@ -193,9 +196,11 @@ function main() {
     process.exit(0);
   }
 
-  console.log('');
-  console.log('📊 Generating Audit Trail...');
-  console.log('');
+  if (!QUIET) {
+    console.log('');
+    console.log('📊 Generating Audit Trail...');
+    console.log('');
+  }
 
   const result = generateAuditTrail(projectRoot);
 
@@ -206,15 +211,14 @@ function main() {
 
   const outputPath = path.join(projectRoot, 'outputs', 'audit-trail.md');
 
-  // Ensure outputs directory exists
   const outputDir = path.dirname(outputPath);
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
   }
 
   fs.writeFileSync(outputPath, result.auditTrail);
+  if (QUIET) process.exit(0);
 
-  // Output structured remediation for machine parsing
   outputRemediation(
     'AUDIT_TRAIL_GENERATED',
     'info',  // This is informational, not a warning or blocker
@@ -240,7 +244,6 @@ function main() {
   console.log('   ✓ Audit trail generated: outputs/audit-trail.md');
   console.log('');
 
-  // Report any parsing issues
   if (result.stats.malformedCount > 0) {
     console.log(`   ⚠️  Warning: ${result.stats.malformedCount} log entries could not be parsed (skipped)`);
     if (result.stats.parseErrors) {
@@ -266,7 +269,6 @@ function main() {
   console.log('   • Transparent research documentation');
   console.log('');
 
-  // Log the audit trail generation
   const logPath = path.join(projectRoot, '.interpretive-orchestration', 'conversation-log.jsonl');
   const logEntry = {
     timestamp: new Date().toISOString(),

@@ -1,0 +1,41 @@
+cff-version: 1.2.0
+message: "If you use this plugin in your research, please cite the article it implements (preferred citation below)."
+title: "Interpretive Orchestration: Epistemic Partnership System"
+type: software
+version: 0.3.0
+date-released: 2026-11-06
+license: MIT
+repository-code: "https://github.com/linxule/interpretive-orchestration"
+authors:
+  - family-names: Lin
+    given-names: Xule
+    affiliation: "SKEMA Business School, Université Côte d'Azur"
+    orcid: "https://orcid.org/0000-0001-7885-4194"
+  - family-names: Corley
+    given-names: Kevin G.
+    affiliation: "Imperial Business School, Imperial College London"
+    orcid: "https://orcid.org/0000-0002-6556-5032"
+keywords:
+  - qualitative research
+  - grounded theory
+  - Gioia methodology
+  - human-AI collaboration
+  - interpretive orchestration
+preferred-citation:
+  type: article
+  title: "Interpretive Orchestration: An Essay Exploring the Epistemic Intersection of Human Intuition and Machine Intelligence"
+  authors:
+    - family-names: Lin
+      given-names: Xule
+      affiliation: "SKEMA Business School, Université Côte d'Azur"
+      orcid: "https://orcid.org/0000-0001-7885-4194"
+    - family-names: Corley
+      given-names: Kevin G.
+      affiliation: "Imperial Business School, Imperial College London"
+      orcid: "https://orcid.org/0000-0002-6556-5032"
+  journal: "Strategic Organization"
+  publisher:
+    name: "SAGE Publications"
+  year: 2026
+  doi: "10.1177/14761270261448645"
+  url: "https://doi.org/10.1177/14761270261448645"

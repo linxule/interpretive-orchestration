@@ -19,6 +19,10 @@ yarn.lock
 # User-specific MCP configurations
 .mcp.local.json
 
+# Personal Claude Code settings (permission allowlists can hold secrets)
+.claude/settings.local.json
+.claude/settings.json
+
 # OS files
 .DS_Store
 Thumbs.db
@@ -57,7 +61,7 @@ WORKSHOP-NOTES.md
 INTERNAL-*.md
 
 # Internal meta-research documentation (for methods paper, not plugin users)
-docs/local/
+**/docs/local/
 
 # User research data (never commit actual research data!)
 # These patterns protect sensitive research materials from accidental commits

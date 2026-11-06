@@ -1,8 +1,19 @@
 {
   "name": "interpretive-orchestration",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Atelier of Co-Apprenticeship for interpretive qualitative research. Human and AI learn together as apprentices to the craft tradition (rigor, reflexivity, theoretical sensitivity). Three stages: Solo Practice → Side-by-Side Collaboration → Dialogue with Tradition. Prevents calculator mindset, embeds meta-cognition, maintains human interpretive authority.",
   "author": {
-    "name": "Xule Lin and Kevin Corley (Imperial College London)"
-  }
+    "name": "Xule Lin (SKEMA Business School) and Kevin Corley (Imperial College London)"
+  },
+  "homepage": "https://github.com/linxule/interpretive-orchestration#readme",
+  "repository": "https://github.com/linxule/interpretive-orchestration",
+  "license": "MIT",
+  "keywords": [
+    "qualitative-research",
+    "grounded-theory",
+    "gioia-method",
+    "interpretive-inquiry",
+    "reflexive-analysis",
+    "human-ai-collaboration"
+  ]
 }

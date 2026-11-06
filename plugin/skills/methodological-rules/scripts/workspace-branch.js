@@ -106,16 +106,12 @@ ${message}
   }
 }
 
-/**
- * Fork a new interpretive branch
- */
 function forkBranch(config, name, framing, rationale) {
   const branches = initWorkspaceBranches(config);
   const now = new Date().toISOString();
   const branchId = generateBranchId(name);
   const currentVersion = getCurrentVersion(config);
 
-  // Validate framing
   const validFramings = ['exploratory', 'confirmatory', 'negative_case', 'alternative_interpretation'];
   if (framing && !validFramings.includes(framing)) {
     return {
@@ -124,7 +120,6 @@ function forkBranch(config, name, framing, rationale) {
     };
   }
 
-  // Create new branch
   const newBranch = {
     id: branchId,
     name: name,
@@ -138,7 +133,6 @@ function forkBranch(config, name, framing, rationale) {
 
   branches.branches.push(newBranch);
 
-  // Log decision
   branches.branch_decisions.push({
     action: 'fork',
     branch_id: branchId,
@@ -147,7 +141,6 @@ function forkBranch(config, name, framing, rationale) {
     rationale: rationale || ''
   });
 
-  // Switch to new branch
   const previousBranch = branches.current_branch;
   branches.current_branch = branchId;
 
@@ -170,14 +163,10 @@ function forkBranch(config, name, framing, rationale) {
   };
 }
 
-/**
- * Switch to a different branch
- */
 function switchBranch(config, branchId) {
   const branches = initWorkspaceBranches(config);
   const now = new Date().toISOString();
 
-  // Find branch
   const branch = branches.branches.find(b => b.id === branchId);
   if (!branch) {
     return {
@@ -227,7 +216,6 @@ function mergeBranch(config, branchId, memo) {
     };
   }
 
-  // Find branch
   const branch = branches.branches.find(b => b.id === branchId);
   if (!branch) {
     return {
@@ -250,11 +238,9 @@ function mergeBranch(config, branchId, memo) {
     };
   }
 
-  // Mark as merged
   branch.status = 'merged';
   branch.merge_memo = memo;
 
-  // Log decision
   branches.branch_decisions.push({
     action: 'merge',
     branch_id: branchId,
@@ -263,7 +249,6 @@ function mergeBranch(config, branchId, memo) {
     rationale: memo
   });
 
-  // Switch back to parent if we're on this branch
   if (branches.current_branch === branchId) {
     branches.current_branch = branch.parent_branch || 'main';
   }
@@ -277,14 +262,10 @@ function mergeBranch(config, branchId, memo) {
   };
 }
 
-/**
- * Abandon a branch (with rationale)
- */
 function abandonBranch(config, branchId, rationale) {
   const branches = initWorkspaceBranches(config);
   const now = new Date().toISOString();
 
-  // Find branch
   const branch = branches.branches.find(b => b.id === branchId);
   if (!branch) {
     return {
@@ -307,10 +288,8 @@ function abandonBranch(config, branchId, rationale) {
     };
   }
 
-  // Mark as abandoned
   branch.status = 'abandoned';
 
-  // Log decision
   branches.branch_decisions.push({
     action: 'abandon',
     branch_id: branchId,
@@ -319,7 +298,6 @@ function abandonBranch(config, branchId, rationale) {
     rationale: rationale || 'No rationale provided'
   });
 
-  // Switch back to parent if we're on this branch
   if (branches.current_branch === branchId) {
     branches.current_branch = branch.parent_branch || 'main';
   }
@@ -332,9 +310,6 @@ function abandonBranch(config, branchId, rationale) {
   };
 }
 
-/**
- * List all branches
- */
 function listBranches(config) {
   const branches = initWorkspaceBranches(config);
 
@@ -359,9 +334,6 @@ function listBranches(config) {
   };
 }
 
-/**
- * Get current status
- */
 function getStatus(config) {
   const branches = config.workspace_branches;
   if (!branches) {
@@ -414,7 +386,6 @@ if (!config) {
   process.exit(1);
 }
 
-// Handle different modes
 if (args.status) {
   console.log(JSON.stringify(getStatus(config), null, 2));
   process.exit(0);

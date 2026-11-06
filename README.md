@@ -1,377 +1,364 @@
-# Interpretive Orchestration: Epistemic Partnership System
+# Interpretive Orchestration
 
-> Not a tool for faster coding. A partner for deeper thinking.
+Not a tool for faster coding. A partner for deeper thinking.
 
-**🚀 Ready to start?** → [INSTALL.md](plugin/INSTALL.md) (complete setup from scratch)
+Interpretive Orchestration is a plugin for AI agents that supports interpretive qualitative research. It helps you scale your analysis without giving up interpretive authority. You code the first documents yourself, then work with AI through visible reasoning, then build theory in dialogue with your research tradition.
 
-**📋 Already set up?** → [QUICK-START.md](plugin/QUICK-START.md) (quick reference)
+The plugin is built for Claude Code. It also installs in OpenAI Codex, GitHub Copilot CLI and Kimi Code, with some parts missing on each. See [what works on each platform](#what-works-on-each-platform).
 
-**📖 Want depth?** → Keep reading below
+It puts into practice the framework in Lin and Corley (2026), ["Interpretive Orchestration"](https://doi.org/10.1177/14761270261448645), published in Strategic Organization.
 
-**🧠 Frameworks?** → [Cognitio Emergens](https://arxiv.org/abs/2505.03105) (Lin) | Interpretive Orchestration (Lin & Corley)
+- [Install the plugin](#install-the-plugin)
+- [Set up from scratch](plugin/INSTALL.md), including Node.js, on Windows, macOS or Linux
+- [Quick reference](plugin/QUICK-START.md)
 
----
+## What the plugin does
 
-## 🌟 The Transformation
+Most AI tools for qualitative research treat AI as a faster way to code. You put data in, the AI processes it and you review the output. That speeds up the work, but it does not deepen it, and the assumptions behind the analysis stay hidden.
 
-**What you might expect:**
-"Software that automates qualitative coding so I can finish faster"
+This plugin treats AI as a thinking partner instead. It asks questions that make your reasoning visible to you. It shows how it interpreted a passage, not only what it concluded. Final interpretive decisions stay with you.
 
-**What you'll actually get:**
-"A thinking partner that deepens my reflexivity, challenges my assumptions, and helps me understand how I construct knowledge - making me a better researcher"
+The aim is to change how you think about interpretation, not only to speed up coding.
 
-**The difference matters.**
+## How the 3 stages work
 
----
+You and the AI both learn from the craft tradition of interpretive inquiry: rigor, reflexivity, theoretical sensitivity and interpretive depth. Neither directs the other. We call this the atelier of co-apprenticeship. Our earlier research called it the human-AI-human "sandwich".
 
-## 🧠 What Is This Really?
+| Stage | What happens | What the AI does |
+|-------|--------------|------------------|
+| 1. Solo practice | You code 10 to 15 documents by hand, write memos and develop an initial framework | Listens and asks questions, but does not code. AI cannot build your theoretical sensitivity for you. |
+| 2. Collaboration | Parallel theoretical and empirical streams, synthesis and pattern characterization | Codes with you through 4-stage visible reasoning, using `@dialogical-coder` |
+| 3. Dialogue with tradition | You examine your work through the questions your research tradition asks | Asks those questions, using `@scholarly-companion` |
 
-This isn't another CAQDAS tool (NVivo, Atlas.ti, etc.) with AI bolted on.
-This isn't ChatGPT for ad-hoc document analysis.
-This isn't Google's AI Co-Scientist for qualitative research.
+The plugin checks that Stage 1 is complete before Stage 2 work starts. In Claude Code, if you start a Stage 2 command or agent too early, it shows your Stage 1 progress and asks whether you want to go ahead. You can proceed if you have a reason, for example if you did Stage 1 on paper.
 
-**This is infrastructure for human-AI epistemic partnership in interpretive inquiry.**
+## Why the structure matters
 
-### What That Means
+This plugin puts Partnership Agency into practice. Partnership Agency comes from the [Cognitio Emergens](https://arxiv.org/abs/2505.03105) framework (Lin, 2025). In it, human and AI form one epistemic system that produces insights neither could reach alone.
 
-**Traditional tools:**
-- You input data → AI processes → You review output
-- AI automates manual labor (the "calculator mindset")
-- Faster but not necessarily deeper
-- Philosophy implicit and unexamined
+Partnership Agency depends on 4 conditions:
 
-**Epistemic partnership:**
-- You build foundation → You + AI collaborate → You synthesize theory
-- AI asks questions that deepen YOUR reflexivity
-- Scale AND interpretive depth
-- Philosophy explicit and reflexive
+- theoretical foundation: Stage 1 prevents the "calculator mindset", where AI becomes mere automation
+- visible reasoning: the 4-stage process prevents black-box interpretation
+- recursive evolution: human and AI both learn and adapt
+- epistemic ambidexterity: you balance AI capability with human control
 
-**The goal:** Transform how you think about interpretation itself, not just speed up coding.
+The structure is not a constraint. It is what makes the partnership possible. We offer one rigorous path, grounded in Cognitio Emergens and in the Gioia and constructivist traditions.
 
----
+## Core principles
 
-## 🎨 The Atelier of Co-Apprenticeship
-
-**Both human and AI are apprentices to the craft tradition of interpretive inquiry.** Neither masters the other. Both learn from craft principles: rigor, reflexivity, theoretical sensitivity, interpretive depth.
-
-*Also known as human-AI-human "sandwich" from our original research.*
-
-| Stage | What Happens | AI Role |
-|-------|--------------|---------|
-| **1. Solo Practice** 🎨 | Manual coding of 10-15 docs, memo-writing, framework development | Watches but doesn't intervene (theoretical sensitivity can't be automated) |
-| **2. Collaboration** 🤝 | Parallel streams (theoretical + empirical), synthesis, pattern characterization | 4-stage visible reasoning with @dialogical-coder |
-| **3. Tradition Dialogue** 💭 | Examine work through craft tradition's wisdom | @scholarly-companion asks tradition's questions |
-
-**The atelier ENFORCES Stage 1** - doors to collaborative workspace stay locked until solo practice complete.
-
----
-
-## 🌊 Partnership Agency (Our Argument)
-
-This plugin instantiates **Partnership Agency** from [Cognitio Emergens](https://arxiv.org/abs/2505.03105) (Lin, 2025): "Human and AI boundaries dissolve into unified epistemic system generating insights neither could produce independently."
-
-**Four enabling conditions:**
-1. **Theoretical Foundation** - Stage 1 prevents calculator mindset
-2. **Visible Reasoning** - 4-stage process prevents black-box opacity
-3. **Recursive Evolution** - Both human and AI learn and adapt
-4. **Epistemic Ambidexterity** - Balance AI capability with human control
-
-**Our structure isn't constraint - it's architecture for Partnership Agency.** We provide ONE rigorous path, grounded in Cognitio Emergens and Gioia/Constructivist tradition.
-
----
-
-## 🎯 Core Principles
-
-| Principle | What It Means |
+| Principle | What it means |
 |-----------|---------------|
-| **Epistemic Coherence** | Plugin adapts to YOUR declared philosophy (ontology, epistemology, GT tradition) |
-| **Reflexivity as Strength** | Prompts examine assumptions - awareness, not doubt |
-| **Human Authority** | AI organizes and suggests; YOU interpret and decide (non-negotiable) |
-| **Visible Reasoning** | 4-stage dialogical process shows HOW AI interpreted, not just WHAT |
-| **Meta-Cognition** | Every interaction teaches you to think about thinking |
-| **Progressive Depth** | Philosophy deepens through practice, not front-loaded lectures |
+| Epistemic coherence | The plugin adapts to the philosophy you declare: your ontology, epistemology and grounded theory tradition |
+| Reflexivity as strength | Prompts examine your assumptions to build awareness, not doubt |
+| Human authority | The AI organizes and suggests. You interpret and decide. This does not change. |
+| Visible reasoning | The 4-stage dialogical process shows how the AI interpreted a passage, not only what it concluded |
+| Meta-cognition | Each interaction helps you think about how you think |
+| Progressive depth | Philosophy deepens through practice, not through lectures at the start |
 
----
+If you disagree with the AI, that is part of the method. The AI organizes possibilities. You make the interpretive judgments.
 
-## 💡 What Makes This Different
+## How it differs from other tools
 
-| Approach | Their Model | Our Model |
-|----------|------------|-----------|
-| **vs CAQDAS** | AI bolted onto manual tools | AI embedded with human authority maintained |
-| **vs ChatGPT** | Ad-hoc prompts, no audit trail | Systematic 4-stage dialogical process |
-| **vs AI Co-Scientist** | Full automation (STEM) | Human-centered augmentation (Social Science) |
+| Compared with | Their model | This plugin |
+|---------------|-------------|-------------|
+| CAQDAS tools such as NVivo and Atlas.ti | AI added to manual tools | AI built in, with human authority kept |
+| General chat assistants | One-off prompts and no audit trail | A systematic 4-stage dialogical process with an audit trail |
+| AI co-scientist systems | Full automation, mostly for STEM | Augmentation centered on the researcher, for social science |
 
-**Unique:** First infrastructure treating epistemology as UX design - embeds meta-cognition, enforces sandwich methodology, bundles MCP ecosystem.
+The plugin treats epistemology as part of the user experience. It builds in meta-cognition, keeps the sandwich methodology in place and builds in reasoning tools.
 
----
+## Expect some friction
 
-## 🌊 Why This Tool Feels Different
+The plugin puts reflection before speed. When it stops you, it is asking you to think.
 
-This plugin prioritizes **friction over flow**. If it stops you, it's asking you to think.
+It makes 3 trade-offs on purpose:
 
-| Trade-off | Meaning |
-|-----------|---------|
-| **Transformation over reliability** | Change how you think, not just process faster |
-| **Dialogue over determinism** | Socratic onboarding adapts to YOU |
-| **Reflection over efficiency** | Interpretive pauses are methodology, not bugs |
+- transformation over reliability: it aims to change how you think, not only to process faster
+- dialogue over determinism: Socratic onboarding adapts to you
+- reflection over efficiency: interpretive pauses are part of the method, not bugs
 
-If something feels "heavy" - that's intentional epistemic friction preventing the "calculator mindset."
+If something feels heavy, that is deliberate. The friction prevents the calculator mindset.
 
----
+## Install the plugin
 
-## 🚀 Getting Started
+You need Node.js 18 or later, because the plugin's scripts and checks run on Node. [Set up from scratch](plugin/INSTALL.md) explains how to install Node.js and Claude Code.
 
-**New to Claude Code?** See [INSTALL.md](plugin/INSTALL.md) for complete hand-holding setup instructions (Windows, macOS, Linux).
+### Claude Code
 
-**Want a pre-configured environment?** Use the [Starter Project](https://github.com/linxule/interpretive-orchestration-starter) - a ready-to-use VS Code workspace with beginner-friendly settings.
+Run these commands in Claude Code:
 
-**Already have Claude Code?**
-```bash
-cd your-project-folder
-claude
-/plugin install linxule/interpretive-orchestration
-/qual-check-setup  # Verify installation
-/qual-init         # Begin Socratic onboarding
+```
+/plugin marketplace add linxule/interpretive-orchestration
+/plugin install interpretive-orchestration@interpretive-orchestration
 ```
 
-**Then:** Complete Stage 1 manual coding (10-15 documents) before AI-assisted analysis. This builds the irreplaceable theoretical sensitivity that makes partnership meaningful.
+Then check your setup and start a project:
 
----
+```
+/qual-check-setup
+/qual-init
+```
 
-## 📚 The MCP Ecosystem
+To start from a ready-made workspace instead, use the [Interpretive Orchestration starter project](https://github.com/linxule/interpretive-orchestration-starter). It is a VS Code workspace with settings for people new to Claude Code.
 
-This plugin bundles powerful MCPs as epistemic tools - **no API keys required for core functionality!**
+### OpenAI Codex
 
-### Bundled (Auto-Install, No Keys Required)
-- **Sequential Thinking** - Dynamic reasoning through structured thought sequences (`/qual-think-through`)
-- **Lotus Wisdom** - Navigate paradoxes with five wisdom domains (`/qual-wisdom-check`)
-- **Markdownify** - Convert PDFs, transcribe audio, extract from videos/web (`/qual-import-pdf`)
+Run these commands in a terminal:
 
-### Optional (Require API Keys)
-- **MinerU** - High-accuracy PDF parsing (90%+) for complex tables/figures - requires MINERU_API_KEY
-- **Zen MCP** - Multi-model validation (`/qual-get-perspectives`) - requires GOOGLE_API_KEY or OPENAI_API_KEY
-- **Jina** - Fetch articles (`/qual-fetch-article`) - requires JINA_API_KEY
-- **Exa** - Search literature (`/qual-search-literature`) - requires EXA_API_KEY
-- **Zotero** - Manage bibliography - requires ZOTERO_API_KEY
+```
+codex plugin marketplace add linxule/interpretive-orchestration
+codex plugin add interpretive-orchestration@interpretive-orchestration
+```
 
-**These aren't utilities - they're tools for epistemic work.**
+Codex runs a plugin's hooks only after you trust them. The next time you start Codex, it asks you to review the new hooks: choose Trust all and continue. You can also do this later in `/hooks`. Codex asks again after each plugin update. Until you trust the hooks, the Stage 1 check and the session-start reminder do not run in Codex.
 
-**Markdownify is especially powerful for qualitative researchers:**
-- Transcribe interview audio files directly (no separate transcription service needed!)
-- Convert PDF articles and reports
-- Extract content from YouTube videos
-- Convert web pages and Office documents
+### GitHub Copilot CLI
 
----
+Run these commands in a terminal:
 
-## 🧩 Skills (v0.2.0)
+```
+copilot plugin marketplace add linxule/interpretive-orchestration
+copilot plugin install interpretive-orchestration@interpretive-orchestration
+```
 
-Skills are auto-discoverable capability packages that Claude loads when relevant to your request.
+### Kimi Code
 
-| Skill | Triggers | Purpose |
-|-------|----------|---------|
-| `project-setup` | "initialize", "new project" | Socratic onboarding + config |
-| `gioia-methodology` | "data structure", "Gioia" | Data structure building |
-| `literature-sweep` | "literature", "Stream A" | Search + fetch + organize papers |
-| `interview-ingest` | "transcribe", "convert audio" | Audio/PDF conversion |
-| `deep-reasoning` | "think through", "plan" | Sequential Thinking integration |
-| `paradox-navigation` | "tension", "both/and" | Lotus Wisdom integration |
+Run this command in Kimi Code:
 
-**Full list:** See [CLAUDE.md](plugin/CLAUDE.md) for all 12 skills and their triggers.
+```
+/plugins install https://github.com/linxule/interpretive-orchestration
+```
 
----
+## What works on each platform
 
-## 🤖 Agents
+Claude Code runs every part of the plugin. The other platforms run the same commands, skills and scripts. Their hooks work differently, so some checks behave differently there or are missing.
+
+| Feature | Claude Code | Codex | Copilot CLI | Kimi Code |
+|---------|-------------|-------|-------------|-----------|
+| Commands, skills and Lotus Wisdom | Yes | Yes | Yes | Yes |
+| Agents, such as `@dialogical-coder` | Yes | No, Codex plugins cannot include agents | Yes | Yes |
+| Partnership principles and Stage 1 progress given to the AI at the start of each session | Yes | Yes, once you trust the hooks | Yes | Yes, with your first message, which you also see |
+| Stage 1 check before Stage 2 work | Asks you | Asks you when you name a Stage 2 command, once you trust the hooks | Asks you | The AI stops and asks you |
+| Interpretive pause and coherence check after `@dialogical-coder` | Shown to you | No | The AI passes them on | Written to the conversation log only |
+| Audit trail and phase transition after Stage 2 commands | Yes | No | No | Only when the AI starts the command, not when you type it |
+| Session reflection | Written to the conversation log | Written to the conversation log | Written to the conversation log | Written to the conversation log when you exit |
+
+The [next-version list](https://github.com/linxule/interpretive-orchestration/issues/4) tracks the gaps.
+
+## Commands
+
+Each platform writes the same command differently:
+
+| Platform | How to run `/qual-init` |
+|----------|-------------------------|
+| Claude Code | `/qual-init` |
+| Codex | `$interpretive-orchestration:qual-init` |
+| Copilot CLI | `/interpretive-orchestration:qual-init` |
+| Kimi Code | `/skill:interpretive-orchestration:qual-init` |
+
+The commands:
+
+| Group | Commands |
+|-------|----------|
+| Project | `/qual-init`, `/qual-status`, `/qual-check-setup`, `/qual-design`, `/qual-configure-analysis`, `/qual-advance-stage` |
+| Stage 1 | `/qual-stage1-guide`, `/qual-memo`, `/qual-complete-stage1` |
+| Stage 2 | `/qual-parallel-streams`, `/qual-synthesize`, `/qual-code-deductive`, `/qual-characterize-patterns` |
+| Reflection | `/qual-reflect`, `/qual-think-through`, `/qual-wisdom-check`, `/qual-examine-assumptions` |
+
+A typical sequence in Claude Code:
+
+```
+/qual-init                    # Socratic dialogue that establishes your philosophy
+/qual-status                  # shows your Stage 1 progress
+@dialogical-coder Code R01    # 4-stage reflexive coding, once Stage 1 is complete
+/qual-think-through           # thinks deeply and step by step before responding
+/qual-wisdom-check            # paradox navigation with Lotus Wisdom
+```
+
+## Skills
+
+The plugin also has 12 skills. The AI loads a skill when your request matches it, so you do not need to call them by name.
+
+| Skill | Use it for |
+|-------|------------|
+| `project-setup` | Socratic onboarding and project setup |
+| `gioia-methodology` | building and checking a Gioia data structure |
+| `coding-workflow` | managing systematic Stage 2 coding across documents |
+| `analysis-orchestration` | model choice, cost estimates and batch processing |
+| `project-dashboard` | progress and readiness |
+| `methodological-rules` | case, wave and stream isolation rules, saturation tracking, branching and team coding |
+| `coherence-check` | checking your language against your declared stance |
+| `deep-reasoning` | thinking a hard decision through step by step |
+| `paradox-navigation` | working through tensions with Lotus Wisdom |
+| `literature-sweep` | finding and organizing literature for the theoretical stream |
+| `interview-ingest` | converting interview audio, PDFs and documents |
+| `document-conversion` | converting complex PDFs with tables and figures |
+
+The [plugin guide](plugin/CLAUDE.md) lists the phrases that trigger each skill.
+
+## Agents
 
 | Agent | Stage | Role |
 |-------|-------|------|
-| `@stage1-listener` | 1 | Thinking partner - asks questions, never suggests codes |
-| `@dialogical-coder` | 2 | 4-stage visible reasoning for reflexive coding |
-| `@research-configurator` | 2 | "The Whisperer" - technical setup without jargon |
-| `@scholarly-companion` | 3 | Asks tradition's questions about theoretical significance |
+| `@stage1-listener` | 1 | A thinking partner that asks questions and never suggests codes |
+| `@dialogical-coder` | 2 | Reflexive coding with 4-stage visible reasoning |
+| `@research-configurator` | 2 | Technical setup without jargon |
+| `@scholarly-companion` | 3 | Asks your tradition's questions about theoretical significance |
 
-### @research-configurator: The Whisperer
+`@research-configurator` connects research goals to technical choices, for researchers who do not write code. It can help with:
 
-This agent bridges research goals and technical implementation for non-coding researchers. **12 capabilities:**
+- analysis strategy: sampling, checkpoints and framework maturity
+- model selection, based on your needs
+- thinking budgets: how deeply the AI reasons, and the trade-off between cost and quality
+- batch processing: sequential, batch or parallel
+- cost estimates per item and in total
+- API setup, step by step, with no coding
+- quality assessment that turns metrics into research signals
+- human review: when to pause and what to examine
+- troubleshooting that turns technical errors into methodological insights
+- saturation monitoring: new concepts over time
+- comparing different analytical approaches
+- evidence-based refinements to your framework
 
-1. **Analysis Strategy Design** - Sampling, checkpoints, framework maturity
-2. **Model Selection** - Opus vs Sonnet vs Gemini based on YOUR needs
-3. **Thinking Budget Configuration** - How deeply AI reasons (cost/quality trade-off)
-4. **Batch Processing Strategy** - Sequential vs batch vs parallel
-5. **Cost Estimation** - Transparent per-item and total costs
-6. **API Setup** - Guided step-by-step (no coding required)
-7. **Quality Assessment** - Translates metrics to research signals
-8. **Human Review Orchestration** - When to pause, what to examine
-9. **Troubleshooting Translation** - Technical errors → methodological insights
-10. **Saturation Monitoring** - Tracks new concepts over time
-11. **Multi-Strategy Exploration** - Compare different analytical approaches
-12. **Framework Evolution** - Evidence-based refinement suggestions
+For example: `@research-configurator Help me set up my analysis`
 
-**Invoke:** `@research-configurator Help me set up my analysis`
+## Methodology checks
 
----
+Hooks keep the methodology in place at the moments that matter. In Claude Code:
 
-## 🔒 Methodology Hooks
+- at the start of each session in a research project, the AI gets the partnership principles and your Stage 1 progress
+- before Stage 2 work, the Stage 1 check shows your progress and asks whether to go ahead
+- after every 5 coded documents, an interpretive pause suggests reflection and a memo
+- after `@dialogical-coder` finishes, a coherence check compares the language used with your declared stance
+- once `/qual-synthesize` starts, the plugin keeps an audit trail in `outputs/audit-trail.md`, updated at the end of each AI reply
+- after a stage or phase changes, the methodological rules update
+- at the end of a session, the plugin records a reflection prompt in the conversation log
 
-The plugin enforces the sandwich methodology through automated hooks:
+Other platforms run most of these checks. See [what works on each platform](#what-works-on-each-platform).
 
-- **PreStage2** - Blocks AI coding until Stage 1 foundation complete
-- **PostFiveDocuments** - Triggers interpretive pause every 5 documents
-- **EpistemicCoherence** - Checks philosophical consistency
+When a check stops you, it is asking you to think. [Hooks philosophy](plugin/docs/HOOKS-PHILOSOPHY.md) explains why each check exists.
 
-If you're blocked, it's asking you to think. That's intentional epistemic friction.
+## Reasoning and research tools
 
----
+The plugin bundles one MCP server, [Lotus Wisdom](https://github.com/linxule/lotus-wisdom-mcp), for working through paradoxes (`/qual-wisdom-check`). It needs no API key. It runs on your machine, so your research data stays local, and it fetches the latest version each time it starts.
 
-## 🎓 Pedagogical Approach
+If you cannot run Node.js, you can connect the hosted Lotus Wisdom server at `https://lotus-wisdom-mcp.linxule.workers.dev/mcp` instead. The hosted server records usage analytics.
 
-| Phase | Focus | AI Role |
-|-------|-------|---------|
-| **Foundation** (Week 1) | Socratic onboarding, Stage 1 manual coding | Watches, doesn't intervene |
-| **Deepening** (Week 4) | Stage 2 collaboration with @dialogical-coder | 4-stage visible reasoning |
-| **Partnership** (Week 12) | Stage 3 synthesis, meta-dialogue | Asks tradition's questions |
+For step-by-step reasoning, `/qual-think-through` asks the AI to think deeply and step by step before it responds. Earlier versions used a Sequential Thinking MCP server for this. Version 0.3.0 removed it, because a prompt gives the same result.
 
-**Philosophy deepens through practice**, not front-loaded lectures.
+Some skills can also use optional MCP servers that you add with your own API keys:
 
----
+- MinerU, for parsing PDFs with complex tables and figures
+- Jina AI, for fetching web articles
+- Exa, for academic literature search
+- Zen, for checking interpretations with several models
+- Zotero, for bibliography management
 
-## 📖 Documentation
+Without them, those skills fall back to simpler methods. [Dependencies](plugin/DEPENDENCIES.md) explains how to set up each one.
 
-| Start Here | Go Deeper |
-|------------|-----------|
-| [INSTALL.md](plugin/INSTALL.md) - Complete setup | [DESIGN-PHILOSOPHY.md](plugin/DESIGN-PHILOSOPHY.md) - Why partnership |
-| [QUICK-START.md](plugin/QUICK-START.md) - 5-min guide | [ARCHITECTURE.md](plugin/ARCHITECTURE.md) - Technical details |
-| [TROUBLESHOOTING.md](plugin/TROUBLESHOOTING.md) - Issues | [CLAUDE.md](plugin/CLAUDE.md) - Agent behavior |
-| [UPGRADE-GUIDE.md](plugin/UPGRADE-GUIDE.md) - v0.1→v0.2 | [DEPENDENCIES.md](plugin/DEPENDENCIES.md) - MCP ecosystem |
+## What the plugin creates in your project
 
----
-
-## 🤝 The Partnership Agreement
-
-| AI commits to | You commit to |
-|---------------|---------------|
-| Show reasoning, not just results | Complete Stage 1 foundation |
-| Express uncertainty genuinely | Maintain deep data engagement |
-| Honor your interpretive authority | Question both AI and your assumptions |
-
-**Mutual commitment creates epistemic partnership.**
-
----
-
-## 🔬 Methodological Foundation
-
-This plugin implements methodology from our learned practices through multiple research projects.
-
-**Key Innovations:**
-1. **Parallel discovery streams** (theoretical + empirical with mutual checking)
-2. **Dialogical prompting** (4-stage visible reasoning prevents shallow coding)
-3. **Interpretive pauses** (after every 5 documents, at transitions, for edge cases)
-4. **Pattern characterization** (systematic variation analysis, not essentialist discovery)
-5. **Multi-model triangulation** (prevents single-AI bias)
-6. **Sandwich architecture** (human foundation → collaboration → human synthesis)
-
-**Philosophical basis:**
-- Gioia & Corley systematic interpretivist approach (default)
-- Charmaz constructivist reflexivity
-- Configurable for other coherent traditions
-
----
-
-## 🌍 For Whom?
-
-**Perfect for:** Qualitative researchers (GT, phenomenology, narrative analysis) who want scale AND interpretive depth
-
-**Not for:** Those seeking pure automation or unwilling to engage philosophical foundations
-
----
-
-## 🎬 Quick Demo
-
-```bash
-/qual-init                    # Socratic dialogue establishes your philosophy
-/qual-status                  # Shows Stage 1 progress
-@dialogical-coder Code R01    # 4-stage reflexive coding after Stage 1 complete
-/qual-think-through           # Sequential Thinking for deep analysis
-/qual-wisdom-check            # Lotus Wisdom for paradox navigation
-```
-
----
-
-## 🏗️ What Gets Built
-
-When you `/qual-init`, the plugin creates:
+`/qual-init` creates this structure:
 
 ```
 your-project/
 ├── .interpretive-orchestration/
-│   ├── epistemic-stance.md      # YOUR philosophy (human-readable)
-│   ├── config.json              # Settings (AI-readable)
-│   ├── conversation-log.jsonl   # AI-to-AI transparency
-│   └── reflexivity-journal.md   # YOUR growth tracking
+│   ├── epistemic-stance.md      # your philosophy, for you to read
+│   ├── config.json              # settings, for the AI to read
+│   ├── conversation-log.jsonl   # a record of AI activity, for transparency
+│   └── reflexivity-journal.md   # your growth over time
 │
-├── stage1-foundation/           # 🍞 Human bread (top)
-├── stage2-collaboration/        # 🤝 Human-AI filling
-└── stage3-synthesis/            # 🍞 Human bread (bottom)
+├── stage1-foundation/           # human bread (top)
+├── stage2-collaboration/        # human-AI filling
+└── stage3-synthesis/            # human bread (bottom)
 ```
 
-**The folder structure teaches the methodology.**
+The folder structure teaches the methodology. The plugin is mostly prompts written in Markdown, with JavaScript for the checks and scripts. [Architecture](plugin/ARCHITECTURE.md) has the technical details.
 
-**Note:** The plugin is ~90% markdown prompts, ~10% JavaScript hooks. See [ARCHITECTURE.md](plugin/ARCHITECTURE.md) for technical details.
+## How your practice develops
 
----
+| Phase | Focus | What the AI does |
+|-------|-------|------------------|
+| Foundation (week 1) | Socratic onboarding and Stage 1 manual coding | Watches and does not intervene |
+| Deepening (week 4) | Stage 2 collaboration with `@dialogical-coder` | Reasons visibly in 4 stages |
+| Partnership (week 12) | Stage 3 synthesis and dialogue about your own thinking | Asks your tradition's questions |
 
-## 🤔 FAQ
+Philosophy deepens through practice, not through lectures at the start.
 
-**Q: Why can't I skip Stage 1?**
-A: AI cannot develop YOUR theoretical sensitivity. Manual engagement creates the foundation that makes Stage 2 collaboration meaningful.
+## The partnership agreement
 
-**Q: What if I disagree with the AI?**
-A: Perfect! The AI organizes possibilities; YOU make interpretive judgments. Your authority is non-negotiable.
+| The AI commits to | You commit to |
+|-------------------|---------------|
+| Show its reasoning, not only its results | Complete the Stage 1 foundation |
+| Express uncertainty honestly | Stay close to your data |
+| Respect your interpretive authority | Question both the AI and your own assumptions |
 
-**Q: Is this different from automation?**
-A: Fundamentally. Automation replaces human labor. Partnership augments human thinking through reflexive dialogue.
+Mutual commitment creates epistemic partnership.
 
----
+## Methodological foundation
 
-## 🌐 Community & Extensions
+The plugin draws on practices we developed across several research projects. It brings together 6 methods:
 
-**Built with:** Claude Code, MCP ecosystem (Sequential Thinking, Lotus Wisdom, Markdownify), Gioia & Corley methodology
+- parallel discovery streams: theoretical and empirical streams that check each other
+- dialogical prompting: 4-stage visible reasoning that prevents shallow coding
+- interpretive pauses: after every 5 documents, at transitions and for edge cases
+- pattern characterization: analyzing systematic variation rather than discovering essences
+- multi-model triangulation: guards against the bias of any single AI
+- sandwich architecture: human foundation, then collaboration, then human synthesis
 
-**Extend:** Fork for your GT tradition, build custom agents, contribute pattern modules. See [CONTRIBUTING.md](CONTRIBUTING.md).
+Its philosophical basis is:
 
----
+- the Gioia and Corley systematic interpretivist approach, by default
+- Charmaz's constructivist reflexivity
+- other coherent traditions, which you can configure
 
-## 📄 Citation
+## Who it is for
 
-If you use this plugin in your research, please cite:
+The plugin is for qualitative researchers who want scale and interpretive depth, in grounded theory, phenomenology, narrative analysis and similar traditions.
 
-[Methods paper forthcoming]
+It is not for people who want pure automation, or who do not want to engage with philosophical foundations.
 
-**Note:** The plugin itself IS a research contribution. Using it means engaging with our methodological innovation.
+## Documentation
 
----
+| Start here | Go deeper |
+|------------|-----------|
+| [Set up from scratch](plugin/INSTALL.md) | [Design philosophy](plugin/DESIGN-PHILOSOPHY.md): why partnership |
+| [Quick reference](plugin/QUICK-START.md) | [Architecture](plugin/ARCHITECTURE.md): technical details |
+| [Troubleshooting](plugin/TROUBLESHOOTING.md) | [Plugin guide](plugin/CLAUDE.md): how the AI should behave |
+| [Upgrade guide](plugin/UPGRADE-GUIDE.md) | [Dependencies](plugin/DEPENDENCIES.md): optional MCP servers |
+| [Changelog](plugin/CHANGELOG.md) | [Hooks philosophy](plugin/docs/HOOKS-PHILOSOPHY.md): why each check exists |
 
-## ⚖️ License
+To extend the plugin for your grounded theory tradition, build custom agents or contribute pattern modules, see [contributing](CONTRIBUTING.md).
 
-MIT - Because epistemic infrastructure should be freely available
+## Cite this work
 
----
+If you use this plugin in your research, please cite the article it puts into practice:
 
-## 🙏 Acknowledgments
+> Lin, X., & Corley, K. G. (2026). Interpretive Orchestration: An Essay Exploring the Epistemic Intersection of Human Intuition and Machine Intelligence. Strategic Organization. https://doi.org/10.1177/14761270261448645
 
-**Theoretical foundations:** [Cognitio Emergens](https://arxiv.org/abs/2505.03105) (Lin, 2025), Interpretive Orchestration (Lin & Corley), Gioia & Corley methodology, Charmaz constructivist reflexivity
+The article is open access under CC BY 4.0. The "Cite this repository" button on GitHub gives the same citation in other formats.
 
-**Built by:** Xule Lin and Kevin Corley (Imperial College London)
-**AI Collaborators:** Claude Opus 4.5 (Anthropic), Codex (OpenAI), Gemini (Google)
+The plugin is itself a research contribution. Using it means engaging with the method, not only the software.
 
-**This plugin IS Partnership Agency** - knowledge co-created through human-AI collaboration.
+## License
 
----
+MIT. Epistemic infrastructure should be freely available.
 
-## 🚀 Ready to Begin?
+## Acknowledgments
 
-```bash
+Theoretical foundations: [Cognitio Emergens](https://arxiv.org/abs/2505.03105) (Lin, 2025), Interpretive Orchestration (Lin and Corley, 2026), the Gioia and Corley methodology, and Charmaz's constructivist reflexivity.
+
+Built by Xule Lin (SKEMA Business School) and Kevin Corley (Imperial College London).
+
+AI collaborators: Claude (Anthropic), Codex (OpenAI), Gemini (Google) and Kimi (Moonshot AI).
+
+This plugin is itself an instance of Partnership Agency: knowledge created through human-AI collaboration.
+
+## Begin
+
+```
 /qual-init
 ```
 
-**Let's think together.** 💭
+Let's think together.

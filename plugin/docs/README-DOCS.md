@@ -1,40 +1,32 @@
 # Documentation Guide
 
-## What's in This Folder
+## What's in this folder
 
-### For Understanding the Methods Paper
-📄 **METHODS-PAPER-OUTLINE.md** - Structure and arguments for our scholarly contribution
-- Complete paper outline
-- Key theoretical arguments
-- Comparison to Google AI Co-Scientist
-- Target venues and dissemination strategy
-
-### For Understanding Our Process
-📝 **REFLEXIVE-JOURNAL.md** - Our learning throughout building (3 substantial entries)
-- Entry 1: From features to relationships
-- Entry 2: The abstraction meta-cognition (structure vs content)
-- Entry 3: The maestro's refinement (building vs crafting)
-- **This IS research data for the methods paper**
+- [HOOKS-PHILOSOPHY.md](HOOKS-PHILOSOPHY.md) - why each methodology hook exists, and how the hooks are wired
+- [METHODOLOGICAL-RULES-SYSTEM.md](METHODOLOGICAL-RULES-SYSTEM.md) - how methodological rules adapt to the analytical phase
+- [ARCHITECTURE-DECISION-RULES.md](ARCHITECTURE-DECISION-RULES.md) - decision record on Claude Code project rules
+- [commands/](commands/README-COMMANDS.md) - how the `/qual-*` commands are organized, with notes on Stage 1 and Stage 2
 
 ---
 
-## Other Key Documentation (Outside This Folder)
+## Other key documentation (outside this folder)
 
-### Philosophy & Getting Started
-📖 **../README.md** - Start here! Philosophy-first introduction
-📋 **../CONTRIBUTING.md** - Community guidelines with epistemic focus
+### Philosophy and getting started
+📖 **../../README.md** - Start here! Philosophy-first introduction
+📋 **../../CONTRIBUTING.md** - Community guidelines with epistemic focus
+🚀 **../INSTALL.md** and **../QUICK-START.md** - Installation and first steps
 
-### Templates & Guides (now in skills/)
+### Templates and guides (in skills/)
 📐 **../skills/project-setup/templates/epistemic-stance.md** - Socratic self-examination questions
 🏗️ **../skills/gioia-methodology/templates/gioia-structure-guide.md** - How to build your framework
 📊 **../skills/gioia-methodology/templates/gioia-data-structure-template.json** - Concrete scaffold
 ⚙️ **../skills/project-setup/templates/config.schema.json** - Configuration options
 📡 **../skills/coding-workflow/templates/conversation-log-spec.md** - AI-to-AI transparency system
 
-### Project Summaries
-📈 **../PROJECT-SUMMARY.md** - What we built and why
-✅ **../MVEP-COMPLETE.md** - MVEP components and status
-✨ **../MASTERWORK-COMPLETE.md** - Final completion assessment
+### Design and history
+🏛️ **../ARCHITECTURE.md** - How the plugin fits together
+🧭 **../DESIGN-PHILOSOPHY.md** - Why it is built this way
+📈 **../CHANGELOG.md** - What changed in each version
 
 ---
 
@@ -43,29 +35,23 @@
 ### If You Want To:
 
 **Understand the philosophy:**
-→ Start with `../README.md`
+→ Start with `../../README.md`
 → Then `../skills/project-setup/templates/epistemic-stance.md`
 
 **Learn the methodology:**
 → Read `../skills/gioia-methodology/templates/gioia-structure-guide.md`
-→ Review commands in `../commands/`
+→ Review the commands in `../skills/qual-*/` (see `commands/README-COMMANDS.md`)
 
-**See our process:**
-→ Read `REFLEXIVE-JOURNAL.md` (this folder)
-→ Shows our learning, tensions, refinements
-
-**Write the methods paper:**
-→ Use `METHODS-PAPER-OUTLINE.md` (this folder)
-→ Draw on reflexive journal for insights
-→ Pull from conversation logs for evidence
+**Understand the hooks:**
+→ Read `HOOKS-PHILOSOPHY.md` (this folder)
 
 **Contribute:**
-→ Read `../CONTRIBUTING.md`
+→ Read `../../CONTRIBUTING.md`
 → Understand our philosophical commitments first
 
 **Get oriented:**
 → Run `/qual-status` after installing plugin
-→ Check `../MASTERWORK-COMPLETE.md` for inventory
+→ Check `../ARCHITECTURE.md` for the component inventory
 
 ---
 

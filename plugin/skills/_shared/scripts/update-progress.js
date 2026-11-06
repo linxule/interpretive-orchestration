@@ -30,7 +30,6 @@ function parseArgs() {
       const key = args[i].replace('--', '');
       const nextArg = args[i + 1];
 
-      // Check if next arg is a value or another flag
       if (nextArg && !nextArg.startsWith('--')) {
         parsed[key] = nextArg;
         i++;
@@ -65,7 +64,6 @@ function atomicWrite(filePath, content) {
 function updateProgress(projectPath, args) {
   const configPath = path.join(projectPath, '.interpretive-orchestration', 'config.json');
 
-  // Read current config
   if (!fs.existsSync(configPath)) {
     return {
       success: false,
@@ -84,7 +82,6 @@ function updateProgress(projectPath, args) {
     };
   }
 
-  // Ensure required structures exist
   config.sandwich_status = config.sandwich_status || {};
   config.sandwich_status.stage1_details = config.sandwich_status.stage1_details || {};
   config.sandwich_status.stage2_progress = config.sandwich_status.stage2_progress || {};
@@ -92,7 +89,6 @@ function updateProgress(projectPath, args) {
 
   const changes = [];
 
-  // Handle document count updates
   if (args['documents-coded'] !== undefined) {
     const count = parseInt(args['documents-coded'], 10);
     if (isNaN(count) || count < 0) {
@@ -118,7 +114,6 @@ function updateProgress(projectPath, args) {
     changes.push(`coding_progress.documents_coded synced to ${newCount}`);
   }
 
-  // Handle memo count updates
   if (args['memos-written'] !== undefined) {
     const count = parseInt(args['memos-written'], 10);
     if (isNaN(count) || count < 0) {
@@ -137,13 +132,11 @@ function updateProgress(projectPath, args) {
     changes.push(`memos_written incremented to ${current + 1}`);
   }
 
-  // Handle Stage 1 completion
   if (args['stage1-complete']) {
     config.sandwich_status.stage1_complete = true;
     changes.push('stage1_complete set to true');
   }
 
-  // Handle current stage
   if (args['current-stage']) {
     const validStages = ['stage1_foundation', 'stage2_collaboration', 'stage3_synthesis'];
     if (validStages.includes(args['current-stage'])) {
@@ -157,7 +150,6 @@ function updateProgress(projectPath, args) {
     }
   }
 
-  // Handle Stage 2 phase progress
   if (args.phase) {
     const [phaseName, phaseValue] = args.phase.split('=');
     const validPhases = ['phase1_parallel_streams', 'phase2_synthesis', 'phase3_pattern_characterization'];
@@ -174,7 +166,6 @@ function updateProgress(projectPath, args) {
     }
   }
 
-  // Handle coding progress
   if (args['quotes-extracted'] !== undefined) {
     const count = parseInt(args['quotes-extracted'], 10);
     if (isNaN(count) || count < 0) {
@@ -199,12 +190,10 @@ function updateProgress(projectPath, args) {
     changes.push(`concepts_in_framework set to ${count}`);
   }
 
-  // Update last coding session timestamp
   if (changes.length > 0) {
     config.coding_progress.last_coding_session = new Date().toISOString();
   }
 
-  // Validate config against schema before writing
   const { validateConfig } = require('./validate-config.js');
   const validation = validateConfig(config);
 
@@ -218,7 +207,6 @@ function updateProgress(projectPath, args) {
     process.exit(1);
   }
 
-  // Write updated config (only if valid)
   const content = JSON.stringify(config, null, 2);
   const writeResult = atomicWrite(configPath, content);
 
@@ -241,7 +229,6 @@ function updateProgress(projectPath, args) {
   };
 }
 
-// Main execution
 const args = parseArgs();
 
 if (!args['project-path']) {

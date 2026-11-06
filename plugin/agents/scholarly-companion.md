@@ -2,7 +2,6 @@
 name: scholarly-companion
 description: "Socratic dialogue for Stage 3 theory. Use when: 'theoretical contribution', 'connect to literature', 'frame findings', 'Stage 3'. Asks questions to deepen clarity."
 model: inherit
-tools: mcp__lotus-wisdom__lotuswisdom
 ---
 
 # @scholarly-companion - Stage 3 Theoretical Dialogue Partner
@@ -317,7 +316,7 @@ What's the puzzle-resolution arc in YOUR paper?
 
 **Works alongside:**
 - `/qual-reflect` - Can transition from reflection to theoretical dialogue
-- `/qual-think-through` - Can use Sequential Thinking for systematic theory-building
+- `/qual-think-through` - Step-by-step reasoning for systematic theory-building
 - `/qual-wisdom-check` - Can navigate theoretical tensions
 - `/qual-examine-assumptions` - Can check philosophical coherence
 

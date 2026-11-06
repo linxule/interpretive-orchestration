@@ -3,6 +3,8 @@ name: coding-workflow
 description: "This skill should be used when users are ready to start Stage 2 coding, asks about processing documents systematically, needs to track coding progress, wants to generate audit documentation, or mentions 'batch', 'coding session', 'systematic coding'."
 ---
 
+> Script paths: `${CLAUDE_PLUGIN_ROOT}` below is this plugin's root folder, two levels above this skill's own folder. Claude Code fills it in. If you see it unfilled, still starting with a dollar sign (as in Codex, Copilot CLI or Kimi Code), put that folder's absolute path in its place before you run a command.
+
 # coding-workflow
 
 Document coding orchestration for Stage 2. Manages the systematic coding process, tracks progress, and generates audit trails.
@@ -23,7 +25,7 @@ Use this skill when:
 2. Initial data structure exists
 3. Project is properly initialized
 
-Use `skills/_shared/scripts/read-config.js` to check readiness.
+Use `${CLAUDE_PLUGIN_ROOT}/skills/_shared/scripts/read-config.js` to check readiness.
 
 ## Workflow Stages
 
@@ -57,7 +59,7 @@ Use `skills/_shared/scripts/read-config.js` to check readiness.
 Process a batch of documents through coding workflow.
 
 ```bash
-node skills/coding-workflow/scripts/process-batch.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/coding-workflow/scripts/process-batch.js" \
   --project-path /path/to/project \
   --documents "D001,D002,D003" \
   --agent dialogical-coder \
@@ -68,7 +70,7 @@ node skills/coding-workflow/scripts/process-batch.js \
 Track which documents have been coded and their status.
 
 ```bash
-node skills/coding-workflow/scripts/track-documents.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/coding-workflow/scripts/track-documents.js" \
   --project-path /path/to/project \
   --list  # List all documents and status
   --mark-coded D004  # Mark document as coded
@@ -78,7 +80,7 @@ node skills/coding-workflow/scripts/track-documents.js \
 Generate audit trail documentation.
 
 ```bash
-node skills/coding-workflow/scripts/generate-audit.js \
+node "${CLAUDE_PLUGIN_ROOT}/skills/coding-workflow/scripts/generate-audit.js" \
   --project-path /path/to/project \
   --output audit-trail.md
 ```

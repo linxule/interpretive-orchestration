@@ -172,7 +172,6 @@ function escapeLatex(text) {
     .replace(/}/g, '\\}');
 }
 
-// Main execution
 const args = parseArgs();
 
 if (!args['structure-path']) {
@@ -238,5 +237,4 @@ switch (format.toLowerCase()) {
     process.exit(1);
 }
 
-// Output the result
 console.log(output);

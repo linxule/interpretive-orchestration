@@ -68,18 +68,14 @@ function calculateStage1Progress(config, projectPath) {
 
   const stage1Details = config.sandwich_status?.stage1_details || {};
 
-  // Get document count from config or count files
   let docsManuallyCodeded = stage1Details.documents_manually_coded || 0;
   if (docsManuallyCodeded === 0) {
-    // Try counting files in manual-codes directory
     const manualCodesDir = path.join(projectPath, 'stage1-foundation', 'manual-codes');
     docsManuallyCodeded = countFiles(manualCodesDir, ['.md', '.json', '.txt']);
   }
 
-  // Get memo count
   let memosWritten = stage1Details.memos_written || 0;
   if (memosWritten === 0) {
-    // Try counting files in memos directory
     const memosDir = path.join(projectPath, 'stage1-foundation', 'memos');
     memosWritten = countFiles(memosDir, ['.md']);
   }
@@ -123,7 +119,6 @@ function calculateStage2Progress(config) {
     totalProgress += value * weight;
   }
 
-  // Also get document counts
   const documentsProcessed = config.coding_progress?.documents_coded || 0;
   const quotesExtracted = config.coding_progress?.quotes_extracted || 0;
 
@@ -208,7 +203,6 @@ function calculateProgress(projectPath) {
   };
 }
 
-// Main execution
 const args = parseArgs();
 
 if (!args['project-path']) {

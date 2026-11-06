@@ -31,7 +31,6 @@ function validateSetup(projectPath) {
     warnings: []
   };
 
-  // Required directories
   const requiredDirs = [
     '.interpretive-orchestration',
     'stage1-foundation',
@@ -42,13 +41,11 @@ function validateSetup(projectPath) {
     'outputs'
   ];
 
-  // Required files
   const requiredFiles = [
     '.interpretive-orchestration/config.json',
     '.interpretive-orchestration/reflexivity-journal.md'
   ];
 
-  // Check directories
   for (const dir of requiredDirs) {
     const fullPath = path.join(projectPath, dir);
     if (fs.existsSync(fullPath) && fs.statSync(fullPath).isDirectory()) {
@@ -60,7 +57,6 @@ function validateSetup(projectPath) {
     }
   }
 
-  // Check files
   for (const file of requiredFiles) {
     const fullPath = path.join(projectPath, file);
     if (fs.existsSync(fullPath) && fs.statSync(fullPath).isFile()) {
@@ -72,13 +68,11 @@ function validateSetup(projectPath) {
     }
   }
 
-  // Validate config.json if it exists
   const configPath = path.join(projectPath, '.interpretive-orchestration', 'config.json');
   if (fs.existsSync(configPath)) {
     try {
       const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 
-      // Check required fields
       if (!config.project_info?.name) {
         results.warnings.push('config.json missing project_info.name');
       }
@@ -92,7 +86,6 @@ function validateSetup(projectPath) {
         results.warnings.push('config.json missing sandwich_status');
       }
 
-      // Check Stage 1 status for warnings
       if (config.sandwich_status?.stage1_complete === false) {
         results.warnings.push('Stage 1 not yet complete - manual coding required before Stage 2');
       }
@@ -105,7 +98,6 @@ function validateSetup(projectPath) {
     }
   }
 
-  // Check for Stage 1 progress
   const manualCodesPath = path.join(projectPath, 'stage1-foundation', 'manual-codes');
   const memosPath = path.join(projectPath, 'stage1-foundation', 'memos');
 
@@ -133,7 +125,6 @@ function validateSetup(projectPath) {
   return results;
 }
 
-// Main execution
 const args = parseArgs();
 
 if (!args['project-path']) {

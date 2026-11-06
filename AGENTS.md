@@ -6,35 +6,28 @@ This is your entry point for understanding and working with the Interpretive Orc
 
 ## What's in This Repository
 
+One plugin, with a manifest for each agent tool that can install it:
+
 ```
 repo-root/
 │
 ├── AGENTS.md                          # ← You are here
 ├── README.md                          # Human-facing project overview
+├── CITATION.cff                       # How to cite the work
+├── .claude-plugin/marketplace.json    # Claude Code and Copilot CLI marketplace
+├── .agents/plugins/marketplace.json   # Codex marketplace
+├── kimi.plugin.json                   # Kimi Code manifest
 │
-├── plugin/                            # Claude Code plugin (ORIGINAL)
-│   ├── CLAUDE.md                      # Plugin instructions & maintenance guide
-│   ├── ARCHITECTURE.md                # Full architecture reference
-│   ├── skills/                        # 12 skills (JavaScript)
-│   ├── agents/                        # 4 agents (markdown)
-│   ├── commands/                      # Commands system
-│   └── hooks/                         # JavaScript hooks
-│
-├── plugin-cowork/                     # Claude Desktop/Cowork plugin
-│   ├── README.md                      # Cowork plugin guide
-│   └── commands/                      # 17 qual-* commands (flat structure)
-│
-└── plugin-kimi/                       # Kimi CLI plugin (COMPLETE)
-    ├── README.md                      # Kimi plugin user guide
-    ├── AGENTS.md                      # Agent reference
-    ├── CHANGELOG.md                   # Version history & credits
-    ├── .agents/
-    │   ├── skills/                    # 12 skills for Kimi (Python)
-    │   ├── agents/                    # 5 YAML files (4 agents + router)
-    │   └── contexts/                  # 3 stage contexts
-    ├── examples/                      # Sample project
-    └── tests/                         # Test suites
+└── plugin/                            # The plugin
+    ├── CLAUDE.md                      # Maintenance guide and agent instructions
+    ├── ARCHITECTURE.md                # Full architecture reference
+    ├── skills/                        # 17 qual-* commands + 12 skills (JavaScript scripts)
+    ├── agents/                        # 4 agents (markdown)
+    ├── hooks/                         # hooks.json + run-hook.js adapter + hook scripts
+    └── tests/                         # node tests/run-tests.js
 ```
+
+The Python port for the archived kimi-cli (`plugin-kimi/`) was removed in 0.3.0. It is still in the `v0.2.5` tag.
 
 ---
 
@@ -77,30 +70,23 @@ Stage 3 (Synthesis):     Human synthesizes with AI dialogue
 
 1. This file (overview, architecture, non-negotiables)
 2. `plugin/ARCHITECTURE.md` (full technical architecture)
-3. `plugin-kimi/examples/sample-research-project/README.md` (workflow example)
+3. `plugin/examples/tutorial-quickstart/README.md` (workflow example)
 
 ### I need to update the Claude Code plugin
 
 1. `plugin/CLAUDE.md` (instructions, skill list, maintenance guide)
 2. `plugin/ARCHITECTURE.md` (architecture reference)
 
-### I need to update the Kimi plugin
+### I need to support another platform
 
-1. `plugin-kimi/FUTURE-PARITY-GUIDE.md` (porting process)
-2. `plugin/CLAUDE.md` → "Kimi CLI Plugin Maintenance" section (conventions, doc checklist)
-3. `plugin-kimi/CHANGELOG.md` (version history)
-
-### I want to port to another platform
-
-1. `plugin-kimi/FUTURE-PARITY-GUIDE.md` (porting patterns: JS→Python mapping)
-2. `plugin-kimi/.agents/skills/qual-shared/scripts/` (reference implementation)
-3. Use `plugin-kimi/` as your template
+1. `plugin/CLAUDE.md` → "Plugin Marketplace Structure" and "Other platforms"
+2. Keep one plugin folder; add a manifest, not a port
 
 ### I need to fix a bug
 
-1. Check if the bug exists in Claude version too (`plugin/`)
-2. Fix in the affected plugin(s)
-3. Run tests: `bun test` (Claude) or `python3 plugin-kimi/tests/test_integration.py` (Kimi)
+1. Fix it in `plugin/`
+2. Run tests: `bun run test` (or `node plugin/tests/run-tests.js`)
+3. Validate: `claude plugin validate .` and `claude plugin validate plugin`
 
 ---
 
@@ -108,11 +94,10 @@ Stage 3 (Synthesis):     Human synthesizes with AI dialogue
 
 | Component | Status |
 |-----------|--------|
-| **Claude Code Plugin** | 12 skills, maintained |
-| **Kimi CLI Plugin** | 12 skills, production-ready |
-| **Cowork Plugin** | 17 commands, maintained |
-| **Feature Parity** | 12/12 skills across Claude & Kimi |
-| **Tests** | All passing |
+| **Plugin** | 0.3.0: 17 commands (as skills), 12 skills, 4 agents, 6 hooks |
+| **Claude Code** | Full support, including hooks |
+| **Codex, Copilot CLI, Kimi Code** | Installable; see `plugin/CLAUDE.md` → "Other platforms" for what works |
+| **Tests** | `node plugin/tests/run-tests.js` |
 
 ---
 
@@ -120,27 +105,20 @@ Stage 3 (Synthesis):     Human synthesizes with AI dialogue
 
 | Document | Purpose |
 |----------|---------|
-| `plugin/CLAUDE.md` | Claude plugin instructions & Kimi maintenance guide |
+| `plugin/CLAUDE.md` | Maintenance guide and agent instructions |
 | `plugin/ARCHITECTURE.md` | Full architecture reference |
-| `plugin-kimi/README.md` | Kimi plugin user guide |
-| `plugin-kimi/AGENTS.md` | Agent documentation for Kimi |
-| `plugin-kimi/CHANGELOG.md` | Version history and build credits |
-| `plugin-kimi/FUTURE-PARITY-GUIDE.md` | Maintenance and porting process |
-| `plugin-kimi/MVP-SCOPE.md` | Scope, requirements, known limitations |
-| `plugin-cowork/README.md` | Cowork plugin guide |
+| `plugin/docs/HOOKS-PHILOSOPHY.md` | Why each hook exists and how it is wired |
+| `plugin/CHANGELOG.md` | Version history |
 
 ---
 
 ## Testing
 
 ```bash
-# Claude Code plugin
-bun test
-
-# Kimi CLI plugin (tests run standalone, no pytest required)
-python3 plugin-kimi/tests/test_integration.py
-python3 plugin-kimi/tests/test_end_to_end.py
-python3 plugin-kimi/tests/test_performance.py
+bun run test                     # all suites
+node plugin/tests/test-hooks.js  # hooks and the hook adapter
+claude plugin validate .         # marketplace
+claude plugin validate plugin    # plugin
 ```
 
 ---
@@ -160,9 +138,9 @@ When working on this project:
 
 ## Local Development Notes
 
-If a `workshop-notes/` directory exists locally, it contains additional development context (AI handoff guides, Kimi port artifacts, methodology notes). These are gitignored and not required for working on the project.
+If a `workshop-notes/` directory exists locally, it contains additional development context (AI handoff guides, methodology notes). These are gitignored and not required for working on the project.
 
 ---
 
 *Interpretive Orchestration: Epistemic Partnership System*
-*Built by Xule Lin and Kevin Corley (Imperial College London)*
+*Built by Xule Lin (SKEMA Business School) and Kevin Corley (Imperial College London)*

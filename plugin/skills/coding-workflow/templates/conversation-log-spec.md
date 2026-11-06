@@ -140,12 +140,11 @@ Each line in conversation-log.jsonl is a JSON object:
 {
   "timestamp": "2025-10-11T16:20:00Z",
   "from": "human_researcher",
-  "to": "sequential_thinking_mcp",
-  "message": "Invoked Sequential Thinking to work through synthesis challenge: How to integrate theoretical patterns from literature with empirical patterns from extreme cases when they seem incompatible.",
+  "to": "qualitative_ai_plugin",
+  "message": "Asked for step-by-step reasoning to work through synthesis challenge: How to integrate theoretical patterns from literature with empirical patterns from extreme cases when they seem incompatible.",
   "stage": "stage2_phase2_synthesis",
   "activity_type": "deep_reasoning",
   "metadata": {
-    "mcp_used": "mcp-sequentialthinking-tools",
     "thinking_steps": 12,
     "resolution": "Both patterns valid at different abstraction levels - create hierarchical integration"
   },
@@ -240,7 +239,7 @@ Agents automatically log when they:
 {"timestamp":"2025-10-11T10:30:00Z","from":"@theoretical-analyzer","to":"human_researcher","message":"Analyzed 9 articles. Extracted 14 theoretical patterns. Ready for your refinement feedback.","stage":"stage2_phase1_stream_a","activity_type":"pattern_extraction","human_review_required":true}
 {"timestamp":"2025-10-11T14:00:00Z","from":"human_researcher","to":"@theoretical-analyzer","message":"Consolidate patterns 3, 5, 7 - they describe same phenomenon at different abstraction levels. Emphasize {aspect} more explicitly.","stage":"stage2_phase1_stream_a","activity_type":"human_guidance"}
 {"timestamp":"2025-10-11T15:30:00Z","from":"@empirical-interpreter","to":"human_researcher","message":"Coded 20 extreme case documents. Identified 12 empirical patterns. Pattern E8 doesn't align with theoretical patterns - potential important gap.","stage":"stage2_phase1_stream_b","activity_type":"pattern_extraction","uncertainty_areas":["Gap between theoretical and empirical patterns"]}
-{"timestamp":"2025-10-11T16:45:00Z","from":"human_researcher","to":"sequential_thinking_mcp","message":"Need to think through synthesis challenge systematically","stage":"stage2_phase2_synthesis","activity_type":"deep_reasoning"}
+{"timestamp":"2025-10-11T16:45:00Z","from":"human_researcher","to":"qualitative_ai_plugin","message":"Need to think through synthesis challenge systematically","stage":"stage2_phase2_synthesis","activity_type":"deep_reasoning"}
 {"timestamp":"2025-10-11T17:30:00Z","from":"human_researcher","to":"@synthesis-composer","message":"Integration approach decided: Create hierarchical structure where empirical patterns elaborate theoretical patterns. Gap in Pattern E8 is theoretically significant - preserve it.","stage":"stage2_phase2_synthesis","activity_type":"human_guidance"}
 {"timestamp":"2025-10-11T18:00:00Z","from":"@dialogical-coder","to":"human_researcher","message":"Coded first document with synthesized framework. 18 quotes assigned, 6 uncertain. Learning your conceptual boundaries.","stage":"stage2_phase2_deductive_coding","activity_type":"coding","human_review_required":true}
 ```

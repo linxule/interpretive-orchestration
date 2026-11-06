@@ -2,7 +2,6 @@
 name: dialogical-coder
 description: "Four-stage reflexive coding agent for Stage 2. Use when: 'code this document', 'apply my framework', 'dialogical coding', 'visible reasoning'. Organizes evidence with human interpretive authority."
 model: inherit
-tools: mcp__mcp-sequentialthinking-tools__sequentialthinking
 ---
 
 # @dialogical-coder - Four-Stage Reflexive Coding Agent
@@ -576,7 +575,7 @@ significant self-care philosophy.
 **When to Use:** Stage 2 Phase 2 (large-scale deductive coding)
 **Prerequisites:** Stage 1 complete, data structure established
 **Model:** Claude Opus (extended thinking budget recommended)
-**Integration:** Sequential Thinking for complex analytical decisions
+**Integration:** Think deeply and step by step before complex analytical decisions
 
 **Invocation:**
 ```

@@ -146,7 +146,6 @@ function loadOrCreateInventory(projectPath) {
 function saveInventory(projectPath, inventory) {
   const inventoryPath = path.join(projectPath, 'stage1-foundation', 'data-inventory.json');
 
-  // Ensure directory exists
   const dir = path.dirname(inventoryPath);
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
@@ -267,7 +266,6 @@ function generateWorkflow(files, tier, projectPath, outputDir) {
   const inventory = loadOrCreateInventory(projectPath);
   const outputPath = path.join(projectPath, outputDir);
 
-  // Ensure output directory exists
   if (!fs.existsSync(outputPath)) {
     fs.mkdirSync(outputPath, { recursive: true });
   }
@@ -280,7 +278,6 @@ function generateWorkflow(files, tier, projectPath, outputDir) {
     steps: []
   };
 
-  // Group files by format for efficient processing
   const byFormat = {};
   for (const file of files) {
     if (!byFormat[file.format]) {
@@ -291,7 +288,6 @@ function generateWorkflow(files, tier, projectPath, outputDir) {
 
   let stepNum = 1;
 
-  // Generate steps for each format group
   for (const [format, formatFiles] of Object.entries(byFormat)) {
     const toolInfo = getToolInstruction(format, tier, formatFiles[0].path);
 
@@ -314,7 +310,6 @@ function generateWorkflow(files, tier, projectPath, outputDir) {
     });
   }
 
-  // Add inventory update step
   workflow.steps.push({
     step: stepNum++,
     action: 'update_inventory',
@@ -323,7 +318,6 @@ function generateWorkflow(files, tier, projectPath, outputDir) {
     instruction: 'After processing each file, add entry to data-inventory.json with conversion details.'
   });
 
-  // Add quality check step
   workflow.steps.push({
     step: stepNum++,
     action: 'quality_check',
@@ -378,7 +372,6 @@ function main() {
   }
 
   if (!inputDir) {
-    // Return guidance on using the script
     console.log(JSON.stringify({
       success: true,
       mode: 'guidance',
@@ -394,7 +387,6 @@ function main() {
     process.exit(0);
   }
 
-  // Scan input directory
   const scanResult = scanInputDirectory(inputDir, formatFilter);
 
   if (scanResult.error) {
@@ -416,7 +408,6 @@ function main() {
     process.exit(0);
   }
 
-  // List mode - just show files
   if (args.list) {
     console.log(JSON.stringify({
       success: true,
@@ -434,7 +425,6 @@ function main() {
     process.exit(0);
   }
 
-  // Generate workflow
   const tier = detectTier();
   const workflow = generateWorkflow(scanResult.files, tier, resolvedPath, outputDir);
 

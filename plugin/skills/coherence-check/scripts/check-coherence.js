@@ -60,7 +60,6 @@ function readRecentActivity(projectPath, count = 20) {
   const content = fs.readFileSync(logPath, 'utf8');
   const lines = content.split('\n').filter(line => line.trim());
 
-  // Get last N entries
   const recentLines = lines.slice(-count);
   const logs = [];
 
@@ -68,14 +67,12 @@ function readRecentActivity(projectPath, count = 20) {
     try {
       logs.push(JSON.parse(line));
     } catch (error) {
-      // Skip malformed lines
     }
   }
 
   return logs;
 }
 
-// Language patterns for different stances
 const LANGUAGE_PATTERNS = {
   constructivist: {
     preferred: [
@@ -119,7 +116,6 @@ const LANGUAGE_PATTERNS = {
   }
 };
 
-// AI relationship patterns
 const AI_RELATIONSHIP_PATTERNS = {
   epistemic_partner: {
     coherent: [
@@ -173,7 +169,6 @@ function analyzeLanguageCoherence(text, stance) {
 
   if (!text || !stance) return results;
 
-  // Skip technical contexts
   if (isTechnicalContext(text)) {
     results.note = 'Technical context detected - language check skipped';
     return results;
@@ -183,13 +178,11 @@ function analyzeLanguageCoherence(text, stance) {
   const ontology = stance.ontology || 'interpretivist';
   const vocabularyMode = stance.vocabulary_mode || 'constructivist';
 
-  // Determine which pattern set to use
   let patterns = LANGUAGE_PATTERNS[vocabularyMode] || LANGUAGE_PATTERNS[ontology];
   if (!patterns) {
-    patterns = LANGUAGE_PATTERNS.constructivist; // Default
+    patterns = LANGUAGE_PATTERNS.constructivist;
   }
 
-  // Check for preferred language
   for (const word of patterns.preferred) {
     if (lowerText.includes(word.toLowerCase())) {
       results.coherent.push({
@@ -199,10 +192,8 @@ function analyzeLanguageCoherence(text, stance) {
     }
   }
 
-  // Check for language to avoid
   for (const word of patterns.avoid) {
     if (lowerText.includes(word.toLowerCase())) {
-      // Find alternative
       const alternative = patterns.preferred[0] || 'consider rephrasing';
       results.tensions.push({
         word: word,
@@ -212,7 +203,6 @@ function analyzeLanguageCoherence(text, stance) {
     }
   }
 
-  // Generate overall suggestions
   if (results.tensions.length > 0) {
     results.suggestions.push(
       `Your ${vocabularyMode} stance suggests avoiding objectivist language`,
@@ -237,7 +227,6 @@ function analyzeAIRelationship(activity, declaredRelationship) {
 
   const activityText = JSON.stringify(activity).toLowerCase();
 
-  // Check for coherent patterns
   for (const pattern of patterns.coherent) {
     if (activityText.includes(pattern.toLowerCase())) {
       results.coherent.push({
@@ -247,7 +236,6 @@ function analyzeAIRelationship(activity, declaredRelationship) {
     }
   }
 
-  // Check for tension patterns
   for (const pattern of patterns.tension) {
     if (activityText.includes(pattern.toLowerCase())) {
       results.tensions.push({
@@ -276,7 +264,6 @@ function generateFullReport(config, recentActivity, textToAnalyze) {
     reflexive_prompts: []
   };
 
-  // Analyze provided text
   if (textToAnalyze) {
     const languageResults = analyzeLanguageCoherence(textToAnalyze, config.philosophical_stance);
 
@@ -296,7 +283,6 @@ function generateFullReport(config, recentActivity, textToAnalyze) {
     }
   }
 
-  // Analyze recent activity
   if (recentActivity && recentActivity.length > 0) {
     const combinedText = recentActivity.map(a => a.message || a.content || '').join(' ');
     const activityLanguage = analyzeLanguageCoherence(combinedText, config.philosophical_stance);
@@ -309,7 +295,6 @@ function generateFullReport(config, recentActivity, textToAnalyze) {
       });
     }
 
-    // Analyze AI relationship
     const aiResults = analyzeAIRelationship(
       recentActivity,
       config.philosophical_stance?.ai_relationship
@@ -326,7 +311,6 @@ function generateFullReport(config, recentActivity, textToAnalyze) {
     })));
   }
 
-  // Check method-stance alignment
   const tradition = config.philosophical_stance?.tradition;
   const stage1Complete = config.sandwich_status?.stage1_complete;
 
@@ -339,7 +323,6 @@ function generateFullReport(config, recentActivity, textToAnalyze) {
     }
   }
 
-  // Generate recommendations
   if (report.tensions_detected.length > 0) {
     report.recommendations.push(
       'Review your philosophical stance declaration in config.json',
@@ -353,7 +336,6 @@ function generateFullReport(config, recentActivity, textToAnalyze) {
     );
   }
 
-  // Add reflexive prompts
   report.reflexive_prompts = [
     'How has your understanding of your stance evolved since starting?',
     'Are there aspects of your approach that feel inconsistent?',
@@ -361,7 +343,6 @@ function generateFullReport(config, recentActivity, textToAnalyze) {
     'How is your position as researcher shaping your interpretations?'
   ];
 
-  // Summary
   report.summary = {
     coherent_count: report.coherent_aspects.length,
     tension_count: report.tensions_detected.length,
@@ -408,16 +389,13 @@ function main() {
     process.exit(1);
   }
 
-  // Get text to analyze
   const textToAnalyze = args.text || null;
 
-  // Get recent activity if requested
   let recentActivity = null;
   if (args['recent-activity'] || args['full-report']) {
     recentActivity = readRecentActivity(resolvedPath);
   }
 
-  // Generate report
   const report = generateFullReport(config, recentActivity, textToAnalyze);
 
   console.log(JSON.stringify({

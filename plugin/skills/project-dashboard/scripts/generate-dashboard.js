@@ -54,7 +54,6 @@ function countFiles(dirPath, extensions = []) {
 }
 
 function calculateAllProgress(config, projectPath) {
-  // Stage 1
   const stage1Details = config.sandwich_status?.stage1_details || {};
   let docs = stage1Details.documents_manually_coded || 0;
   let memos = stage1Details.memos_written || 0;
@@ -68,7 +67,6 @@ function calculateAllProgress(config, projectPath) {
 
   const stage1Progress = Math.round(Math.min(docs / 10, 1) * 70 + Math.min(memos / 3, 1) * 30);
 
-  // Stage 2
   const stage2Progress = config.sandwich_status?.stage2_progress || {};
   const phaseStatus = {
     phase1: stage2Progress.phase1_parallel_streams || 'not_started',
@@ -83,7 +81,6 @@ function calculateAllProgress(config, projectPath) {
     (statusValue[phaseStatus.phase3] || 0) * 34
   );
 
-  // Stage 3
   const stage3Progress = config.sandwich_status?.stage3_progress || {};
   const s3Components = {
     evidence: stage3Progress.evidence_organized || 'not_started',
@@ -163,7 +160,6 @@ Tradition: ${tradition}
 Overall Progress: ${generateProgressBar(progress.overall, 20)} ${progress.overall}%
 `;
 
-  // Add next steps
   output += '\nNext Steps:\n';
   if (!progress.stage1.complete) {
     if (progress.stage1.documents < 10) {
@@ -288,7 +284,6 @@ function generateDashboard(projectPath, format) {
   }
 }
 
-// Main execution
 const args = parseArgs();
 
 if (!args['project-path']) {

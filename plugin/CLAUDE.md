@@ -2,80 +2,74 @@
 
 This file provides guidance for Claude when working with projects that use the Interpretive Orchestration plugin.
 
-**Note:** This documentation applies to the **Claude Code CLI plugin** (`plugin/`). For the Kimi CLI version, see `plugin-kimi/` which has 100% feature parity with Python-based implementations.
+**Note:** This file is the maintainer and agent guide for the plugin in `plugin/`. Claude Code does not load a plugin's CLAUDE.md into the researcher's session, so behavior the researcher needs must live in skills, agents or hooks. The same plugin folder also installs in Codex, Copilot CLI and Kimi Code; see [Other platforms](#other-platforms).
 
 ---
 
 ## Plugin Marketplace Structure
 
-This repo is a marketplace containing one plugin. Structure requirements:
+This repo is a marketplace containing one plugin, with a manifest for each platform:
 
 ```
 repo-root/
-├── .claude-plugin/
-│   └── marketplace.json    # ONLY marketplace.json here
+├── .claude-plugin/marketplace.json   # Claude Code (and Copilot CLI) marketplace
+├── .agents/plugins/marketplace.json  # Codex marketplace
+├── kimi.plugin.json                  # Kimi Code manifest (Kimi reads the repo root only)
+├── CITATION.cff
 └── plugin/
-    ├── .claude-plugin/
-    │   └── plugin.json     # ONLY plugin.json here
-    ├── commands/
-    ├── skills/
-    └── agents/
+    ├── .claude-plugin/plugin.json    # Claude Code manifest
+    ├── .codex-plugin/plugin.json     # Codex manifest
+    ├── .mcp.json                     # bundled MCP servers
+    ├── skills/                       # qual-* commands and auto-loaded skills
+    ├── agents/
+    └── hooks/                        # hooks.json + run-hook.js adapter
 ```
 
-**Critical:** marketplace.json and plugin.json must NOT be in the same folder.
+- marketplace.json and plugin.json must NOT be in the same folder
+- `marketplace.json` source field: `"./plugin"`
+- every manifest carries the same version; `tests/test-schemas.js` checks it, along with CITATION.cff
+- validate with `claude plugin validate .` (marketplace) and `claude plugin validate plugin` (plugin)
 
-- `marketplace.json` source field: `"./plugin"` (points to plugin subdirectory)
-- `plugin.json`: Minimal format only (name, version, description, author)
-- Validate: `claude plugin validate .` from repo root
+### Commands are skills
 
-## Claude Desktop vs Claude Code
+Since 0.3.0 every `/qual-*` command is a skill at `skills/qual-*/SKILL.md`. Claude Code invokes a skill by its bare name (`/qual-init`), while commands in nested folders would be namespaced (`/interpretive-orchestration:project:init`). Each SKILL.md needs `name` (matching the folder) and `description` in its frontmatter.
 
-- **Claude Code CLI** plugins: `~/.claude/plugins/`
-- **Claude Desktop** plugins: `~/Library/Application Support/Claude/local-agent-mode-sessions/.../cowork_plugins/marketplaces/`
-- stdio MCP servers (npx commands) work in Claude Code but NOT in Claude Desktop's sandboxed environment
-- Both use same marketplace.json/plugin.json format, but Desktop requires strict structure
+- refer to plugin scripts as `node "${CLAUDE_PLUGIN_ROOT}/skills/..."`, never `node skills/...`: commands run from the researcher's project, not the plugin folder
+- a skill's own Stop hooks go in its frontmatter (`hooks:`), as in `qual-synthesize`. They run at the end of every turn once the skill has started, because its work can span several turns, so the adapter runs them quietly there: they report only news (see below)
 
-### Reference Plugins for Structure Examples
+### Hooks
 
-When making structural changes, consult these installed exemplar plugins:
+`hooks/hooks.json` sends every event through `hooks/run-hook.js`. The methodology scripts (`check-stage1-complete.js` and the rest) are unchanged; the adapter:
 
-```
-~/.claude/plugins/marketplaces/
-├── claude-plugins-official/plugins/   # Official Anthropic plugins
-│   ├── plugin-dev/                    # Plugin development reference
-│   ├── feature-dev/                   # Feature development reference
-│   └── commit-commands/               # Simple command examples
-└── knowledge-work-plugins/            # Domain-specific plugins
-    ├── productivity/
-    └── bio-research/
-```
+- matches the `Agent`/`Task` and `Skill` tools and typed commands (`UserPromptExpansion`)
+- runs a script only for the agents and skills listed for it in `TRIGGERS`
+- runs the script from the researcher's project folder
+- turns its output into Claude Code's hook JSON: a failed Stage 1 check becomes an `ask` (the researcher confirms or stops), other notices go to the researcher (`systemMessage`) and to Claude (`additionalContext`)
+- defers after-agent hooks for background agents to `SubagentStop`
+- at `Stop`, sets `INTERPRETIVE_ORCHESTRATION_QUIET=1` for the phase transition (it then speaks only when rules change) and for every audit-trail run after the first in a session (it then rewrites `outputs/audit-trail.md` without a notice or log entry)
 
-**Key structural finding:** Official plugins use **flat command structure** - all `.md` files directly in `commands/` folder, no subdirectories. Our nested structure (`commands/project/`, `commands/stage1/`) may not work in Cowork.
-
-### Commands Structure: CLI vs Cowork
-
-- **Claude Code CLI:** Nested commands work (`commands/project/init.md`)
-- **Claude Desktop/Cowork:** Requires flat structure (`commands/qual-init.md`)
-- plugin-cowork uses flat `qual-*` prefix; plugin/ keeps nested structure
+If you add a hook script, add it to `TRIGGERS` and `hooks.json`; the schema tests check both. `SessionEnd` output is not shown in Claude Code, so `session-reflect.js` only logs.
 
 ### MCP Compatibility Notes
 
 - MCPs using outdated SDK (< 1.1.0) may fail to connect
 - Check with `claude mcp list` to verify connection status
 - Markdownify removed v0.2.1 (SDK 1.0.1 incompatible) - use MinerU or manual conversion
+- Sequential Thinking removed v0.3.0 - providers increasingly block such tools, and a prompt ("think deeply and step by step before responding") gives the same result
+- Lotus Wisdom runs as `npx -y lotus-wisdom-mcp@latest` so it updates itself and keeps data local; keep `.mcp.json` and the `mcpServers` in `kimi.plugin.json` in step
 
 ### Validation Workflow
 
 ```bash
-# Run schema tests
-cd plugin && node tests/test-schemas.js
+# Run every test suite (from plugin/)
+node tests/run-tests.js
 
-# Validate both plugin versions
-claude plugin validate plugin/
-claude plugin validate plugin-cowork/
+# Validate the marketplace and the plugin (from the repo root)
+claude plugin validate .
+claude plugin validate plugin
 
 # Check for stale references after removal
-grep -ri "removed_term" plugin/ plugin-cowork/ --include="*.md" --include="*.js" --include="*.json"
+grep -ri "removed_term" plugin/ --include="*.md" --include="*.js" --include="*.json"
 ```
 
 ---
@@ -113,7 +107,7 @@ When working with this plugin, you are a **co-apprentice** in the craft of quali
 - Researcher codes 10-15 documents manually
 - Writes analytical memos
 - Develops initial theoretical sensitivity
-- **Your role:** Support with Sequential Thinking for planning, but NO coding assistance
+- **Your role:** Support planning by thinking deeply and step by step, but NO coding assistance
 - **Available:** @stage1-listener for thinking partnership (see below)
 
 ### Stage 2: Side-by-Side Collaboration (Partnership)
@@ -161,11 +155,10 @@ When working with this plugin, you are a **co-apprentice** in the craft of quali
 
 ---
 
-## Using the Bundled MCP Servers
+## Using the Bundled MCP Server
 
 | MCP | When to Invoke | Trigger Keywords |
 |-----|----------------|------------------|
-| **Sequential Thinking** | Step-by-step analysis, complex decisions | "plan", "work through", "break down" |
 | **Lotus Wisdom** | Contradictory patterns, integration needed | "tension", "both/and", "paradox" |
 | **MinerU** (optional) | Complex PDFs with tables/figures | "high-accuracy", "tables", "figures" |
 
@@ -204,12 +197,12 @@ The researcher must do the interpretive work. This agent helps them HEAR their o
 
 These hooks may interrupt or modify workflow:
 
-1. **PreStage2** - Blocks AI coding without Stage 1 completion
-2. **PostFiveDocuments** - Triggers interpretive pause
-3. **EpistemicCoherence** - Checks philosophical consistency
-4. **SessionEnd** - Prompts reflexivity
-5. **PostSynthesis** - Generates audit trail
-6. **PostPhaseTransition** - Updates methodological rules when phases change
+1. **Stage 1 check** - Before @dialogical-coder or a Stage 2 command runs without Stage 1 complete, the researcher is asked to confirm. If they proceed, ask why and respect the answer
+2. **Interpretive pause** - After @dialogical-coder, every 5 documents
+3. **Coherence check** - After @dialogical-coder, checks language against the declared stance
+4. **Session reflection** - At session end, logs a reflexivity prompt
+5. **Audit trail** - After /qual-synthesize
+6. **Phase transition** - Updates methodological rules when stages or phases change
 
 Work WITH the hooks, not around them. They enforce good methodology.
 
@@ -777,7 +770,7 @@ The plugin uses auto-discoverable skills for complex workflows. Skills are loade
 |-------|----------------|---------|
 | `project-setup` | "initialize", "new project", "getting started" | Socratic onboarding + project creation |
 | `gioia-methodology` | "data structure", "themes", "concepts", "Gioia" | Data structure building + validation |
-| `deep-reasoning` | "think through", "plan", complex decisions | Step-by-step reasoning (Sequential Thinking) |
+| `deep-reasoning` | "think through", "plan", complex decisions | Thinking deeply and step by step |
 | `paradox-navigation` | "tension", "contradiction", "both/and" | Integration of opposites (Lotus Wisdom) |
 | `coherence-check` | "assumptions", "coherent", consistency questions | Philosophical alignment check |
 
@@ -839,20 +832,20 @@ claude plugin validate .   # Validate marketplace.json and plugin.json
 
 ### marketplace.json Schema Requirements
 
-Must follow official Anthropic schema or Claude Desktop will reject with "failed to add marketplace":
+Must follow the official Anthropic schema, or adding the marketplace fails with "failed to add marketplace":
 
 | Field | Correct | Wrong |
 |-------|---------|-------|
 | `$schema` | `"https://anthropic.com/claude-code/marketplace.schema.json"` | Missing |
 | `owner.name` | `"Name (Affiliation)"` string | `names: []` array |
 | `author.name` | `"Name"` string | `names: []` array |
-| `source` | `{"source": "url", "url": "https://github.com/owner/repo.git"}` | `"owner/repo"` shorthand |
+| `source` | `"./plugin"` (relative to the marketplace root) | `"owner/repo"` shorthand |
 
 **Non-standard fields break validation silently** - remove: `features`, `mvep`, `requirements`, `getting_started`, `marketplace_philosophy`
 
 ### Testing Marketplace Install
 
-After pushing changes, test in Claude Desktop: Add marketplace → `linxule/interpretive-orchestration`
+After pushing changes, test in Claude Code: `/plugin marketplace add linxule/interpretive-orchestration`, then `/plugin install interpretive-orchestration@interpretive-orchestration`
 
 ---
 
@@ -864,61 +857,41 @@ This plugin aims for transformation, not automation. Every interaction should de
 
 ---
 
-## Kimi CLI Plugin Maintenance
+## Other platforms
 
-The repo now contains TWO complete plugins with 100% feature parity:
-- `plugin/` - Claude Code CLI plugin (JavaScript, 12 skills)
-- `plugin-kimi/` - Kimi CLI plugin (Python, 12 skills)
+One plugin folder serves every platform. Each has its own manifest; none has a port. Verified live in November 2026 on codex-cli 0.165.0, Copilot CLI 1.0.106 and Kimi Code.
 
-When updating plugin features:
-1. Make changes in `plugin/` first (Claude Code version)
-2. Use `plugin-kimi/FUTURE-PARITY-GUIDE.md` for porting process
-3. Port JavaScript scripts to Python using qual-shared infrastructure
-4. Update both READMEs and documentation files
+| | Codex | Copilot CLI | Kimi Code |
+|---|---|---|---|
+| Manifest | `plugin/.codex-plugin/plugin.json`, marketplace `.agents/plugins/marketplace.json` | reads `.claude-plugin/` | `kimi.plugin.json` at the repo root (GitHub installs read only the root) |
+| Invoke a skill | `$interpretive-orchestration:qual-init` | `/interpretive-orchestration:qual-init` | `/skill:interpretive-orchestration:qual-init` |
+| Agents | not supported for plugins | plain `.md` agents load | load; `model:` is ignored |
+| Hooks file | `hooks/codex-hooks.json` (set in the Codex manifest) | `hooks/hooks.json` | `hooks` array in `kimi.plugin.json`; commands run from the repo root |
+| `${CLAUDE_PLUGIN_ROOT}` in skill text | not filled in | not filled in | not filled in (`skillInstructions` explains it) |
+| Hook `ask` decision | unsupported | works; becomes deny in `-p` mode | treated as allow |
+| Output the researcher sees | not verified | none | none |
+| Hook trust | asked at TUI start or in `/hooks`, again after every update; `codex exec` skips untrusted hooks silently | not needed | not needed |
 
-**Porting patterns:**
-- JavaScript → Python: Use `subprocess.run()` for calling sibling scripts (matches execSync pattern)
-- Mustache templates → Jinja2 templates
-- Node.js fs → Python pathlib + qual-shared StateManager
-- Add `uv run --script` headers with inline dependencies for auto-installation
+How `run-hook.js` handles the differences:
 
-**Kimi skill conventions (check against established skills before porting):**
-- Import StateManager from qual-shared with try/except fallback (`StateManager = None`)
-- StateManager only exposes flat ProjectState fields — scripts needing nested config (e.g. `philosophical_stance`) must read raw config.json directly
-- Use `pathlib.Path` not `os.path`; add type hints and Google-style docstrings
-- Exit pattern: `main() -> int` with `sys.exit(main())` at module level
-- Errors to stderr: `print(json.dumps(...), file=sys.stderr)`
-- SKILL.md frontmatter (name + description) is the newer convention; some older skills lack it
-- Standard footer: `*Part of Interpretive Orchestration for Kimi CLI*`
+- Copilot (`COPILOT_PLUGIN_ROOT` set): reads `tool_input.agent_type` and the lowercase `skill` tool, handles typed commands through `userPromptTransformed` (Claude Code warns that this event is unknown and ignores it), and puts `additionalContext` at the top level, telling the model to pass notices on
+- Codex: no Skill tool or `UserPromptExpansion`, so the Stage 1 check runs on `UserPromptSubmit` and reads `$skill` mentions in the prompt
+- Kimi (`KIMI_PLUGIN_ROOT` set): the Stage 1 check denies once with a note asking the model to check with the researcher, then lets the confirmed retry through (one-use marker per session and target, which lapses after 30 minutes); the audit trail and phase transition run at every `Stop` after the AI loaded their skill through the Skill tool, because Kimi ignores skill frontmatter hooks. A typed `/skill:` command fires no hook, so then they do not run. Kimi gets no background-agent deferral, because the manifest registers no `SubagentStop`
 
-**When adding a new Kimi skill, update ALL of these docs:**
-- `plugin-kimi/README.md` — Skills Reference table
-- `plugin-kimi/AGENTS.md` — Quick Reference table
-- `plugin-kimi/FUTURE-PARITY-GUIDE.md` — Component Port Matrix
-- `plugin-kimi/CHANGELOG.md` — Version history and skill inventory
-- Root `AGENTS.md` — Skill count in directory tree
-- `plugin/CLAUDE.md` — Cross-platform reference line
+The 17 skills that run scripts start with a one-line note telling the model how to resolve `${CLAUDE_PLUGIN_ROOT}` when a platform leaves it unfilled. Keep it when you add a skill that runs a script.
 
-**Testing:**
-- Tests run standalone: `python3 test_*.py` (no pytest required)
-- Both plugins have separate test suites in their `tests/` directories
-- Kimi tests: integration (8), end-to-end (2), performance (benchmarks), skill-specific (21)
-- Root package.json test scripts point to `plugin/tests/` (not `tests/`)
+When you change hooks, update `hooks.json`, `codex-hooks.json` and the `hooks` array in `kimi.plugin.json`; `tests/test-schemas.js` checks all three. When you change bundled MCP servers, update `.mcp.json` and `kimi.plugin.json`.
 
-**Dependencies for Kimi plugin:**
-- pyyaml>=6.0 (config loading)
-- jinja2>=3.1.0 (templates)
-- rich>=13.0.0 (visualization)
+### Docs organization
 
-**Docs organization:**
 - Root `AGENTS.md` is the AI entry point — must only reference tracked (public) files, never gitignored paths
-- `workshop-notes/` (root and plugin-kimi) is gitignored — local-only dev context, handoff guides, build artifacts
+- `workshop-notes/` is gitignored — local-only dev context and handoff guides
 - `plugin/docs/local/` is gitignored — methods paper drafts, reflexive journal
 - Avoid celebratory/milestone docs in tracked files — consolidate into CHANGELOG.md instead
-- `plugin-kimi/MVP-SCOPE.md` is the scope/requirements doc; `CHANGELOG.md` is for version history and credits
 - When removing tracked docs, grep for references across all `*.md` files before deleting
+- The Python port for the archived kimi-cli (`plugin-kimi/`) was removed in 0.3.0; it remains in the `v0.2.5` tag
 
 ---
 
 *Interpretive Orchestration: Epistemic Partnership System*
-*Built by Xule Lin and Kevin Corley (Imperial College London), with Claude Opus 4.5 (Anthropic), reviewed by Codex (OpenAI) and Gemini (Google)*
+*Built by Xule Lin (SKEMA Business School) and Kevin Corley (Imperial College London), with Claude Opus 4.5 (Anthropic), reviewed by Codex (OpenAI) and Gemini (Google)*

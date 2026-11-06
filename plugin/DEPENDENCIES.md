@@ -6,7 +6,6 @@ This document describes the Model Context Protocol (MCP) servers used by Interpr
 
 | MCP Server | Type | API Key Required | Primary Use |
 |------------|------|------------------|-------------|
-| Sequential Thinking | Bundled | No | Deep reasoning, step-by-step analysis |
 | Lotus Wisdom | Bundled | No | Paradox navigation, integration |
 | MinerU | Optional | Yes (MINERU_API_KEY) | High-accuracy PDF parsing |
 | Jina AI | Optional | Yes (JINA_API_KEY) | Web content extraction |
@@ -16,35 +15,14 @@ This document describes the Model Context Protocol (MCP) servers used by Interpr
 
 ---
 
-## Bundled MCPs (No API Keys Required)
+## Bundled MCP (no API key required)
 
-These MCPs start automatically with the plugin and work out of the box.
-
-### Sequential Thinking
-
-**Package:** `@modelcontextprotocol/server-sequential-thinking`
-
-**Purpose:** Dynamic, reflective problem-solving through structured thought sequences.
-
-**Capabilities:**
-- Step-by-step thinking for complex problems
-- Thought sequences that can branch and revise
-- Hypothesis generation and verification
-- Explicit reasoning chains
-
-**When to Use:**
-- Planning analytical approaches
-- Working through theoretical tensions
-- Dimensional analysis for patterns
-- Building final frameworks in Stage 3
-
-**Invoked by:** `deep-reasoning` skill, `/qual-think-through` command
-
----
+This MCP starts automatically with the plugin and works out of the box.
 
 ### Lotus Wisdom
 
-**Package:** `lotus-wisdom-mcp`
+**Project:** [github.com/linxule/lotus-wisdom-mcp](https://github.com/linxule/lotus-wisdom-mcp)
+**Package:** `lotus-wisdom-mcp`, started as `npx -y lotus-wisdom-mcp@latest`
 
 **Purpose:** Multi-faceted problem-solving using contemplative reasoning.
 
@@ -61,6 +39,20 @@ These MCPs start automatically with the plugin and work out of the box.
 - Moving from tension to integration
 
 **Invoked by:** `paradox-navigation` skill, `/qual-wisdom-check` command
+
+**Why it runs locally:** the server runs on your computer, so your research material stays there. The `@latest` tag means it updates itself each time it starts. It needs Node.js 18 or later.
+
+**Hosted alternative:** if you cannot install Node.js, you can use the hosted server at `https://lotus-wisdom-mcp.linxule.workers.dev/mcp`. It needs no installation, but it records usage analytics, and what you send it leaves your computer. To add it to Claude Code, run:
+
+```bash
+claude mcp add --transport http lotus-wisdom-hosted https://lotus-wisdom-mcp.linxule.workers.dev/mcp
+```
+
+---
+
+### Removed in 0.3.0: Sequential Thinking
+
+The plugin no longer bundles the Sequential Thinking MCP server. Providers increasingly block tools of this kind, and a prompt gives the same result. The `deep-reasoning` skill and `/qual-think-through` now ask the model to think deeply and step by step before responding.
 
 ---
 
@@ -170,7 +162,7 @@ claude mcp add mineru-mcp -e MINERU_API_KEY=your-key -- npx mineru-mcp
 - Alternative perspectives on ambiguous coding
 - Final theory validation
 
-**Invoked by:** `/qual-get-perspectives` command
+**Invoked by:** `/qual-reflect` (optional, for multi-model perspectives)
 
 ---
 
@@ -205,7 +197,7 @@ This shows which skills require which MCPs:
 |-------|---------------|---------------|----------|
 | `project-setup` | None | None | N/A |
 | `gioia-methodology` | None | None | N/A |
-| `deep-reasoning` | Sequential Thinking (bundled) | None | N/A |
+| `deep-reasoning` | None | None | N/A |
 | `paradox-navigation` | Lotus Wisdom (bundled) | None | N/A |
 | `coherence-check` | None | None | N/A |
 | `interview-ingest` | None | MinerU | Manual conversion guidance |
@@ -285,7 +277,6 @@ else tier = 3;
 ## Cost Considerations
 
 ### Free (Bundled)
-- Sequential Thinking
 - Lotus Wisdom
 
 ### Pay-as-you-go
@@ -297,7 +288,7 @@ else tier = 3;
 
 ### Recommendations
 
-1. **Start with bundled MCPs** - They cover most needs
+1. **Start with the bundled MCP** - It covers most needs
 2. **Add MinerU** if you have complex PDF documents with tables
 3. **Add Exa + Jina** if you need automated literature search
 4. **Add Zen** if you want multi-model validation
@@ -318,7 +309,7 @@ else tier = 3;
 3. Fall back to manual conversion (see tier guidance above)
 
 ### No MCPs Available
-The plugin works without any optional MCPs. Bundled MCPs start automatically.
+The plugin works without any optional MCPs. The bundled MCP starts automatically.
 
 ---
 
@@ -347,11 +338,8 @@ Choose a directory for your MCP servers (examples):
 export MCP_DIR="$HOME/mcp-servers"  # Customize this path
 mkdir -p "$MCP_DIR" && cd "$MCP_DIR"
 
-# Clone and build Sequential Thinking (official Anthropic)
-# Note: Use npx for this one - it's lightweight
-
 # Clone and build Lotus Wisdom
-git clone https://github.com/XiYuan68/lotus-wisdom-mcp.git
+git clone https://github.com/linxule/lotus-wisdom-mcp.git
 cd lotus-wisdom-mcp && bun install && bun run build && cd ..
 ```
 
@@ -364,22 +352,18 @@ Edit `~/.claude.json` (global) or project `.mcp.json`.
 ```json
 {
   "mcpServers": {
-    "mcp-sequentialthinking-tools": {
-      "command": "bunx",
-      "args": ["@modelcontextprotocol/server-sequential-thinking"]
-    },
     "lotus-wisdom": {
-      "command": "bun",
-      "args": ["<MCP_DIR>/lotus-wisdom-mcp/dist/index.js"]
+      "command": "node",
+      "args": ["<MCP_DIR>/lotus-wisdom-mcp/cli.js"]
     }
   }
 }
 ```
 
 **Example paths by platform:**
-- macOS: `/Users/jane/mcp-servers/lotus-wisdom-mcp/dist/index.js`
-- Linux: `/home/jane/mcp-servers/lotus-wisdom-mcp/dist/index.js`
-- Windows: `C:\\Users\\jane\\mcp-servers\\lotus-wisdom-mcp\\dist\\index.js`
+- macOS: `/Users/jane/mcp-servers/lotus-wisdom-mcp/cli.js`
+- Linux: `/home/jane/mcp-servers/lotus-wisdom-mcp/cli.js`
+- Windows: `C:\\Users\\jane\\mcp-servers\\lotus-wisdom-mcp\\cli.js`
 
 ### Local vs Remote Comparison
 

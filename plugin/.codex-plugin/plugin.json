@@ -1,0 +1,40 @@
+{
+  "name": "interpretive-orchestration",
+  "version": "0.3.0",
+  "description": "Atelier of Co-Apprenticeship for interpretive qualitative research. Human and AI learn together as apprentices to the craft tradition (rigor, reflexivity, theoretical sensitivity).",
+  "author": {
+    "name": "Xule Lin (SKEMA Business School) and Kevin Corley (Imperial College London)"
+  },
+  "homepage": "https://github.com/linxule/interpretive-orchestration#readme",
+  "repository": "https://github.com/linxule/interpretive-orchestration",
+  "license": "MIT",
+  "keywords": [
+    "qualitative-research",
+    "grounded-theory",
+    "gioia-method",
+    "interpretive-inquiry",
+    "reflexive-analysis",
+    "human-ai-collaboration"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "hooks": "./hooks/codex-hooks.json",
+  "interface": {
+    "displayName": "Interpretive Orchestration",
+    "shortDescription": "Human-AI partnership for interpretive qualitative research",
+    "longDescription": "Skills for the sandwich methodology: the researcher codes the first 10-15 documents by hand (Stage 1), works with AI through visible four-stage reasoning (Stage 2), then builds theory in dialogue with the craft tradition (Stage 3). Includes Socratic project setup, Gioia data structures, methodological rules, saturation tracking and audit trails. Needs Node.js 18 or later.",
+    "developerName": "Xule Lin and Kevin Corley",
+    "category": "Research",
+    "capabilities": [
+      "Local Shell",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/linxule/interpretive-orchestration",
+    "defaultPrompt": [
+      "Use $interpretive-orchestration:qual-init to start a new qualitative research project.",
+      "Use $interpretive-orchestration:qual-status to see where I am in the sandwich methodology.",
+      "Use $interpretive-orchestration:qual-memo to help me write an analytical memo."
+    ]
+  }
+}

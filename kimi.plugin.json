@@ -1,0 +1,86 @@
+{
+  "name": "interpretive-orchestration",
+  "version": "0.3.0",
+  "description": "Atelier of Co-Apprenticeship for interpretive qualitative research. Human and AI learn together as apprentices to the craft tradition (rigor, reflexivity, theoretical sensitivity).",
+  "keywords": [
+    "qualitative-research",
+    "grounded-theory",
+    "gioia-method",
+    "interpretive-inquiry",
+    "reflexive-analysis"
+  ],
+  "author": "Xule Lin (SKEMA Business School) and Kevin Corley (Imperial College London)",
+  "homepage": "https://github.com/linxule/interpretive-orchestration#readme",
+  "license": "MIT",
+  "skills": "./plugin/skills/",
+  "agents": "./plugin/agents/",
+  "mcpServers": {
+    "lotus-wisdom": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "lotus-wisdom-mcp@latest"
+      ]
+    }
+  },
+  "interface": {
+    "displayName": "Interpretive Orchestration",
+    "shortDescription": "Human-AI partnership for interpretive qualitative research",
+    "longDescription": "Skills and agents for the sandwich methodology: the researcher codes the first 10-15 documents by hand (Stage 1), works with AI through visible four-stage reasoning (Stage 2), then builds theory in dialogue with the craft tradition (Stage 3). Needs Node.js 18 or later.",
+    "developerName": "Xule Lin and Kevin Corley",
+    "websiteURL": "https://github.com/linxule/interpretive-orchestration"
+  },
+  "skillInstructions": "In these skills, ${CLAUDE_PLUGIN_ROOT} means this plugin's plugin/ folder, two levels above the skill's own folder. Commands written as /qual-status are typed in Kimi Code as /skill:interpretive-orchestration:qual-status. Before you start qual-parallel-streams, qual-synthesize, qual-code-deductive or qual-characterize-patterns, check .interpretive-orchestration/config.json in the researcher's project. If sandwich_status.stage1_complete is not true and the researcher has not already confirmed in this conversation, tell them what Stage 1 still needs, explain why the manual foundation matters, and ask whether they want to proceed anyway, and why. Continue only if they confirm.",
+  "hooks": [
+    {
+      "event": "UserPromptSubmit",
+      "command": "node plugin/hooks/run-hook.js session-stance.js",
+      "timeout": 10
+    },
+    {
+      "event": "PreToolUse",
+      "matcher": "^(Agent|AgentSwarm|Skill)$",
+      "command": "node plugin/hooks/run-hook.js check-stage1-complete.js",
+      "timeout": 10
+    },
+    {
+      "event": "PostToolUse",
+      "matcher": "^(Agent|AgentSwarm)$",
+      "command": "node plugin/hooks/run-hook.js interpretive-pause.js",
+      "timeout": 10
+    },
+    {
+      "event": "PostToolUse",
+      "matcher": "^(Agent|AgentSwarm)$",
+      "command": "node plugin/hooks/run-hook.js check-coherence.js",
+      "timeout": 10
+    },
+    {
+      "event": "PostToolUse",
+      "matcher": "^(Agent|AgentSwarm|Skill)$",
+      "command": "node plugin/hooks/run-hook.js post-phase-transition.js",
+      "timeout": 10
+    },
+    {
+      "event": "PostToolUse",
+      "matcher": "^Skill$",
+      "command": "node plugin/hooks/run-hook.js generate-audit-trail.js",
+      "timeout": 10
+    },
+    {
+      "event": "Stop",
+      "command": "node plugin/hooks/run-hook.js generate-audit-trail.js",
+      "timeout": 30
+    },
+    {
+      "event": "Stop",
+      "command": "node plugin/hooks/run-hook.js post-phase-transition.js",
+      "timeout": 30
+    },
+    {
+      "event": "SessionEnd",
+      "command": "node plugin/hooks/run-hook.js session-reflect.js",
+      "timeout": 15
+    }
+  ]
+}
