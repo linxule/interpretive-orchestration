@@ -99,7 +99,7 @@ coverage/
 test-results/
 
 # Python virtual environments
-.venv/
+.venv
 
 # Kimi plugin development leftovers
 plugin-kimi/stage2-collaboration/
