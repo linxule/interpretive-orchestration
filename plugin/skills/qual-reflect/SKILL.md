@@ -221,10 +221,10 @@ Ready to transition? Or need more Stage 2 work?
 
 /qual-reflect can invoke other epistemic tools:
 
-**Sequential Thinking** - For deep analytical reasoning about synthesis challenges
+**Step-by-step thinking** - For deep analytical reasoning about synthesis challenges
 ```
 During reflection: "Let me think through this systematically..."
-→ Invokes Sequential Thinking for structured 10-step analysis
+→ Thinks deeply and step by step through a structured 10-step analysis
 ```
 
 **Lotus Wisdom** - For navigating paradoxes

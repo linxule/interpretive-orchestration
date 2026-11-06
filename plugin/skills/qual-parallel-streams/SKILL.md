@@ -42,7 +42,7 @@ Systematically extract theoretical patterns from your foundational literature th
 
 ### Tools
 - For PDF articles: Use **MinerU** (if API key configured) or manual conversion (Adobe Acrobat, Google Docs OCR)
-- Use **Sequential Thinking** to work through complex theoretical frameworks
+- Think deeply and step by step to work through complex theoretical frameworks
 - Optional: **Exa/Jina** for literature search and fetching
 
 ## Stream B: Empirical Pattern Extraction
@@ -64,7 +64,7 @@ Continue building patterns from your coded documents, now with AI assistance thr
 
 ### Tools
 - **@dialogical-coder** for 4-stage reflexive coding
-- **Sequential Thinking** for working through complex coding decisions
+- **Step-by-step thinking** for working through complex coding decisions
 - **Lotus Wisdom** when patterns seem contradictory
 
 ## Tracking Your Streams

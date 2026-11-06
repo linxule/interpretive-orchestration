@@ -173,6 +173,111 @@ function testInterpretivePauseStructure() {
   });
 }
 
+// Behavioral tests: feed run-hook.js the payloads Claude Code sends and check
+// what it returns. Payload shapes were captured from Claude Code 2.1.319.
+function makeProject(config) {
+  const os = require('os');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'io-hook-test-'));
+  fs.mkdirSync(path.join(dir, '.interpretive-orchestration'));
+  fs.writeFileSync(path.join(dir, '.interpretive-orchestration', 'config.json'), JSON.stringify(config));
+  return dir;
+}
+
+function runAdapter(script, payload) {
+  const { spawnSync } = require('child_process');
+  const result = spawnSync(process.execPath, [path.join(HOOKS_DIR, 'run-hook.js'), script], {
+    input: payload ? JSON.stringify(payload) : '',
+    encoding: 'utf8'
+  });
+  const out = result.stdout.trim();
+  return { status: result.status, raw: out, json: out ? JSON.parse(out) : null };
+}
+
+const agentCall = (cwd, agent, extra = {}) => ({
+  hook_event_name: 'PreToolUse', tool_name: 'Agent', cwd,
+  tool_input: { subagent_type: `interpretive-orchestration:${agent}` }, ...extra
+});
+const skillCall = (cwd, skill) => ({
+  hook_event_name: 'PreToolUse', tool_name: 'Skill', cwd,
+  tool_input: { skill: `interpretive-orchestration:${skill}` }
+});
+
+function testHookAdapterBehaviour() {
+  const incomplete = makeProject({
+    sandwich_status: { stage1_complete: false, stage1_details: { documents_manually_coded: 2, memos_written: 1 } },
+    coding_progress: { documents_coded: 5 }
+  });
+  const complete = makeProject({
+    sandwich_status: { stage1_complete: true, stage1_details: { documents_manually_coded: 12, memos_written: 6 } },
+    coding_progress: { documents_coded: 5 }
+  });
+
+  test('adapter: asks before @dialogical-coder when Stage 1 is incomplete', () => {
+    const { json } = runAdapter('check-stage1-complete.js', agentCall(incomplete, 'dialogical-coder'));
+    assert(json && json.hookSpecificOutput.permissionDecision === 'ask', 'Expected permissionDecision ask');
+    assert(json.hookSpecificOutput.permissionDecisionReason.includes('Stage 1'), 'Reason should explain Stage 1');
+  });
+
+  test('adapter: asks before a Stage 2 skill when Stage 1 is incomplete', () => {
+    const { json } = runAdapter('check-stage1-complete.js', skillCall(incomplete, 'qual-synthesize'));
+    assert(json && json.hookSpecificOutput.permissionDecision === 'ask', 'Expected permissionDecision ask');
+  });
+
+  test('adapter: ignores other agents and skills', () => {
+    assert(runAdapter('check-stage1-complete.js', agentCall(incomplete, 'Explore')).raw === '', 'Explore should pass silently');
+    assert(runAdapter('check-stage1-complete.js', skillCall(incomplete, 'qual-status')).raw === '', 'qual-status should pass silently');
+  });
+
+  test('adapter: does not ask once Stage 1 is complete', () => {
+    const { json } = runAdapter('check-stage1-complete.js', agentCall(complete, 'dialogical-coder'));
+    assert(!json || !json.hookSpecificOutput, 'Should not return a permission decision');
+  });
+
+  test('adapter: typed Stage 2 command tells Claude to confirm with the researcher', () => {
+    const { json } = runAdapter('check-stage1-complete.js', {
+      hook_event_name: 'UserPromptExpansion', cwd: incomplete,
+      command_name: 'interpretive-orchestration:qual-parallel-streams'
+    });
+    assert(json && json.hookSpecificOutput.additionalContext.includes('ask whether they want to proceed'), 'Should ask the researcher');
+    assert(json.systemMessage, 'Researcher should see the check');
+  });
+
+  test('adapter: interpretive pause reaches researcher and Claude after a foreground agent', () => {
+    const { json } = runAdapter('interpretive-pause.js', agentCall(complete, 'dialogical-coder', {
+      hook_event_name: 'PostToolUse', tool_response: { status: 'completed' }
+    }));
+    assert(json && json.systemMessage.includes('INTERPRETIVE PAUSE'), 'Researcher should see the pause');
+    assert(json.hookSpecificOutput.additionalContext.includes('INTERPRETIVE PAUSE'), 'Claude should see the pause');
+  });
+
+  test('adapter: background agent defers its pause to SubagentStop, once', () => {
+    const launch = runAdapter('interpretive-pause.js', agentCall(complete, 'dialogical-coder', {
+      hook_event_name: 'PostToolUse', tool_response: { status: 'async_launched', agentId: 'testagent123' }
+    }));
+    assert(launch.raw === '', 'Launch should stay silent');
+    const stop = { hook_event_name: 'SubagentStop', cwd: complete, agent_id: 'testagent123', agent_type: 'interpretive-orchestration:dialogical-coder' };
+    const first = runAdapter('interpretive-pause.js', stop);
+    assert(first.json && first.json.systemMessage.includes('INTERPRETIVE PAUSE'), 'Pause should show when the agent finishes');
+    assert(runAdapter('interpretive-pause.js', stop).raw === '', 'Pause should not repeat');
+  });
+
+  test('adapter: foreground agent does not fire again at SubagentStop', () => {
+    const stop = { hook_event_name: 'SubagentStop', cwd: complete, agent_id: 'never-deferred', agent_type: 'interpretive-orchestration:dialogical-coder' };
+    assert(runAdapter('interpretive-pause.js', stop).raw === '', 'Should stay silent');
+  });
+
+  test('adapter: without a payload the hook runs as before', () => {
+    const { spawnSync } = require('child_process');
+    const result = spawnSync(process.execPath, [path.join(HOOKS_DIR, 'run-hook.js'), 'check-stage1-complete.js'], {
+      cwd: incomplete, input: '', encoding: 'utf8'
+    });
+    assert(result.status === 1, `Expected exit 1, got ${result.status}`);
+    assert(result.stdout.includes('METHODOLOGY CHECK'), 'Plain text should pass through');
+  });
+
+  for (const dir of [incomplete, complete]) fs.rmSync(dir, { recursive: true, force: true });
+}
+
 // Run all tests
 async function run() {
   testHookFilesExist();
@@ -183,6 +288,7 @@ async function run() {
   testCheckStage1CompleteStructure();
   testCheckCoherenceStructure();
   testInterpretivePauseStructure();
+  testHookAdapterBehaviour();
 
   return { passed, failed };
 }

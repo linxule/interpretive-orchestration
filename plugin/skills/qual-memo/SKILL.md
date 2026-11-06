@@ -124,7 +124,7 @@ Your memos become the foundation for AI-assisted analysis. The theoretical sensi
 
 ## Tools for Memo Writing
 
-### Sequential Thinking
+### Step-by-step thinking
 When working through complex analytical puzzles:
 > "I'm noticing [pattern] but I'm not sure what to make of it. Help me think through what this might mean."
 

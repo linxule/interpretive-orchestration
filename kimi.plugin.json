@@ -9,19 +9,18 @@
     "interpretive-inquiry",
     "reflexive-analysis"
   ],
-  "author": "Xule Lin and Kevin Corley (Imperial College London)",
+  "author": "Xule Lin (SKEMA Business School) and Kevin Corley (Imperial College London)",
   "homepage": "https://github.com/linxule/interpretive-orchestration#readme",
   "license": "MIT",
   "skills": "./plugin/skills/",
   "agents": "./plugin/agents/",
   "mcpServers": {
-    "mcp-sequentialthinking-tools": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
-    },
     "lotus-wisdom": {
       "command": "npx",
-      "args": ["-y", "lotus-wisdom-mcp"]
+      "args": [
+        "-y",
+        "lotus-wisdom-mcp@latest"
+      ]
     }
   },
   "interface": {

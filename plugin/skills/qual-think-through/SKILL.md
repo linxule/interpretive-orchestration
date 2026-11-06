@@ -1,12 +1,12 @@
 ---
 name: qual-think-through
-description: Deep analytical reasoning via Sequential Thinking for complex decisions
+description: Deep analytical reasoning for complex decisions, thinking deeply and step by step before responding
 ---
 
 # /qual-think-through - Deep Analytical Reasoning
 
 ## Purpose
-Invoke Sequential Thinking MCP for structured, step-by-step reasoning about complex analytical challenges. This is for when quick intuition isn't enough - when you need to think deeply, systematically, and reflexively.
+Think deeply and step by step before responding, for structured reasoning about complex analytical challenges. This is for when quick intuition isn't enough - when you need to think deeply, systematically, and reflexively.
 
 ---
 
@@ -31,16 +31,16 @@ Invoke Sequential Thinking MCP for structured, step-by-step reasoning about comp
 
 ## What This Command Does
 
-**Invokes:** Sequential Thinking MCP - a specialized reasoning system
+**Uses:** step-by-step reasoning - numbered steps written out in the conversation
 
 **Process:**
 1. You present a complex analytical question or challenge
-2. Sequential Thinking breaks it down into 10-20 reasoning steps
+2. Thinking deeply and step by step breaks it down into 10-20 reasoning steps
 3. Each step builds on previous insights
 4. You see the THINKING PROCESS, not just conclusions
 5. Final step provides integrated recommendation
 
-**Why Sequential Thinking?**
+**Why step-by-step thinking?**
 - Forces systematic analysis (prevents jumping to conclusions)
 - Makes reasoning visible (you can critique each step)
 - Builds understanding progressively (handles complexity)
@@ -56,7 +56,7 @@ Invoke Sequential Thinking MCP for structured, step-by-step reasoning about comp
 /qual-think-through How should I distinguish {Concept A} from {Concept B} in my framework?
 ```
 
-**The MCP will:**
+**The reasoning will:**
 - Step 1: Clarify the conceptual distinction question
 - Step 2: Consider theoretical properties of each
 - Step 3: Examine empirical examples
@@ -76,7 +76,7 @@ Empirical patterns emphasize {aspect B}.
 How should I integrate these without forcing alignment?
 ```
 
-**The MCP will:**
+**The reasoning will:**
 - Break down the integration challenge
 - Consider multiple resolution strategies
 - Examine epistemological implications
@@ -92,7 +92,7 @@ How should I integrate these without forcing alignment?
 User: /qual-think-through I need to plan my Stage 1 manual coding
       approach. I have 36 documents. How should I proceed?
 
-Sequential Thinking:
+Step-by-step reasoning:
 
   Step 1/12: Understanding the scope
   You have 36 documents and want to build foundational interpretive
@@ -131,7 +131,7 @@ User: That's really helpful! I'll start with 12 diverse documents.
 
 Plugin: Wonderful! Shall I log this decision to conversation-log.jsonl?
 
-        [Saves: "Human used Sequential Thinking to plan Stage 1 approach.
+        [Saves: "Human used step-by-step reasoning to plan Stage 1 approach.
         Decision: Purposeful sample of 12 diverse documents. Rationale:
         Balance depth with coverage."]
 ```
@@ -171,7 +171,7 @@ Plugin: Wonderful! Shall I log this decision to conversation-log.jsonl?
 
 Quick AI responses can feel authoritative (even when they shouldn't be).
 
-**Sequential Thinking shows PROCESS:**
+**Step-by-step thinking shows PROCESS:**
 - You see how conclusions are reached
 - You can question any step
 - You understand the reasoning logic
@@ -184,7 +184,7 @@ Quick AI responses can feel authoritative (even when they shouldn't be).
 
 **This is:** Structured reasoning tool for YOUR analytical thinking
 
-**You're still thinking. Sequential Thinking just organizes your process.**
+**You're still thinking. Step-by-step reasoning just organizes your process.**
 
 ---
 
@@ -194,8 +194,8 @@ Quick AI responses can feel authoritative (even when they shouldn't be).
 {
   "timestamp": "{ISO_TIMESTAMP}",
   "from": "human_researcher",
-  "to": "sequential_thinking_mcp",
-  "message": "Invoked Sequential Thinking for: {QUESTION}",
+  "to": "qualitative_ai_plugin",
+  "message": "Asked for step-by-step reasoning on: {QUESTION}",
   "stage": "{CURRENT_STAGE}",
   "activity_type": "deep_reasoning",
   "metadata": {

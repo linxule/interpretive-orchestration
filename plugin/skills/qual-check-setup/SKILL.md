@@ -13,11 +13,10 @@ Please verify the following and report back to the researcher:
 
 ### 1. Plugin Status
 - Confirm the Interpretive Orchestration plugin is installed
-- Report the current version (should be 0.2.0)
+- Report the current version (should be 0.3.0)
 
 ### 2. Bundled MCP Servers (Should Auto-Start)
 Check if these servers are available and responding:
-- **Sequential Thinking** - For deep analytical reasoning
 - **Lotus Wisdom** - For paradox navigation
 
 ### 3. Available Commands
@@ -53,7 +52,6 @@ Interpretive Orchestration Setup Check
 Plugin version: [version]
 
 Bundled MCP Servers:
-✓ Sequential Thinking - Ready
 ✓ Lotus Wisdom - Ready
 
 Optional MCP Servers:

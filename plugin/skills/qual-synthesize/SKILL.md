@@ -85,7 +85,7 @@ Remember: You make the final interpretive decisions.
 
 ## Tools for Synthesis
 
-- **Sequential Thinking:** Work through complex integration challenges step-by-step
+- **Step-by-step thinking:** Work through complex integration challenges step-by-step
 - **Lotus Wisdom:** Navigate paradoxes and transcend either/or thinking
 - **@dialogical-coder:** Assist with pattern presentation and connection mapping
 

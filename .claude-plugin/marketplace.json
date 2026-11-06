@@ -3,13 +3,13 @@
   "name": "interpretive-orchestration",
   "description": "Interpretive Orchestration: a human-AI partnership system for interpretive qualitative research, by Xule Lin and Kevin Corley.",
   "owner": {
-    "name": "Xule Lin and Kevin Corley (Imperial College London)"
+    "name": "Xule Lin (SKEMA Business School) and Kevin Corley (Imperial College London)"
   },
   "plugins": [
     {
       "name": "interpretive-orchestration",
       "source": "./plugin",
-      "description": "Socratic onboarding, 4-stage reflexive coding, methodology hooks, specialized agents and MCP tools (Sequential Thinking, Lotus Wisdom) for the sandwich methodology.",
+      "description": "Socratic onboarding, 4-stage reflexive coding, methodology hooks, specialized agents and the Lotus Wisdom MCP for the sandwich methodology.",
       "version": "0.3.0",
       "category": "research"
     }

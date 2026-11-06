@@ -114,7 +114,7 @@ Refinements needed: [suggested changes]
 ## Tools
 
 - **@dialogical-coder:** Primary coding assistant
-- **Sequential Thinking:** Work through ambiguous coding decisions
+- **Step-by-step thinking:** Work through ambiguous coding decisions
 - **Lotus Wisdom:** When data seems to both fit and not fit a pattern
 
 ## Philosophical Note

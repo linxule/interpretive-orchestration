@@ -575,7 +575,7 @@ significant self-care philosophy.
 **When to Use:** Stage 2 Phase 2 (large-scale deductive coding)
 **Prerequisites:** Stage 1 complete, data structure established
 **Model:** Claude Opus (extended thinking budget recommended)
-**Integration:** Sequential Thinking for complex analytical decisions
+**Integration:** Think deeply and step by step before complex analytical decisions
 
 **Invocation:**
 ```

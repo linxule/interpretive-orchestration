@@ -162,7 +162,7 @@ Then /qual-wisdom-check to transcend it
 ```
 
 **Complementary, not redundant:**
-- Sequential Thinking: Systematic analysis
+- Step-by-step thinking: Systematic analysis
 - Lotus Wisdom: Integrative synthesis
 - Together: Analysis → Transcendence → Integration
 

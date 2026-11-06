@@ -316,7 +316,7 @@ What's the puzzle-resolution arc in YOUR paper?
 
 **Works alongside:**
 - `/qual-reflect` - Can transition from reflection to theoretical dialogue
-- `/qual-think-through` - Can use Sequential Thinking for systematic theory-building
+- `/qual-think-through` - Step-by-step reasoning for systematic theory-building
 - `/qual-wisdom-check` - Can navigate theoretical tensions
 - `/qual-examine-assumptions` - Can check philosophical coherence
 

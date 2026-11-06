@@ -94,7 +94,7 @@ How does this pattern relate to others in your framework?
 
 ## Using Tools for Characterization
 
-### Sequential Thinking
+### Step-by-step thinking
 Use for systematic dimensional analysis:
 > "Help me think through the properties and dimensions of [pattern]. What are its defining characteristics and how do they vary?"
 

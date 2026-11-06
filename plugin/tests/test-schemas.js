@@ -181,21 +181,119 @@ function testMcpJsonStructure() {
     const mcp = JSON.parse(fs.readFileSync(mcpPath, 'utf8'));
 
     assert(mcp.mcpServers, 'Should have mcpServers');
-    assert(mcp.mcpServers['mcp-sequentialthinking-tools'], 'Should have sequential thinking');
     assert(mcp.mcpServers['lotus-wisdom'], 'Should have lotus wisdom');
-    // Note: markdownify removed due to MCP SDK compatibility issues
+    // Removed: markdownify (MCP SDK incompatibility, 0.2.1), sequential thinking (0.3.0, now a prompt)
+    const kimi = JSON.parse(fs.readFileSync(path.join(PROJECT_ROOT, '..', 'kimi.plugin.json'), 'utf8'));
+    assert(JSON.stringify(Object.keys(kimi.mcpServers || {})) === JSON.stringify(Object.keys(mcp.mcpServers)),
+      'kimi.plugin.json should bundle the same MCP servers as .mcp.json');
   });
 }
 
 // Test: Version consistency
 function testVersionConsistency() {
-  test('Version matches across files', () => {
-    // package.json is at marketplace root level
-    const packageJson = JSON.parse(fs.readFileSync(path.join(PROJECT_ROOT, '..', 'package.json'), 'utf8'));
-    const pluginJson = JSON.parse(fs.readFileSync(path.join(PROJECT_ROOT, '.claude-plugin', 'plugin.json'), 'utf8'));
+  test('Version matches across every platform manifest', () => {
+    const repoRoot = path.join(PROJECT_ROOT, '..');
+    const readJson = rel => JSON.parse(fs.readFileSync(path.join(repoRoot, rel), 'utf8'));
+    const marketplace = readJson('.claude-plugin/marketplace.json');
+    const citation = fs.readFileSync(path.join(repoRoot, 'CITATION.cff'), 'utf8').match(/^version:\s*(\S+)/m);
+    const versions = {
+      'package.json': readJson('package.json').version,
+      'plugin/.claude-plugin/plugin.json': readJson('plugin/.claude-plugin/plugin.json').version,
+      'plugin/.claude-plugin/plugin-extended.json': readJson('plugin/.claude-plugin/plugin-extended.json').version,
+      'plugin/.codex-plugin/plugin.json': readJson('plugin/.codex-plugin/plugin.json').version,
+      'kimi.plugin.json': readJson('kimi.plugin.json').version,
+      '.claude-plugin/marketplace.json': marketplace.plugins.find(p => p.name === 'interpretive-orchestration').version,
+      'CITATION.cff': citation && citation[1]
+    };
+    const distinct = new Set(Object.values(versions));
+    assert(distinct.size === 1, `Version mismatch: ${JSON.stringify(versions)}`);
+  });
+}
 
-    assert(packageJson.version === pluginJson.version,
-      `Version mismatch: package.json=${packageJson.version}, plugin.json=${pluginJson.version}`);
+function frontmatter(file) {
+  const content = fs.readFileSync(file, 'utf8');
+  const match = content.match(/^---\n([\s\S]*?)\n---\n/);
+  return match ? match[1] : null;
+}
+
+// Test: every skill follows the Agent Skills format that Claude Code, Codex,
+// Copilot CLI and Kimi Code all read
+function testSkillsFormat() {
+  const skillsDir = path.join(PROJECT_ROOT, 'skills');
+  const skillDirs = fs.readdirSync(skillsDir, { withFileTypes: true })
+    .filter(d => d.isDirectory() && d.name !== '_shared')
+    .map(d => d.name);
+
+  test('skills: every skill folder has a SKILL.md', () => {
+    const missing = skillDirs.filter(d => !fs.existsSync(path.join(skillsDir, d, 'SKILL.md')));
+    assert(missing.length === 0, `Missing SKILL.md: ${missing.join(', ')}`);
+  });
+
+  test('skills: frontmatter name matches folder and description is present', () => {
+    const problems = [];
+    for (const dir of skillDirs) {
+      const fm = frontmatter(path.join(skillsDir, dir, 'SKILL.md'));
+      const name = fm && fm.match(/^name:\s*(.+)$/m);
+      const description = fm && fm.match(/^description:\s*(.+)$/m);
+      if (!name || name[1].trim() !== dir) problems.push(`${dir}: name`);
+      if (!description || description[1].trim().length > 1024) problems.push(`${dir}: description`);
+    }
+    assert(problems.length === 0, problems.join('; '));
+  });
+
+  test('skills: every command listed in plugin-extended.json exists as a skill', () => {
+    const plugin = JSON.parse(fs.readFileSync(path.join(PROJECT_ROOT, '.claude-plugin', 'plugin-extended.json'), 'utf8'));
+    const commands = Object.entries(plugin.components.commands)
+      .filter(([group]) => !group.startsWith('_'))
+      .flatMap(([, names]) => names);
+    const missing = commands.filter(c => !skillDirs.includes(c));
+    assert(missing.length === 0, `Listed commands without a skill: ${missing.join(', ')}`);
+  });
+
+  test('skills: script paths are anchored to the plugin root', () => {
+    // A bare "node skills/..." only works when the plugin folder is the working directory.
+    const offenders = [];
+    for (const dir of [...skillDirs, '_shared']) {
+      const files = fs.readdirSync(path.join(skillsDir, dir)).filter(f => f.endsWith('.md'));
+      for (const f of files) {
+        const content = fs.readFileSync(path.join(skillsDir, dir, f), 'utf8');
+        if (/\b(node|python3?) +skills\//.test(content)) offenders.push(`${dir}/${f}`);
+      }
+    }
+    assert(offenders.length === 0, `Relative script paths in: ${offenders.join(', ')}`);
+  });
+}
+
+// Test: agents can start. Claude Code refuses to start an agent whose tools
+// allowlist resolves to nothing, and plugin MCP tools are named
+// mcp__plugin_<plugin>_<server>__<tool>.
+function testAgentToolLists() {
+  const agentsDir = path.join(PROJECT_ROOT, 'agents');
+  for (const file of fs.readdirSync(agentsDir).filter(f => f.endsWith('.md'))) {
+    test(`agents: ${file} does not restrict itself to MCP-only tools`, () => {
+      const fm = frontmatter(path.join(agentsDir, file)) || '';
+      const tools = fm.match(/^tools:\s*(.+)$/m);
+      if (!tools) return;
+      const names = tools[1].split(',').map(t => t.trim()).filter(Boolean);
+      assert(names.some(t => !t.startsWith('mcp__')),
+        `tools: lists only MCP tools (${names.join(', ')}), which removes Read and Grep`);
+    });
+  }
+}
+
+// Test: hooks.json only points at hook scripts the adapter knows
+function testHooksConfig() {
+  test('hooks.json: every command runs a known script through run-hook.js', () => {
+    const hooksDir = path.join(PROJECT_ROOT, 'hooks');
+    const config = JSON.parse(fs.readFileSync(path.join(hooksDir, 'hooks.json'), 'utf8'));
+    const adapter = fs.readFileSync(path.join(hooksDir, 'run-hook.js'), 'utf8');
+    const commands = Object.values(config.hooks).flat().flatMap(group => group.hooks.map(h => h.command));
+    for (const command of commands) {
+      const match = command.match(/run-hook\.js"? ([\w-]+\.js)$/);
+      assert(match, `Hook does not use run-hook.js: ${command}`);
+      assert(fs.existsSync(path.join(hooksDir, match[1])), `Missing hook script: ${match[1]}`);
+      assert(adapter.includes(`'${match[1]}'`), `run-hook.js has no triggers for ${match[1]}`);
+    }
   });
 }
 
@@ -234,6 +332,9 @@ async function run() {
   testMcpJsonStructure();
   testVersionConsistency();
   testAgentsExist();
+  testSkillsFormat();
+  testAgentToolLists();
+  testHooksConfig();
 
   return { passed, failed };
 }

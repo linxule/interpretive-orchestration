@@ -183,7 +183,6 @@ function generateConfig(args) {
 
     mcp_integrations: {
       active_mcps: [
-        'mcp-sequentialthinking-tools',
         'lotus-wisdom'
       ],
       mcp_usage_log: []
