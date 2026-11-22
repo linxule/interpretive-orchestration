@@ -448,12 +448,12 @@ OpenAI (GPT):
 - Strengths: Familiar, widely used, good general capability
 - Best for: Standard tasks, when you want second opinion
 - Models: Choose a current general-purpose model
-- Use via: Zen MCP (multi-model validation)
+- Use via: Vox MCP (multi-model validation)
 
 For YOUR research:
 Primary: [Recommendation based on needs]
 Secondary: [For specific use cases]
-Validation: [Via Zen MCP if doing triangulation]
+Validation: [Via Vox MCP if doing triangulation]
 
 Thinking about budget? [Discuss cost optimization]
 Want to use multiple? [Explain strategic mixing]

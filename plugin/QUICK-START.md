@@ -84,7 +84,7 @@ Claude loads these when relevant to your request:
 
 - **[Lotus Wisdom](https://github.com/linxule/lotus-wisdom-mcp)** - Navigate paradoxes, integrate tensions
 
-**Optional (with API keys):** MinerU (90%+ PDF accuracy), Zen (multi-model), Exa (search), Jina (fetch), Zotero (bibliography). See [DEPENDENCIES.md](DEPENDENCIES.md).
+**Optional (with API keys):** MinerU (90%+ PDF accuracy), Vox MCP (multi-model), Exa (search), Jina (fetch), Zotero (bibliography). See [DEPENDENCIES.md](DEPENDENCIES.md).
 
 ---
 

@@ -75,7 +75,7 @@ graph TB
 
     subgraph MCPs["EPISTEMIC SCAFFOLDING - MCPs"]
         LotusW[Lotus Wisdom<br/>Paradox navigation]
-        Zen[Zen MCP<br/>Multi-model validation]
+        Vox[Vox MCP<br/>Multi-model validation]
         Jina[Jina + Exa<br/>Literature]
 
         Wisdom -.Invokes.-> LotusW
@@ -193,7 +193,7 @@ Each command is a skill at `skills/qual-<name>/SKILL.md`.
 | MCP | Function | When Used | Epistemic Role |
 |-----|----------|-----------|----------------|
 | MinerU | Parse complex PDFs | Document import | Data preparation |
-| Zen MCP | Multi-model validation | Major decisions | Triangulation |
+| Vox MCP | Multi-model validation | Major decisions | Triangulation |
 | Jina | Fetch articles | Literature work | Knowledge access |
 | Exa | Search literature | Discovery | Knowledge discovery |
 | Zotero | Bibliography | Citations | Scholarly infrastructure |
@@ -452,7 +452,7 @@ graph LR
 │     Invoked by: document-conversion, interview-ingest   │
 │     Used in: Data preparation (all stages)              │
 │                                                          │
-│  🎯 Zen MCP (Optional - requires API key)                                              │
+│  🎯 Vox MCP (Optional - requires API key)                                              │
 │     When: Multi-model validation, major decisions       │
 │     Invoked by: Via commands or @research-configurator  │
 │     Used in: Quality checking (Stage 2)                 │

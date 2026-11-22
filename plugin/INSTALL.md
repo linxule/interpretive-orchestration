@@ -185,7 +185,7 @@ cd ~/my-qualitative-research
 claude
 ```
 
-Then ask: *"Help me set up the Zen MCP server for multi-model validation"*
+Then ask: *"Help me set up the Vox MCP server for multi-model validation"*
 
 Claude Code will guide you through:
 1. Getting the necessary API keys
@@ -197,7 +197,7 @@ Claude Code will guide you through:
 | MCP | What It Does | API Key Needed |
 |-----|--------------|----------------|
 | **MinerU** | High-accuracy PDF parsing (90%+) | MINERU_API_KEY |
-| **Zen** | Multi-model validation (Gemini, GPT-4) | GOOGLE_API_KEY or OPENAI_API_KEY |
+| **Vox MCP** | Multi-model validation (Gemini, OpenAI, and other providers) | GEMINI_API_KEY or OPENAI_API_KEY (or another supported provider key) |
 | **Exa** | Literature search | EXA_API_KEY |
 | **Jina** | Web article fetching | JINA_API_KEY |
 | **Zotero** | Bibliography management | ZOTERO_API_KEY + ZOTERO_LIBRARY_ID |
@@ -207,7 +207,7 @@ Claude Code will guide you through:
 1. Get your API keys from the respective services
 2. Add to your shell profile (`~/.zshrc` on macOS, `~/.bashrc` on Linux):
 ```bash
-export GOOGLE_API_KEY="your-key-here"
+export GEMINI_API_KEY="your-key-here"
 export EXA_API_KEY="your-key-here"
 ```
 3. Restart Claude Code

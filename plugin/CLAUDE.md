@@ -752,7 +752,7 @@ You CAN help users with installation and configuration tasks. These are qualitat
 
 **What you can help with:**
 - Installing Node.js (platform-specific commands)
-- Configuring optional MCP servers (Zen, Exa, Jina, Zotero)
+- Configuring optional MCP servers (Vox MCP, Exa, Jina, Zotero)
 - Setting up API keys in environment variables
 - Troubleshooting setup issues
 

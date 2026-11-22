@@ -257,7 +257,7 @@ Some skills can also use optional MCP servers that you add with your own API key
 - MinerU, for parsing PDFs with complex tables and figures
 - Jina AI, for fetching web articles
 - Exa, for academic literature search
-- Zen, for checking interpretations with several models
+- Vox MCP, for checking interpretations with several models
 - Zotero, for bibliography management
 
 Without them, those skills fall back to simpler methods. [Dependencies](plugin/DEPENDENCIES.md) explains how to set up each one.

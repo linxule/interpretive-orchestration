@@ -108,7 +108,7 @@
     ],
     "mcps_optional": [
       "mineru-mcp",
-      "zen-mcp-server",
+      "vox-mcp",
       "jina-ai-mcp-server",
       "exa",
       "zotero"

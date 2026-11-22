@@ -256,10 +256,10 @@ During reflection: "I want to check my philosophical coherence..."
 → Uses Socratic questioning to surface ontological commitments
 ```
 
-**Zen MCP** - For multi-model perspectives
+**Vox MCP** - For multi-model perspectives
 ```
 During reflection: "How would different AIs see this synthesis?"
-→ Invokes Zen MCP for triangulated perspectives
+→ Invokes Vox MCP for triangulated perspectives
 ```
 
 ---

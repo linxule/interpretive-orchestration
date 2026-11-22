@@ -10,7 +10,7 @@ This document describes the Model Context Protocol (MCP) servers used by Interpr
 | MinerU | Optional | Yes (MINERU_API_KEY) | High-accuracy PDF parsing |
 | Jina AI | Optional | Yes (JINA_API_KEY) | Web content extraction |
 | Exa | Optional | Yes (EXA_API_KEY) | Academic literature search |
-| Zen | Optional | Yes (various) | Multi-model validation |
+| Vox MCP | Optional | Yes (various) | Multi-model validation |
 | Zotero | Optional | Yes (ZOTERO_API_KEY) | Bibliography management |
 
 ---
@@ -143,15 +143,16 @@ claude mcp add mineru-mcp -e MINERU_API_KEY=your-key -- npx mineru-mcp
 
 ---
 
-### Zen
+### Vox MCP
 
-**Package:** `zen-mcp-server`
-**API Keys:** `GOOGLE_API_KEY` and/or `OPENAI_API_KEY`
+**Project:** [github.com/linxule/vox-mcp](https://github.com/linxule/vox-mcp)
+**Package:** `vox-mcp`, started as `uvx vox-mcp`
+**API Keys:** `GEMINI_API_KEY`, `OPENAI_API_KEY`, or another supported provider key
 
 **Purpose:** Multi-model validation and triangulation.
 
 **Capabilities:**
-- Query multiple AI models (Claude, GPT-4, Gemini)
+- Query multiple AI models (Claude, OpenAI, Gemini, and other providers)
 - Compare interpretations across models
 - Validate coding decisions
 - Triangulate theoretical claims
@@ -242,7 +243,7 @@ For full functionality, configure these environment variables:
 export MINERU_API_KEY="your-mineru-key"
 export JINA_API_KEY="your-jina-key"
 export EXA_API_KEY="your-exa-key"
-export GOOGLE_API_KEY="your-google-key"
+export GEMINI_API_KEY="your-gemini-key"
 export OPENAI_API_KEY="your-openai-key"
 export ZOTERO_API_KEY="your-zotero-key"
 export ZOTERO_LIBRARY_ID="your-library-id"
@@ -291,7 +292,7 @@ else tier = 3;
 1. **Start with the bundled MCP** - It covers most needs
 2. **Add MinerU** if you have complex PDF documents with tables
 3. **Add Exa + Jina** if you need automated literature search
-4. **Add Zen** if you want multi-model validation
+4. **Add Vox MCP** if you want multi-model validation
 5. **Add Zotero** if you use Zotero for bibliography
 
 ---
